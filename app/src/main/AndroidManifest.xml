@@ -13,7 +13,7 @@
         <activity android:name=".SingleFragmentActivity"/>
         <activity android:name=".Multiplefragment" />
         <activity
-            android:name=".DetailActivity"
+            android:name=".SpecificNewsActivity"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity android:name=".MainActivity">

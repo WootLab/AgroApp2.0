@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MoviesLab {
+public class AgroAppRepo {
 
     List<Movie> actionMovieList = new ArrayList<>();
     List<Movie> comedyMovieList = new ArrayList<>();
@@ -284,7 +284,7 @@ public class MoviesLab {
     };
 
 
-    public MoviesLab(){
+    public AgroAppRepo(){
         finalMovieGenerator(actionMovies,actionMovieList,actionmoviepposterurl);//actionGenerator();
         finalMovieGenerator(comedymovies,comedyMovieList,comedyMoviesPoster);//comedyGenerator();
         finalMovieGenerator(dramaMovies,dramaMovieList,dramaMoviesPoster);//DramaGenerator();

@@ -16,20 +16,20 @@ import com.bumptech.glide.Glide;
 import java.util.Objects;
 
 
-public class DetailFragment extends Fragment {
+public class SpecificNewsFragment extends Fragment {
     ImageView topImage,real;
     TextView TV_movietitle, TV_moviestory,TV_date;
     RatingBar bar;
     Movie movie;
 
-    public DetailFragment() {
+    public SpecificNewsFragment() {
         // Required empty public constructor
     }
 
-    public static DetailFragment newInstance(Movie movie){
+    public static SpecificNewsFragment newInstance(Movie movie){
         Bundle bundle = new Bundle();
-        bundle.putSerializable(DetailActivity.MOVIE_OBJECT,movie);
-        DetailFragment fragment = new DetailFragment();
+        bundle.putSerializable(SpecificNewsActivity.MOVIE_OBJECT,movie);
+        SpecificNewsFragment fragment = new SpecificNewsFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -41,7 +41,7 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
-        movie = (Movie) getArguments().getSerializable(DetailActivity.MOVIE_OBJECT);
+        movie = (Movie) getArguments().getSerializable(SpecificNewsActivity.MOVIE_OBJECT);
     }
 
     @Override

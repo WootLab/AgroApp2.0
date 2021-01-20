@@ -18,8 +18,8 @@ import java.util.List;
 public class DramaFragment extends Fragment {
     RecyclerView mRecyclerView ;
     List<Movie> dramamovieList;
-    MoviesLab moviesLab;
-    MovieAdapter adapter;
+    AgroAppRepo agroAppRepo;
+    PlatformAdapter adapter;
 
 
     public DramaFragment() {
@@ -37,15 +37,15 @@ public class DramaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moviesLab = new MoviesLab();
-        dramamovieList = moviesLab.getDramaMovieList();
-        adapter = new MovieAdapter(dramamovieList,getActivity());
-        adapter.setOnAdapterListener(new MovieAdapter.CustomeAdapterListener() {
+        agroAppRepo = new AgroAppRepo();
+        dramamovieList = agroAppRepo.getDramaMovieList();
+        adapter = new PlatformAdapter(dramamovieList,getActivity());
+        adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
             @Override
             public void adapterListener(int position) {
                 Movie movie = dramamovieList.get(position);
-                Intent intent = new Intent(getActivity(),DetailActivity.class);
-                intent.putExtra(DetailActivity.MOVIE_OBJECT,movie);
+                Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
+                intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,movie);
                 startActivity(intent);
             }
         });

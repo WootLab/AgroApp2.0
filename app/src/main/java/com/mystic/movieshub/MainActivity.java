@@ -11,6 +11,6 @@ public class MainActivity extends Multiplefragment {
 
     @Override
     protected Fragment createFragment() {
-        return  ActionFragment.newInstance();
+        return  PlatformFragment.newInstance();
     }
 }

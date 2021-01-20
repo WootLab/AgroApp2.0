@@ -60,10 +60,10 @@ public abstract class Multiplefragment extends AppCompatActivity implements Navi
 
         switch (id){
             case R.id.nav_action:
-                fragment = new ActionFragment();
+                fragment = new PlatformFragment();
                 break;
             case R.id.nav_com:
-                fragment = new ComedyFragment();
+                fragment = new ProfileFragment();
                 break;
 
             case R.id.nav_drama:

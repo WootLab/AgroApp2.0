@@ -15,48 +15,50 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ActionFragment#newInstance} factory method to
+ * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ActionFragment extends Fragment {
-
+public class ProfileFragment extends Fragment {
 
     RecyclerView mRecyclerView ;
-    List<Movie> actionmovieList;
-    MoviesLab moviesLab;
-    MovieAdapter adapter;
+    List<Movie> comedymovieList;
+    AgroAppRepo agroAppRepo;
+    PlatformAdapter adapter;
 
-    public ActionFragment() {
+
+    public ProfileFragment() {
         // Required empty public constructor
     }
 
+
     // TODO: Rename and change types and number of parameters
-    public static ActionFragment newInstance() {
-        return new ActionFragment();
+    public static ProfileFragment newInstance(String param1, String param2) {
+        ProfileFragment fragment = new ProfileFragment();
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moviesLab = new MoviesLab();
+        agroAppRepo = new AgroAppRepo();
 
-        actionmovieList = moviesLab.getActionMovieList();
-        adapter = new MovieAdapter(actionmovieList,getActivity());
-        adapter.setOnAdapterListener(new MovieAdapter.CustomeAdapterListener() {
+        comedymovieList = agroAppRepo.getComedyMovieList();
+        adapter = new PlatformAdapter(comedymovieList,getActivity());
+
+        adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
             @Override
             public void adapterListener(int position) {
-                Movie movie = actionmovieList.get(position);
-                Intent intent = new Intent(getActivity(),DetailActivity.class);
-                intent.putExtra(DetailActivity.MOVIE_OBJECT,movie);
+                Movie movie = comedymovieList.get(position);
+                Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
+                intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,movie);
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_genericview, container, false);
+       View view = inflater.inflate(R.layout.fragment_genericview, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);

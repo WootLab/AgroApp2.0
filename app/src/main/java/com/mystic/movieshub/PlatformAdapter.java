@@ -17,14 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder> {
+public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieHolder> {
 
     List<Movie> movies;
     Context context;
     CustomeAdapterListener listener;
 
 
-    public MovieAdapter(List<Movie> movies, Context context){
+    public PlatformAdapter(List<Movie> movies, Context context){
         this.movies = movies;
         this.context = context;
 
