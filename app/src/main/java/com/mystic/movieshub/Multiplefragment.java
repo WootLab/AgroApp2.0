@@ -67,7 +67,7 @@ public abstract class Multiplefragment extends AppCompatActivity implements Navi
                 break;
 
             case R.id.nav_drama:
-                fragment = new DramaFragment();
+                fragment = new FarmersNewsFragment();
                 break;
 
         }

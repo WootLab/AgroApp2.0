@@ -22,7 +22,7 @@ public class PlatformFragment extends Fragment {
 
 
     RecyclerView mRecyclerView ;
-    List<Movie> actionmovieList;
+    List<FarmProduct> farmProductList;
     AgroAppRepo agroAppRepo;
     PlatformAdapter adapter;
 
@@ -38,16 +38,16 @@ public class PlatformFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        agroAppRepo = new AgroAppRepo();
+        agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
-        actionmovieList = agroAppRepo.getActionMovieList();
-        adapter = new PlatformAdapter(actionmovieList,getActivity());
+        farmProductList = agroAppRepo.fetchProduct();
+        adapter = new PlatformAdapter(farmProductList,getActivity());
         adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
             @Override
             public void adapterListener(int position) {
-                Movie movie = actionmovieList.get(position);
+                FarmProduct product = farmProductList.get(position);
                 Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
-                intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,movie);
+                intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,product);
                 startActivity(intent);
             }
         });

@@ -1,4 +1,13 @@
 package com.mystic.movieshub;
+import androidx.annotation.NonNull;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,9 +17,13 @@ public class AgroAppRepo {
     List<Movie> actionMovieList = new ArrayList<>();
     List<Movie> comedyMovieList = new ArrayList<>();
     List<Movie> dramaMovieList = new ArrayList<>();
+    private FirebaseDatabase firebaseDatabase;
+    List<FarmProduct> farmProductList = new ArrayList<>();
+    private static  AgroAppRepo agroAppRepo;
 
+    private FirebaseAuth mAuth;
 
-    String[] actionmoviepposterurl = {
+    /*String[] actionmoviepposterurl = {
             "https://m.media-amazon.com/images/M/MV5BYjA5YjA2YjUtMGRlNi00ZTU4LThhZmMtNDc0OTg4ZWExZjI3XkEyXkFqcGdeQXVyNjUyNjI3NzU@._V1_UY268_CR16,0,182,268_AL_.jpg",
     "https://m.media-amazon.com/images/M/MV5BMDY1NzhlZDAtYTM1Mi00NjU3LTk4MWQtZDgxZGQxYzhmZTNhXkEyXkFqcGdeQXVyNzIzMTc2Mw@@._V1_UX182_CR0,0,182,268_AL_.jpg",
     "https://m.media-amazon.com/images/M/MV5BNDJiZDliZDAtMjc5Yy00MzVhLThkY2MtNDYwNTQ2ZTM5MDcxXkEyXkFqcGdeQXVyMDA4NzMyOA@@._V1_UX182_CR0,0,182,268_AL_.jpg",
@@ -281,13 +294,24 @@ public class AgroAppRepo {
             " full of Deadpool-style humor, and we’ll get to see Jodie Comer as something other than a stylish serial killer (though, she's still equipped with a Villanelle-approved accent and " +
             "wig)","https://m.media-amazon.com/images/M/MV5BYTNjNzFiZTItNDM5NS00ODBhLTk5NmMtYzUyZWRmOWJjOTI3XkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_UX182_CR0,0,182,268_AL_.jpg")
 
-    };
+    };*/
 
 
-    public AgroAppRepo(){
-        finalMovieGenerator(actionMovies,actionMovieList,actionmoviepposterurl);//actionGenerator();
+    private AgroAppRepo(){
+        /*finalMovieGenerator(actionMovies,actionMovieList,actionmoviepposterurl);//actionGenerator();
         finalMovieGenerator(comedymovies,comedyMovieList,comedyMoviesPoster);//comedyGenerator();
-        finalMovieGenerator(dramaMovies,dramaMovieList,dramaMoviesPoster);//DramaGenerator();
+        finalMovieGenerator(dramaMovies,dramaMovieList,dramaMoviesPoster);//DramaGenerator();*/
+        mAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+    }
+
+
+
+    public static AgroAppRepo getInstanceOfAgroApp(){
+        if(agroAppRepo == null){
+            agroAppRepo = new AgroAppRepo();
+        }
+        return  agroAppRepo;
     }
 
 
@@ -308,6 +332,81 @@ public class AgroAppRepo {
     private void finalMovieGenerator(Movie[] movieArray, List<Movie> movieContainer,String[] movieposter){
         movieGenerator(movieArray,movieContainer);
         addPosterImages(movieposter,movieContainer);
+    }
+
+    public void uploadProduct(FarmProduct farmProduct){
+        //Add to firebase;
+    }
+
+
+    public List<FarmProduct> fetchProduct(){
+        //whenever we are fetching the product from this is going to be the plug......
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("PRODUCTS");
+        mDatebaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                farmProductList.clear();
+                for(DataSnapshot dataSnapshot :snapshot.getChildren()){
+                    FarmProduct farmProduct = dataSnapshot.getValue(FarmProduct.class);
+                    farmProductList.add(farmProduct);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return farmProductList;
+    }
+
+
+    public List<AgriNews> agriNewsFetcher(){
+        final List<AgriNews> agriNewsList = new ArrayList<>();
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("AgriNewa");
+        mDatebaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                agriNewsList.clear();
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    AgriNews news = snapshot1.getValue(AgriNews.class);
+                    agriNewsList.add(news);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        //This might return null;
+        return agriNewsList;
+
+    }
+
+
+    public User getUserDetail(){
+        String userId = mAuth.getCurrentUser().getUid();
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("USER").child(userId);
+        mDatebaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+
+
+            }
+        });
+
+        return null;
     }
 
 

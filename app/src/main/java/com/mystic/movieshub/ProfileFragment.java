@@ -15,15 +15,16 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
 
-    RecyclerView mRecyclerView ;
-    List<Movie> comedymovieList;
+    //RecyclerView mRecyclerView ;
+    //List<Movie> comedymovieList;
     AgroAppRepo agroAppRepo;
-    PlatformAdapter adapter;
+    private User user;
+    //PlatformAdapter adapter;
+
 
 
     public ProfileFragment() {
@@ -32,20 +33,21 @@ public class ProfileFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
+    /*public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        agroAppRepo = new AgroAppRepo();
+        agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
+        user = agroAppRepo.getUserDetail();
 
-        comedymovieList = agroAppRepo.getComedyMovieList();
-        adapter = new PlatformAdapter(comedymovieList,getActivity());
+        //comedymovieList = agroAppRepo.getComedyMovieList();
+        //adapter = new PlatformAdapter(comedymovieList,getActivity());
 
-        adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
+        /*adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
             @Override
             public void adapterListener(int position) {
                 Movie movie = comedymovieList.get(position);
@@ -53,15 +55,18 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,movie);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_genericview, container, false);
-        mRecyclerView = view.findViewById(R.id.recyclerview);
+       View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+
+
+       /* mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);*/
         return view;
     }
 }

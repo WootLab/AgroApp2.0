@@ -15,21 +15,22 @@ import java.util.List;
 
 
 
-public class DramaFragment extends Fragment {
+public class FarmersNewsFragment extends Fragment {
     RecyclerView mRecyclerView ;
-    List<Movie> dramamovieList;
-    AgroAppRepo agroAppRepo;
-    PlatformAdapter adapter;
 
-
-    public DramaFragment() {
+    //List<Movie> dramamovieList;
+   //AgroAppRepo agroAppRepo;
+   //PlatformAdapter adapter;
+    AgriNewsAdapter agriNewsAdapter;
+    List<AgriNews> agriNewsContainer;
+    public FarmersNewsFragment() {
         // Required empty public constructor
     }
 
 
     // TODO: Rename and change types and number of parameters
-   /* public static DramaFragment newInstance(String param1, String param2) {
-        DramaFragment fragment = new DramaFragment();
+   /* public static FarmersNewsFragment newInstance(String param1, String param2) {
+        FarmersNewsFragment fragment = new FarmersNewsFragment();
 
         return fragment;
     }*/
@@ -37,9 +38,10 @@ public class DramaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        agroAppRepo = new AgroAppRepo();
-        dramamovieList = agroAppRepo.getDramaMovieList();
-        adapter = new PlatformAdapter(dramamovieList,getActivity());
+        agriNewsContainer = AgroAppRepo.getInstanceOfAgroApp().agriNewsFetcher();
+        agriNewsAdapter = new AgriNewsAdapter(agriNewsContainer);
+
+        /*adapter = new PlatformAdapter(dramamovieList,getActivity());
         adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
             @Override
             public void adapterListener(int position) {
@@ -48,7 +50,7 @@ public class DramaFragment extends Fragment {
                 intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,movie);
                 startActivity(intent);
             }
-        });
+        });*/
 
     }
 
@@ -56,9 +58,9 @@ public class DramaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_genericview, container, false);
-        mRecyclerView = view.findViewById(R.id.recyclerview);
+        /*mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);*/
         return view;
     }
 }
