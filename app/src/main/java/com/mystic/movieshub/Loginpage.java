@@ -32,7 +32,7 @@ public class Loginpage extends AppCompatActivity {
         inputEditPassword = findViewById(R.id.loginInPassword);
         Button logbtn = findViewById(R.id.Login);
         TextView ntmb = findViewById(R.id.donthaveccount);
-        firebase =FirebaseAuth.getInstance();
+        //firebase = FirebaseAuth.getInstance();
 
         String emailPref = AccSharedPref.getStoredEmail(this);
         inputEditEmail.setText(emailPref);
@@ -58,11 +58,11 @@ public class Loginpage extends AppCompatActivity {
         finish();
     }
 
-    @Override
+   /* @Override
     protected void onStart() {
         super.onStart();
         new FirebaseAuth.AuthStateListener(){
-            final FirebaseUser firebaseUser = firebase.getCurrentUser();
+          /*  final FirebaseUser firebaseUser = firebase.getCurrentUser();
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseUser != null) {
@@ -76,7 +76,7 @@ public class Loginpage extends AppCompatActivity {
 
 
         };
-    }
+    }*/
 
     private void login(){
 
