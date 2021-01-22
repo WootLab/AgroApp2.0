@@ -42,7 +42,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
-        user = agroAppRepo.getUserDetail();
+        user = agroAppRepo.getUser();
 
         //comedymovieList = agroAppRepo.getComedyMovieList();
         //adapter = new PlatformAdapter(comedymovieList,getActivity());
