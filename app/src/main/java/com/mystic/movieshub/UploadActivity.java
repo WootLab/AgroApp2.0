@@ -36,8 +36,6 @@ public class UploadActivity extends AppCompatActivity {
     private static final  int IMAGE_VALUE = 1;
     private Uri mImageUri;
     private ProgressBar bar;
-
-
     private StorageReference mStorageRef;
     private StorageTask mUploads;
     private User user;
@@ -50,6 +48,7 @@ public class UploadActivity extends AppCompatActivity {
         edtTitle = findViewById(R.id.EdtTitle);
         fileName = findViewById(R.id.fileName);
         edtDesc =  findViewById(R.id.EdtDesc);
+        bar = findViewById(R.id.progress_bar);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
         uploadBtn = findViewById(R.id.button2);
