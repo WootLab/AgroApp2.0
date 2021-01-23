@@ -1,6 +1,8 @@
 package com.mystic.movieshub;
 
-public class AgriNews {
+import java.io.Serializable;
+
+public class AgriNews implements Serializable {
 
     private String title;
     private String description;
