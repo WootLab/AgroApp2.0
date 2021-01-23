@@ -82,8 +82,8 @@ public class SignUpActivity extends AppCompatActivity {
     private void uploadUserToBase() {
 
         if(mImageUri != null ){
-            String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-            final StorageReference fileref = mStorageRef.child(userId).child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
+            //String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            final StorageReference fileref = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
             mUploads = fileref.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
