@@ -1,13 +1,19 @@
 package com.mystic.movieshub;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class AgroAppRepo {
 
@@ -27,6 +34,8 @@ public class AgroAppRepo {
     private List<AgriNews> agriNewsCont;
     private FirebaseAuth mAuth;
     private User user;
+
+    private ProgressBar bar;
 
 
     private AgroAppRepo(){
@@ -187,6 +196,101 @@ public class AgroAppRepo {
             }
         });
         return user;
+    }
+
+
+    public void signUp(final String email, final String password, final Context context, final ProgressBar bar, final String phone, final String name, final Uri uri, final String role){
+        bar.setVisibility(View.VISIBLE);
+        mAuth.createUserWithEmailAndPassword(email,password)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context,"error"+e.getMessage(),Toast.LENGTH_LONG).show();
+                        bar.setVisibility(View.GONE);
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (task.isSuccessful()) {
+                            bar.setVisibility(View.GONE);
+                            Toast.makeText(context, "You have signed up", Toast.LENGTH_LONG).show();
+                            //This is where we set the values we want our users to have
+                            String userId = mAuth.getCurrentUser().getUid();
+                            DatabaseReference mDatebaseReference = firebaseDatabase.getReference("USERS");
+                            User user = new User(userId);
+                            user.setName(name);
+                            user.setImage(uri.toString());
+                            user.setEmail(email);
+                            user.setPassword(password);
+                            user.setPhoneNumber(phone);
+                            user.setRole(role);
+                            mDatebaseReference.child(userId)
+                                    .setValue(user)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                login(email, password, context,bar);
+                                            }
+
+                                            if(!task.isSuccessful()){
+                                                Toast.makeText(context,"not working",Toast.LENGTH_LONG).show();
+                                                Log.d("Repo","Not complete");
+                                                bar.setVisibility(View.GONE);
+                                            }
+
+                                            if (task.isCanceled()) {
+                                                Toast.makeText(context, "action was cancelled", Toast.LENGTH_LONG).show();
+                                                bar.setVisibility(View.GONE);
+                                            }
+
+                                        }
+                                    });
+
+
+
+                        }
+
+                        if(task.isCanceled()){
+                            Toast.makeText(context, "Process was cancelled", Toast.LENGTH_LONG).show();
+                            bar.setVisibility(View.GONE);
+                        }
+
+                    }
+                });
+
+    }
+
+    public void login(String email, String password, final Context context, final ProgressBar bar) {
+        if (email != null && password != null) {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
+                            Log.d("Login error", Objects.requireNonNull(e.getMessage()));
+                            bar.setVisibility(View.GONE);
+                        }
+                    })
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                //Go to the next Activity
+                                bar.setVisibility(View.GONE);
+                                Intent intent = new Intent(context,MainActivity.class);
+                                context.startActivity(intent);
+                            }
+                        }
+                    });
+
+        }else{
+            Toast.makeText(context,"Email or password is empty",Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public interface FireBaseCallback{
