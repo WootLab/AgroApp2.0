@@ -1,6 +1,5 @@
 package com.mystic.movieshub;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,17 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
-public class Loginpage extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText inputEditEmail;
     private TextInputEditText inputEditPassword;
@@ -40,20 +36,20 @@ public class Loginpage extends AppCompatActivity {
         logbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Loginpage.this.login();
+                LoginActivity.this.login();
             }
         });
         ntmb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Loginpage.this.moveToSignUp();
+                LoginActivity.this.moveToSignUp();
             }
         });
 
     }
 
     private void moveToSignUp() {
-        Intent intent = new Intent(Loginpage.this, SignUpPage.class);
+        Intent intent = new Intent(LoginActivity.this, SignUpPage.class);
         startActivity(intent);
         finish();
     }
@@ -66,11 +62,11 @@ public class Loginpage extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseUser != null) {
-                    Toast.makeText(Loginpage.this, "you are already loggd in", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(Loginpage.this, MainActivity.class);
+                    Toast.makeText(LoginActivity.this, "you are already loggd in", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }else {
-                    Toast.makeText(Loginpage.this, "You are loggeg out", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "You are loggeg out", Toast.LENGTH_LONG).show();
                 }
             }
 
