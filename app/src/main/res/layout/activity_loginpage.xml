@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="5dp"
         tools:context=".Loginpage">
 
         <TextView
@@ -72,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign Up"
-            android:textColor="@color/blue"
+            android:textColor="@color/colorAccent"
             app:layout_constraintStart_toEndOf="@+id/donthaveccount"
             app:layout_constraintTop_toTopOf="@+id/donthaveccount" />
     </androidx.constraintlayout.widget.ConstraintLayout>
