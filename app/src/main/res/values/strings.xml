@@ -21,4 +21,9 @@
     <string name="release_date">release date</string>
     <string name="todo">TODO</string>
 
+    <string-array name="roles">
+        <item>Farmer</item>
+        <item>Consumer</item>
+    </string-array>
+
 </resources>

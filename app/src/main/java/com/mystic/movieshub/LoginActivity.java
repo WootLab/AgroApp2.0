@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         inputEditEmail = findViewById(R.id.logInEmail);
         inputEditPassword = findViewById(R.id.loginInPassword);
         Button logbtn = findViewById(R.id.Login);
-        TextView ntmb = findViewById(R.id.donthaveccount);
+        TextView ntmb = findViewById(R.id.textView6);
         //firebase = FirebaseAuth.getInstance();
 
         String emailPref = AccSharedPref.getStoredEmail(this);
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void moveToSignUp() {
-        Intent intent = new Intent(LoginActivity.this, SignUpPage.class);
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         startActivity(intent);
         finish();
     }
