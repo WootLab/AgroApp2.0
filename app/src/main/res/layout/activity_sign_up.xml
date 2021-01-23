@@ -76,11 +76,12 @@
                     android:text="CHOOSE IMAGE"/>
 
                 <TextView
+                    android:id="@+id/picname"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:hint="name of file"/>
+                    android:hint="name of file" />
             </LinearLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout2"
@@ -128,9 +129,10 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
+                android:id="@+id/spinnini"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:entries="@array/roles"/>
+                android:entries="@array/roles" />
 
             <Button
                 android:id="@+id/signUp"

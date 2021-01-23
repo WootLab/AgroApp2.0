@@ -1,8 +1,10 @@
 package com.mystic.movieshub;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -13,6 +15,8 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,46 +24,39 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Objects;
+
 public class SignUpActivity extends AppCompatActivity {
 
 
     private static  final int PROFILE_PIC = 2;
 
-
-    private EditText ediTextUsername;
     private EditText editTextPassword;
     private EditText editTextEmail;
     private EditText editTextPhone;
     private EditText editTextFullName;
 
-    private TextView btnSignIn;
+    private TextView btnSignIn,picName;
     private Button btnSignUp;
     private MaterialButton cho;
     private Uri mImageUri;
     private StorageReference mStorageRef;
+    private Spinner spinner;
     private StorageTask mUploads;
 
-    /*private TextInputLayout
-            textInputLayoutUsername,
-            textInputLayoutPassword,
-            textInputLayoutEmail,
-            textInputLayoutPhone,
-            textInputLayoutFullName;*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mStorageRef = FirebaseStorage.getInstance().getReference("USERSPIC");
         defineViews();
-
-
-
 
         cho.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,15 +68,12 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                uploadUserToBase();
+                if (mUploads != null && mUploads.isInProgress()) {
+                    Toast.makeText(SignUpActivity.this, "An upload is ongoing", Toast.LENGTH_LONG).show();
+                }else{
+                    uploadUserToBase();
+                }
 
-
-                String email = editTextEmail.getText().toString().trim();
-                String username = ediTextUsername.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-                String phone = editTextPhone.getText().toString().trim();
-                String fullname = editTextFullName.getText().toString().trim();
-                //addToDatabase(email, password,username,phone,fullname);
             }
         });
 
@@ -88,7 +82,8 @@ public class SignUpActivity extends AppCompatActivity {
     private void uploadUserToBase() {
 
         if(mImageUri != null ){
-            final StorageReference fileref = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
+            String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            final StorageReference fileref = mStorageRef.child(userId).child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
             mUploads = fileref.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -109,12 +104,11 @@ public class SignUpActivity extends AppCompatActivity {
                                 public void onSuccess(Uri uri) {
                                     Toast.makeText(SignUpActivity.this,"successfully uploaded",Toast.LENGTH_SHORT).show();
                                     String email = editTextEmail.getText().toString().trim();
-                                    String username = ediTextUsername.getText().toString().trim();
                                     String password = editTextPassword.getText().toString().trim();
                                     String phone = editTextPhone.getText().toString().trim();
                                     String fullname = editTextFullName.getText().toString().trim();
-
-                                    addToDatabase(email,password,phone,fullname);
+                                    String role = spinner.getSelectedItem().toString();;
+                                    addToDatabase(email,password,phone,fullname,uri,role);
 
                                 }
                             });
@@ -143,7 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    private void addToDatabase(String email, String password,String phone,String fullname) {
+    private void addToDatabase(String email, String password,String phone,String fullname,Uri uri,String role) {
         if(email.isEmpty()){
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
@@ -151,8 +145,8 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         if(fullname.isEmpty()){
-            ediTextUsername.setError("Username is required");
-            ediTextUsername.requestFocus();
+            editTextFullName.setError("Username is required");
+            editTextFullName.requestFocus();
             return;
         }
 
@@ -165,8 +159,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         AccSharedPref.setStoredEmail(this,email);
         //This will trigger what adds the user to the database
-        //ProgressBar prog = findViewById(R.id.progressBar);
-        //repoInstance.signUp(email,password,this,prog,phone,username,fullname);
+        ProgressBar prog = findViewById(R.id.progressBar);
+        AgroAppRepo.getInstanceOfAgroApp().signUp(email,password,this,prog,phone,fullname,uri,role);
     }
 
     private void chooseImage() {
@@ -184,9 +178,15 @@ public class SignUpActivity extends AppCompatActivity {
         return mime.getExtensionFromMimeType(resolver.getType(uri));
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PROFILE_PIC && resultCode == Activity.RESULT_OK && data != null  && data.getData() != null){
+            mImageUri = data.getData();
+            picName.setText(mImageUri.toString());
+        }
 
-
-
+    }
 
     public void defineViews(){
         //Button definition
@@ -195,12 +195,12 @@ public class SignUpActivity extends AppCompatActivity {
 
         //EditText Definition
         editTextPassword = findViewById(R.id.password);
-        ediTextUsername = findViewById(R.id.username);
         editTextEmail = findViewById(R.id.email);
         editTextPhone = findViewById(R.id.phoneEd);
         editTextFullName = findViewById(R.id.fullname);
         cho = findViewById(R.id.choPic);
-
+        picName = findViewById(R.id.picname);
+        spinner = findViewById(R.id.spinnini);
         //Define TextInputLayout
         /*textInputLayoutEmail = findViewById(R.id.textInputLayout2);
         textInputLayoutFullName = findViewById(R.id.textInputLayout5);
