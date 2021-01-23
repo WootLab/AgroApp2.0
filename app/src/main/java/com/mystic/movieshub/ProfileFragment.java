@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,8 +25,11 @@ public class ProfileFragment extends Fragment {
 
     //RecyclerView mRecyclerView ;
     //List<Movie> comedymovieList;
-    AgroAppRepo agroAppRepo;
+    private AgroAppRepo agroAppRepo;
     private User user;
+    private CircleImageView circleImageView;
+    private TextView textView;
+    private Button upload;
     //PlatformAdapter adapter;
 
 
@@ -44,23 +51,25 @@ public class ProfileFragment extends Fragment {
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
         user = agroAppRepo.getUser();
 
-        //comedymovieList = agroAppRepo.getComedyMovieList();
-        //adapter = new PlatformAdapter(comedymovieList,getActivity());
-
-        /*adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
-            @Override
-            public void adapterListener(int position) {
-                Movie movie = comedymovieList.get(position);
-                Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
-                intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,movie);
-                startActivity(intent);
-            }
-        });*/
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+       circleImageView = view.findViewById(R.id.cycleimage);
+       textView = view.findViewById(R.id.username);
+       upload = view.findViewById(R.id.btnUpload);
+
+
+
+       upload.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent intent = new Intent(getActivity(),UploadActivity.class);
+               startActivity(intent);
+           }
+       });
+
 
 
 

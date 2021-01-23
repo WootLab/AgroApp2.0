@@ -1,6 +1,13 @@
 package com.mystic.movieshub;
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,21 +21,18 @@ import java.util.List;
 
 public class AgroAppRepo {
 
-    List<Movie> actionMovieList = new ArrayList<>();
-    List<Movie> comedyMovieList = new ArrayList<>();
-    List<Movie> dramaMovieList = new ArrayList<>();
     private FirebaseDatabase firebaseDatabase;
-    List<FarmProduct> farmProductList = new ArrayList<>();
+    private List<FarmProduct> farmProductList = new ArrayList<>();
     private static  AgroAppRepo agroAppRepo;
-    List<AgriNews> agriNewsCont;
+    private List<AgriNews> agriNewsCont;
     private FirebaseAuth mAuth;
-    private  User user;
+    private User user;
+
 
     private AgroAppRepo(){
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
     }
-
 
 
     public static AgroAppRepo getInstanceOfAgroApp(){
@@ -40,7 +44,23 @@ public class AgroAppRepo {
 
 
     public void uploadProduct(FarmProduct farmProduct){
-        //Add to firebase;
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference("PRODUCTS");
+        mDatabaseReference.setValue(farmProduct)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            //Toast.makeText(context,"Succesfully added",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
+                        //Action was not succesful
+                    }
+                });
     }
 
 

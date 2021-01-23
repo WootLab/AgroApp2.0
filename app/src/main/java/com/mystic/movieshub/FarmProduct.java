@@ -7,7 +7,8 @@ public class FarmProduct implements Serializable {
     private String description;
     private String title;
     private int size;
-    private String url;
+    private User user;
+    private String image;
 
     public FarmProduct(String description){
         this.description = description;
@@ -33,12 +34,21 @@ public class FarmProduct implements Serializable {
         this.description = description;
     }
 
-    public String getUrl() {
-        return url;
+
+    public String getImage() {
+        return image;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getSize() {
