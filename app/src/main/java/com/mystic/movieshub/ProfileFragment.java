@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -29,7 +32,7 @@ public class ProfileFragment extends Fragment {
     private User user;
     private CircleImageView circleImageView;
     private TextView textView;
-    private Button upload;
+    private Button upload,uploadNewsBtn;
     //PlatformAdapter adapter;
 
 
@@ -40,10 +43,6 @@ public class ProfileFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    /*public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,27 @@ public class ProfileFragment extends Fragment {
        circleImageView = view.findViewById(R.id.cycleimage);
        textView = view.findViewById(R.id.username);
        upload = view.findViewById(R.id.btnUpload);
+       String bamidele = "bam@gmail.com";
+       String yvonne = "yvonne@gmail.com";
+       String chinedu = "chinedu@gmail.com";
+       uploadNewsBtn = view.findViewById(R.id.button4);
 
+       String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        assert userEmail != null;
+        if(userEmail.equals(bamidele) || userEmail.equals(yvonne) || userEmail.equals(chinedu)){
+           uploadNewsBtn.setVisibility(View.VISIBLE);
+       }else{
+            uploadNewsBtn.setVisibility(View.GONE);
+        }
+
+
+        uploadNewsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),UploadNewsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
        upload.setOnClickListener(new View.OnClickListener() {
@@ -72,10 +91,6 @@ public class ProfileFragment extends Fragment {
 
 
 
-
-       /* mRecyclerView = view.findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(adapter);*/
         return view;
     }
 }

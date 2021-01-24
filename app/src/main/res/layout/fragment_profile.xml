@@ -85,6 +85,13 @@
             android:layout_height="wrap_content"
             android:text="UPLOAD PRODUCT" />
 
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="UPLOAD NEWS"
+            android:visibility="gone" />
+
         <!--<de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageView"
             android:layout_width="200dp"

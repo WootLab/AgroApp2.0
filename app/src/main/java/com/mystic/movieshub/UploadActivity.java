@@ -131,7 +131,6 @@ public class UploadActivity extends AppCompatActivity {
                                     user = agroAppRepo.getUser();
                                     String tit = edtTitle.getText().toString().trim();
                                     String desc = edtDesc.getText().toString().trim();
-                                    //String img = fileName.toString().trim();
                                     FarmProduct product = new FarmProduct(desc);
                                     product.setTitle(tit);
                                     product.setUser(user);

@@ -11,10 +11,9 @@ public class AgriNews implements Serializable {
     public AgriNews(){
 
     }
-    public AgriNews(String title, String description, String source) {
+    public AgriNews(String title, String description) {
         this.title = title;
         this.description = description;
-        this.source = source;
     }
 
     public String getTitle() {

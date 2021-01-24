@@ -293,6 +293,25 @@ public class AgroAppRepo {
 
     }
 
+
+    public void uploadNews(AgriNews agriNews, final Context context){
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference("NEWS");
+        mDatabaseReference.setValue(agriNews).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(context,"Succesfully added",Toast.LENGTH_LONG).show();
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context,"Error occured"+e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     public interface FireBaseCallback{
         void firebaseAgriNews(List<AgriNews> agriNews);
         void fireBaseUser(User basuser);
