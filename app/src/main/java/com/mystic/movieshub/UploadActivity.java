@@ -128,7 +128,6 @@ public class UploadActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     Toast.makeText(UploadActivity.this,"successfully uploaded",Toast.LENGTH_SHORT).show();
-                                    user = agroAppRepo.getUser();
                                     String tit = edtTitle.getText().toString().trim();
                                     String desc = edtDesc.getText().toString().trim();
                                     FarmProduct product = new FarmProduct(desc);

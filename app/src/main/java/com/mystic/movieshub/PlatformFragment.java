@@ -22,7 +22,7 @@ public class PlatformFragment extends Fragment {
 
 
     RecyclerView mRecyclerView ;
-    List<FarmProduct> farmProductList;
+   // List<FarmProduct> farmProductList;
     AgroAppRepo agroAppRepo;
     PlatformAdapter adapter;
 
@@ -40,17 +40,23 @@ public class PlatformFragment extends Fragment {
         super.onCreate(savedInstanceState);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
-        farmProductList = agroAppRepo.fetchProduct();
-        adapter = new PlatformAdapter(farmProductList,getActivity());
-        adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
+        agroAppRepo.fetchPro(new AgroAppRepo.FireBaseCallbacProduct() {
             @Override
-            public void adapterListener(int position) {
-                FarmProduct product = farmProductList.get(position);
-                Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
-                intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,product);
-                startActivity(intent);
+            public void fireBaseProducts(final List<FarmProduct> product) {
+                adapter = new PlatformAdapter(product,getActivity());
+                mRecyclerView.setAdapter(adapter);
+                adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
+                    @Override
+                    public void adapterListener(int position) {
+                        FarmProduct specProd = product.get(position);
+                        Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
+                        intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,specProd);
+                        startActivity(intent);
+                    }
+                });
             }
         });
+
 
     }
 
@@ -59,7 +65,6 @@ public class PlatformFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_genericview, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(adapter);
         return view;
     }
 }

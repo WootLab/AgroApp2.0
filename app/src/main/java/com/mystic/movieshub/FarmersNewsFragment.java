@@ -10,47 +10,36 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.List;
 
 
 
 public class FarmersNewsFragment extends Fragment {
     RecyclerView mRecyclerView ;
-
-    //List<Movie> dramamovieList;
-   //AgroAppRepo agroAppRepo;
-   //PlatformAdapter adapter;
     AgriNewsAdapter agriNewsAdapter;
-    List<AgriNews> agriNewsContainer;
+    AgroAppRepo agroAppRepo;
     public FarmersNewsFragment() {
         // Required empty public constructor
     }
 
 
     // TODO: Rename and change types and number of parameters
-   /* public static FarmersNewsFragment newInstance(String param1, String param2) {
-        FarmersNewsFragment fragment = new FarmersNewsFragment();
 
-        return fragment;
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        agriNewsContainer = AgroAppRepo.getInstanceOfAgroApp().agriNewsHolder();
-        agriNewsAdapter = new AgriNewsAdapter(agriNewsContainer);
+        agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
-        /*adapter = new PlatformAdapter(dramamovieList,getActivity());
-        adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
+        agroAppRepo.fetchAgriNews(new AgroAppRepo.FireBaseCallbackAgriNews() {
             @Override
-            public void adapterListener(int position) {
-                Movie movie = dramamovieList.get(position);
-                Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
-                intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,movie);
-                startActivity(intent);
+            public void firebaseAgriNews(List<AgriNews> agriNews) {
+                agriNewsAdapter = new AgriNewsAdapter(agriNews);
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                mRecyclerView.setAdapter(agriNewsAdapter);
             }
-        });*/
+        });
+
 
     }
 
@@ -58,9 +47,7 @@ public class FarmersNewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_genericview, container, false);
-        /*mRecyclerView = view.findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(adapter);*/
+        mRecyclerView = view.findViewById(R.id.recyclerview);
         return view;
     }
 }

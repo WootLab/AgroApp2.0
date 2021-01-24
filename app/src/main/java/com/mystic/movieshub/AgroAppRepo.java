@@ -71,30 +71,6 @@ public class AgroAppRepo {
     }
 
 
-    public List<FarmProduct> fetchProduct(){
-        //whenever we are fetching the product from this is going to be the plug......
-        return farmProductList;
-    }
-
-
-
-
-
-    public List<AgriNews> agriNewsHolder(){
-        agriNewsFetcher();
-        return agriNewsCont;
-    }
-
-    public void agriNewsFetcher(){
-        fetchAgriNews(new FireBaseCallbackAgriNews() {
-            @Override
-            public void firebaseAgriNews(List<AgriNews> agriNews) {
-                agriNewsCont = agriNews;
-            }
-
-        });
-    }
-
     //Fetches the latest agricultural news for framers
     public void fetchAgriNews(final FireBaseCallbackAgriNews fireBaseCallback){
         final List<AgriNews> agriNewsContainer = new ArrayList<>();
@@ -118,7 +94,7 @@ public class AgroAppRepo {
         });
     }
 
-    private void fetchPro(final FireBaseCallbacProduct fireBaseCallback){
+    public void fetchPro(final FireBaseCallbacProduct fireBaseCallback){
         firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference("PRODUCTS");
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
@@ -140,7 +116,7 @@ public class AgroAppRepo {
     }
 
     //fetches from base
-    private void fetchUser(final FireBaseCallbackUser fireBaseCallback){
+    public void fetchUser(final FireBaseCallbackUser fireBaseCallback){
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference("USERS").child(userId);
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
@@ -158,28 +134,6 @@ public class AgroAppRepo {
         });
     }
 
-   //sends to fragmentProfile
-    public User getUser() {
-
-        /*fetchUser(new FireBaseCallback() {
-            @Override
-            public void firebaseAgriNews(List<AgriNews> agriNews) {
-                //gets news
-            }
-
-            @Override
-            public void fireBaseUser(User basuser) {
-                user = basuser;
-                Log.d("User",user.getEmail());
-            }
-
-            @Override
-            public void fireBaseProducts(List<FarmProduct> product) {
-
-            }
-        });*/
-        return null;
-    }
 
 
     public void signUp(final String email, final String password, final Context context, final ProgressBar bar, final String phone, final String name, final Uri uri, final String role){

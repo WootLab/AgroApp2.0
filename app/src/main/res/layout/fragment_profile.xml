@@ -33,7 +33,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <ImageView
                     android:id="@+id/cycleimage"
                     android:layout_width="300dp"
                     android:layout_height="200dp"
@@ -58,13 +58,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
-
-        <Button
-            android:id="@+id/button14"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upload School"
-            android:visibility="gone" />
 
         <Button
             android:id="@+id/button15"

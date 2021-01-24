@@ -1,6 +1,7 @@
 package com.mystic.movieshub;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,17 +35,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
-
-    //RecyclerView mRecyclerView ;
-    //List<Movie> comedymovieList;
-    private AgroAppRepo agroAppRepo;
-    private User user;
-    private CircleImageView circleImageView;
+    private ImageView circleImageView;
     private TextView textView;
     private Button upload,uploadNewsBtn;
-    //PlatformAdapter adapter;
-    private FirebaseDatabase firebaseDatabase;
-    private FirebaseAuth mAuth;
+    private AgroAppRepo agroAppRepo;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -54,43 +50,40 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
-        //mAuth = FirebaseAuth.getInstance();
-        //firebaseDatabase = FirebaseDatabase.getInstance();
-        //user = agroAppRepo.getUser();
+        agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
+        final String bamidele = "bam@gmail.com";
+        final String yvonne = "yvonne@gmail.com";
+        final String chinedu = "chinedu@gmail.com";
 
-        /*fetchUser(new FireBaseCallbackUser() {
+        agroAppRepo.fetchUser(new AgroAppRepo.FireBaseCallbackUser() {
             @Override
             public void fireBaseUser(User basuser) {
-
-                user = basuser;
+                String userEmail = basuser.getEmail();
+                textView.setText(basuser.getName());
+                Glide.with(getActivity())
+                        .asBitmap()
+                        .load(Uri.parse(basuser.getImage()))
+                        .circleCrop()
+                        .into(circleImageView);
+                if(userEmail.equals(bamidele) || userEmail.equals(yvonne) || userEmail.equals(chinedu)){
+                    uploadNewsBtn.setVisibility(View.VISIBLE);
+                }else{
+                    uploadNewsBtn.setVisibility(View.GONE);
+                }
             }
-        });*/
-        //Log.d("Working",""+user);
+        });
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_profile, container, false);
-       circleImageView = view.findViewById(R.id.cycleimage);
-       textView = view.findViewById(R.id.username);
-       upload = view.findViewById(R.id.btnUpload);
-       String bamidele = "bam@gmail.com";
-       String yvonne = "yvonne@gmail.com";
-       String chinedu = "chinedu@gmail.com";
-       uploadNewsBtn = view.findViewById(R.id.button4);
-
-
-       /*String userEmail = user.getEmail();
-
-        if(userEmail.equals(bamidele) || userEmail.equals(yvonne) || userEmail.equals(chinedu)){
-           uploadNewsBtn.setVisibility(View.VISIBLE);
-       }else{
-            uploadNewsBtn.setVisibility(View.GONE);
-        }
-
-       textView.setText(user.getName());*/
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        circleImageView = view.findViewById(R.id.cycleimage);
+        textView = view.findViewById(R.id.username);
+        upload = view.findViewById(R.id.btnUpload);
+        uploadNewsBtn = view.findViewById(R.id.button4);
         uploadNewsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,25 +106,5 @@ public class ProfileFragment extends Fragment {
 
 
     //fetches from base
-    private void fetchUser(final FireBaseCallbackUser fireBaseCallback){
-        String userId = mAuth.getCurrentUser().getUid();
-        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("USERS").child(userId);
-        mDatebaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user = snapshot.getValue(User.class);
-                fireBaseCallback.fireBaseUser(user);
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-    public interface FireBaseCallbackUser {
-        void fireBaseUser(User basuser);
-    }
 
 }
