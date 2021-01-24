@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +33,7 @@ public class AgroAppRepo {
     private FirebaseAuth mAuth;
     private User user;
 
-    private ProgressBar bar;
+    //private ProgressBar bar;
 
 
     private AgroAppRepo(){
@@ -75,47 +73,30 @@ public class AgroAppRepo {
 
     public List<FarmProduct> fetchProduct(){
         //whenever we are fetching the product from this is going to be the plug......
-        fetchPro(new FireBaseCallback() {
-            @Override
-            public void firebaseAgriNews(List<AgriNews> agriNews) {
-
-            }
-
-            @Override
-            public void fireBaseUser(User user) {
-            }
-
-            @Override
-            public void fireBaseProducts(List<FarmProduct> product) {
-                farmProductList = product;
-            }
-        });
         return farmProductList;
     }
 
-    public List<AgriNews> agriNewsFetcher(){
 
-        fetchAgriNews(new FireBaseCallback() {
+
+
+
+    public List<AgriNews> agriNewsHolder(){
+        agriNewsFetcher();
+        return agriNewsCont;
+    }
+
+    public void agriNewsFetcher(){
+        fetchAgriNews(new FireBaseCallbackAgriNews() {
             @Override
             public void firebaseAgriNews(List<AgriNews> agriNews) {
                 agriNewsCont = agriNews;
             }
 
-            @Override
-            public void fireBaseUser(User user) {
-
-            }
-
-            @Override
-            public void fireBaseProducts(List<FarmProduct> product) {
-
-            }
         });
-        return agriNewsCont;
     }
 
     //Fetches the latest agricultural news for framers
-    public void fetchAgriNews(final FireBaseCallback fireBaseCallback){
+    public void fetchAgriNews(final FireBaseCallbackAgriNews fireBaseCallback){
         final List<AgriNews> agriNewsContainer = new ArrayList<>();
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference("AgriNews");
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
@@ -137,7 +118,7 @@ public class AgroAppRepo {
         });
     }
 
-    private void fetchPro(final FireBaseCallback fireBaseCallback){
+    private void fetchPro(final FireBaseCallbacProduct fireBaseCallback){
         firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference("PRODUCTS");
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
@@ -159,7 +140,7 @@ public class AgroAppRepo {
     }
 
     //fetches from base
-    private void fetchUser(final FireBaseCallback fireBaseCallback){
+    private void fetchUser(final FireBaseCallbackUser fireBaseCallback){
         String userId = mAuth.getCurrentUser().getUid();
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference("USERS").child(userId);
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
@@ -178,8 +159,9 @@ public class AgroAppRepo {
     }
 
    //sends to fragmentProfile
-    public User getUser(){
-        fetchUser(new FireBaseCallback() {
+    public User getUser() {
+
+        /*fetchUser(new FireBaseCallback() {
             @Override
             public void firebaseAgriNews(List<AgriNews> agriNews) {
                 //gets news
@@ -188,14 +170,15 @@ public class AgroAppRepo {
             @Override
             public void fireBaseUser(User basuser) {
                 user = basuser;
+                Log.d("User",user.getEmail());
             }
 
             @Override
             public void fireBaseProducts(List<FarmProduct> product) {
 
             }
-        });
-        return user;
+        });*/
+        return null;
     }
 
 
@@ -312,11 +295,17 @@ public class AgroAppRepo {
                 });
     }
 
-    public interface FireBaseCallback{
+    public interface FireBaseCallbackAgriNews{
         void firebaseAgriNews(List<AgriNews> agriNews);
-        void fireBaseUser(User basuser);
-        void fireBaseProducts(List<FarmProduct> product);
+    }
 
+
+    public interface FireBaseCallbackUser {
+        void fireBaseUser(User basuser);
+    }
+
+    public interface FireBaseCallbacProduct {
+        void fireBaseProducts(List<FarmProduct> product);
     }
 
 }

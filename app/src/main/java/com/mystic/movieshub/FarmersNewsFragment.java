@@ -38,7 +38,7 @@ public class FarmersNewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        agriNewsContainer = AgroAppRepo.getInstanceOfAgroApp().agriNewsFetcher();
+        agriNewsContainer = AgroAppRepo.getInstanceOfAgroApp().agriNewsHolder();
         agriNewsAdapter = new AgriNewsAdapter(agriNewsContainer);
 
         /*adapter = new PlatformAdapter(dramamovieList,getActivity());
