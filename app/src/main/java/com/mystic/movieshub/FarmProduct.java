@@ -9,12 +9,16 @@ public class FarmProduct implements Serializable {
     private int size;
     private User user;
     private String image;
+    private String productId;
+
+    public FarmProduct() {
+    }
 
     public FarmProduct(String description){
         this.description = description;
     }
 
-    public String getDescriptrion() {
+    public String getDescription() {
         return description;
     }
 
@@ -26,8 +30,12 @@ public class FarmProduct implements Serializable {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public void setDescription(String description) {

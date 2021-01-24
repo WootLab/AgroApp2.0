@@ -7,6 +7,7 @@ public class AgriNews implements Serializable {
     private String title;
     private String description;
     private String source;
+    private String newsId;
 
     public AgriNews(){
 
@@ -14,6 +15,15 @@ public class AgriNews implements Serializable {
     public AgriNews(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+
+    public String getNewsId() {
+        return newsId;
+    }
+
+    public void setNewsId(String newsId) {
+        this.newsId = newsId;
     }
 
     public String getTitle() {

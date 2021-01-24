@@ -31,7 +31,9 @@ public class AgroAppRepo {
     private static  AgroAppRepo agroAppRepo;
     private FirebaseAuth mAuth;
     private User user;
-
+    private  FarmProduct farmProduct;
+    private List<FarmProduct> farmProductList ;
+    private List<AgriNews> agriNewsContainer;
     public static final String PRODUCT = "product";
     public static final String AGRIC_NEWS = "AgricNews";
     //private ProgressBar bar;
@@ -40,6 +42,8 @@ public class AgroAppRepo {
     private AgroAppRepo(){
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        farmProductList = new ArrayList<>();
+        agriNewsContainer = new ArrayList<>();
     }
 
 
@@ -53,12 +57,16 @@ public class AgroAppRepo {
 
     public void uploadProduct(FarmProduct farmProduct, final Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference(PRODUCT);
-        mDatabaseReference.setValue(farmProduct)
+        String productId = mDatabaseReference.push().getKey();
+        farmProduct.setProductId(productId);
+        mDatabaseReference.child(productId).setValue(farmProduct)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(context,"Succesfully added",Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(context,"Something went wrong",Toast.LENGTH_LONG).show();
                         }
                     }
                 })
@@ -74,12 +82,11 @@ public class AgroAppRepo {
 
     //Fetches the latest agricultural news for framers
     public void fetchAgriNews(final FireBaseCallbackAgriNews fireBaseCallback){
-        final List<AgriNews> agriNewsContainer = new ArrayList<>();
+        agriNewsContainer = new ArrayList<>();
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference(AGRIC_NEWS);
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 agriNewsContainer.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     AgriNews agriNews = dataSnapshot.getValue(AgriNews.class);
@@ -100,7 +107,10 @@ public class AgroAppRepo {
     //Uploads the news to the database
     public void uploadNews(AgriNews agriNews, final Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference(AGRIC_NEWS);
-        mDatabaseReference.setValue(agriNews).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        String newsId = mDatabaseReference.push().getKey();
+        agriNews.setNewsId(newsId);
+        mDatabaseReference.child(newsId).setValue(agriNews).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -117,16 +127,15 @@ public class AgroAppRepo {
     }
 
     public void fetchPro(final FireBaseCallbacProduct fireBaseCallback){
-        final List<FarmProduct> farmProductList = new ArrayList<>();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference(PRODUCT);
+
+
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 farmProductList.clear();
-                for(DataSnapshot dataSnapshot :snapshot.getChildren()){
-                    FarmProduct farmProduct = dataSnapshot.getValue(FarmProduct.class);
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    farmProduct = dataSnapshot.getValue(FarmProduct.class);
                     farmProductList.add(farmProduct);
                 }
                 fireBaseCallback.fireBaseProducts(farmProductList);

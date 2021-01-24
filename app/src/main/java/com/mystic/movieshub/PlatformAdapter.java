@@ -47,7 +47,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
         FarmProduct farmProduct = farmProductList.get(position);
         holder.textView1.setText(farmProduct.getTitle());
-        holder.textView2.setText(farmProduct.getDescriptrion());
+        holder.textView2.setText(farmProduct.getDescription());
 
         if(farmProduct.getUser().getImage() != null){
             Glide.with(context)

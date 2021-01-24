@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class PlatformFragment extends Fragment {
    // List<FarmProduct> farmProductList;
     AgroAppRepo agroAppRepo;
     PlatformAdapter adapter;
+    ProgressBar bar;
 
     public PlatformFragment() {
         // Required empty public constructor
@@ -43,6 +45,8 @@ public class PlatformFragment extends Fragment {
         agroAppRepo.fetchPro(new AgroAppRepo.FireBaseCallbacProduct() {
             @Override
             public void fireBaseProducts(final List<FarmProduct> product) {
+                bar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 adapter = new PlatformAdapter(product,getActivity());
                 mRecyclerView.setAdapter(adapter);
                 adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
@@ -65,6 +69,7 @@ public class PlatformFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_genericview, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        bar = view.findViewById(R.id.progressBar3);
         return view;
     }
 }

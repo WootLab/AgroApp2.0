@@ -10,6 +10,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -126,15 +127,24 @@ public class UploadActivity extends AppCompatActivity {
 
                             fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
-                                public void onSuccess(Uri uri) {
+                                public void onSuccess(final Uri uri) {
                                     Toast.makeText(UploadActivity.this,"successfully uploaded",Toast.LENGTH_SHORT).show();
-                                    String tit = edtTitle.getText().toString().trim();
+                                    final String tit = edtTitle.getText().toString().trim();
                                     String desc = edtDesc.getText().toString().trim();
-                                    FarmProduct product = new FarmProduct(desc);
-                                    product.setTitle(tit);
-                                    product.setUser(user);
-                                    product.setImage(uri.toString());
-                                    agroAppRepo.uploadProduct(product,UploadActivity.this);
+                                    final FarmProduct product = new FarmProduct(desc);
+
+                                    AgroAppRepo.getInstanceOfAgroApp().fetchUser(new AgroAppRepo.FireBaseCallbackUser() {
+                                        @Override
+                                        public void fireBaseUser(User basuser) {
+                                            Log.d("User",""+basuser);
+                                            user = basuser;
+                                            product.setTitle(tit);
+                                            product.setUser(user);
+                                            product.setImage(uri.toString());
+                                            agroAppRepo.uploadProduct(product,UploadActivity.this);
+                                        }
+                                    });
+
                                 }
                             });
                         }

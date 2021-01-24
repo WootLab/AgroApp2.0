@@ -37,7 +37,8 @@ public class AgriNewsAdapter extends RecyclerView.Adapter<AgriNewsAdapter.AgriHo
 
     @Override
     public int getItemCount() {
-        return 0;
+
+        return agriNewsList.size();
     }
 
     public class AgriHolder extends RecyclerView.ViewHolder {
