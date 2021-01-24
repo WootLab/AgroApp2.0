@@ -52,21 +52,21 @@ public class AgroAppRepo {
     }
 
 
-    public void uploadProduct(FarmProduct farmProduct){
+    public void uploadProduct(FarmProduct farmProduct, final Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference("PRODUCTS");
         mDatabaseReference.setValue(farmProduct)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            //Toast.makeText(context,"Succesfully added",Toast.LENGTH_LONG).show();
+                            Toast.makeText(context,"Succesfully added",Toast.LENGTH_LONG).show();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        //Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
                         //Action was not succesful
                     }
                 });
@@ -212,7 +212,6 @@ public class AgroAppRepo {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
                         if (task.isSuccessful()) {
                             bar.setVisibility(View.GONE);
                             Toast.makeText(context, "You have signed up", Toast.LENGTH_LONG).show();
@@ -265,6 +264,7 @@ public class AgroAppRepo {
 
     public void login(String email, String password, final Context context, final ProgressBar bar) {
         if (email != null && password != null) {
+            bar.setVisibility(View.VISIBLE);
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnFailureListener(new OnFailureListener() {
                         @Override

@@ -136,7 +136,7 @@ public class UploadActivity extends AppCompatActivity {
                                     product.setTitle(tit);
                                     product.setUser(user);
                                     product.setImage(uri.toString());
-                                    agroAppRepo.uploadProduct(product);
+                                    agroAppRepo.uploadProduct(product,UploadActivity.this);
                                 }
                             });
                         }

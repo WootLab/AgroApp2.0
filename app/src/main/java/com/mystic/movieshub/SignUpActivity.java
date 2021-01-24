@@ -42,7 +42,6 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextPhone;
     private EditText editTextFullName;
-
     private TextView btnSignIn,picName;
     private Button btnSignUp;
     private MaterialButton cho;
@@ -80,7 +79,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void uploadUserToBase() {
-
         if(mImageUri != null ){
             //String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
             final StorageReference fileref = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
@@ -96,8 +94,6 @@ public class SignUpActivity extends AppCompatActivity {
                                     //bar.setProgress(0);
                                 }
                             },500);
-
-
 
                             fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override

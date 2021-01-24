@@ -2,9 +2,9 @@
     <string name="app_name">Agro App</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="Action">Action</string>
-    <string name="Comedy">Comedy</string>
-    <string name="Drama">Drama</string>
+    <string name="Action">Available Products</string>
+    <string name="Comedy">Profile</string>
+    <string name="Drama">Agric News</string>
     <string name="user_name">spot@catchat.com</string>
     <string name="imagedescription">imagedescription</string>
     <string name="name_of_current_genre">Name of Current genre</string>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -75,12 +76,11 @@ public class LoginActivity extends AppCompatActivity {
     }*/
 
     private void login(){
-
         String email = Objects.requireNonNull(inputEditEmail.getText()).toString().trim();
         String password = Objects.requireNonNull(inputEditPassword.getText()).toString().trim();
         AccSharedPref.setStoredEmail(this,email);
-        //ProgressBar bar = findViewById(R.id.progressBar2);
-       // FarmRepository.getFarmRepositoryInstance(getApplicationContext()).login(email, password,this,bar,editTextName,editTextPassword);
+        ProgressBar bar = findViewById(R.id.progressBar2);
+        AgroAppRepo.getInstanceOfAgroApp().login(email, password,this,bar);
 
     }
 }
