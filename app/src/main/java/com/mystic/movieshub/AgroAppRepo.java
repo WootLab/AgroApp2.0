@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,12 +28,12 @@ import java.util.Objects;
 public class AgroAppRepo {
 
     private FirebaseDatabase firebaseDatabase;
-    private List<FarmProduct> farmProductList = new ArrayList<>();
     private static  AgroAppRepo agroAppRepo;
-    private List<AgriNews> agriNewsCont;
     private FirebaseAuth mAuth;
     private User user;
 
+    public static final String PRODUCT = "product";
+    public static final String AGRIC_NEWS = "AgricNews";
     //private ProgressBar bar;
 
 
@@ -51,7 +52,7 @@ public class AgroAppRepo {
 
 
     public void uploadProduct(FarmProduct farmProduct, final Context context){
-        DatabaseReference mDatabaseReference = firebaseDatabase.getReference("PRODUCTS");
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference(PRODUCT);
         mDatabaseReference.setValue(farmProduct)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -74,11 +75,12 @@ public class AgroAppRepo {
     //Fetches the latest agricultural news for framers
     public void fetchAgriNews(final FireBaseCallbackAgriNews fireBaseCallback){
         final List<AgriNews> agriNewsContainer = new ArrayList<>();
-        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("AgriNews");
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference(AGRIC_NEWS);
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                agriNewsContainer.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     AgriNews agriNews = dataSnapshot.getValue(AgriNews.class);
                     agriNewsContainer.add(agriNews);
@@ -94,9 +96,31 @@ public class AgroAppRepo {
         });
     }
 
+
+    //Uploads the news to the database
+    public void uploadNews(AgriNews agriNews, final Context context){
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference(AGRIC_NEWS);
+        mDatabaseReference.setValue(agriNews).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(context,"Succesfully added",Toast.LENGTH_LONG).show();
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context,"Error occured"+e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     public void fetchPro(final FireBaseCallbacProduct fireBaseCallback){
+        final List<FarmProduct> farmProductList = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("PRODUCTS");
+
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference(PRODUCT);
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -231,23 +255,7 @@ public class AgroAppRepo {
     }
 
 
-    public void uploadNews(AgriNews agriNews, final Context context){
-        DatabaseReference mDatabaseReference = firebaseDatabase.getReference("NEWS");
-        mDatabaseReference.setValue(agriNews).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(context,"Succesfully added",Toast.LENGTH_LONG).show();
-                }
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context,"Error occured"+e.getMessage(),Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
+
 
     public interface FireBaseCallbackAgriNews{
         void firebaseAgriNews(List<AgriNews> agriNews);

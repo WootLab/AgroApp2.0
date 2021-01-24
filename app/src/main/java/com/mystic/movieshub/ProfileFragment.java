@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +41,8 @@ public class ProfileFragment extends Fragment {
     private TextView textView;
     private Button upload,uploadNewsBtn;
     private AgroAppRepo agroAppRepo;
+    private ProgressBar bar ;
+    private LinearLayout linearLayout;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -59,6 +63,8 @@ public class ProfileFragment extends Fragment {
         agroAppRepo.fetchUser(new AgroAppRepo.FireBaseCallbackUser() {
             @Override
             public void fireBaseUser(User basuser) {
+                bar.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
                 String userEmail = basuser.getEmail();
                 textView.setText(basuser.getName());
                 Glide.with(getActivity())
@@ -84,6 +90,8 @@ public class ProfileFragment extends Fragment {
         textView = view.findViewById(R.id.username);
         upload = view.findViewById(R.id.btnUpload);
         uploadNewsBtn = view.findViewById(R.id.button4);
+        bar = view.findViewById(R.id.prog);
+        linearLayout = view.findViewById(R.id.lay);
         uploadNewsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
