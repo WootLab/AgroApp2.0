@@ -1,5 +1,6 @@
 package com.mystic.movieshub;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,9 +10,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -29,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         inputEditPassword = findViewById(R.id.loginInPassword);
         Button logbtn = findViewById(R.id.Login);
         TextView ntmb = findViewById(R.id.textView6);
+        firebase = FirebaseAuth.getInstance();
         //firebase = FirebaseAuth.getInstance();
 
         String emailPref = AccSharedPref.getStoredEmail(this);
@@ -55,11 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-   /* @Override
+    @Override
     protected void onStart() {
         super.onStart();
         new FirebaseAuth.AuthStateListener(){
-          /*  final FirebaseUser firebaseUser = firebase.getCurrentUser();
+           final FirebaseUser firebaseUser = firebase.getCurrentUser();
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseUser != null) {
@@ -73,14 +77,25 @@ public class LoginActivity extends AppCompatActivity {
 
 
         };
-    }*/
+    }
 
     private void login(){
         String email = Objects.requireNonNull(inputEditEmail.getText()).toString().trim();
         String password = Objects.requireNonNull(inputEditPassword.getText()).toString().trim();
-        AccSharedPref.setStoredEmail(this,email);
-        ProgressBar bar = findViewById(R.id.progressBar2);
-        AgroAppRepo.getInstanceOfAgroApp().login(email, password,this,bar);
+
+        if(email.isEmpty()){
+            inputEditEmail.setError("Email is required");
+            inputEditEmail.requestFocus();
+
+        } else if(password.isEmpty()){
+            inputEditPassword.setError("password is required");
+            inputEditPassword.requestFocus();
+        }else{
+
+            AccSharedPref.setStoredEmail(this,email);
+            ProgressBar bar = findViewById(R.id.progressBar2);
+            AgroAppRepo.getInstanceOfAgroApp().login(email, password,this,bar);
+        }
 
     }
 }

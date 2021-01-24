@@ -10,7 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
@@ -50,6 +54,27 @@ public abstract class Multiplefragment extends AppCompatActivity implements Navi
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        int positionOfMenuItem = 0; // or whatever...
+        MenuItem item = menu.getItem(positionOfMenuItem);
+        SpannableString s = new SpannableString("Logout");
+        s.setSpan(new ForegroundColorSpan(Color.GREEN), 0, s.length(), 0);
+        item.setTitle(s);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+           AgroAppRepo.getInstanceOfAgroApp().logOut(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -263,6 +263,11 @@ public class AgroAppRepo {
 
     }
 
+    public void logOut(Context context){
+        mAuth.signOut();
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
 
 
 

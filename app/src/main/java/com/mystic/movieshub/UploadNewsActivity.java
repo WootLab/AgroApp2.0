@@ -30,10 +30,10 @@ public class UploadNewsActivity extends AppCompatActivity {
                 String tit = title.getText().toString().trim();
                 String descri = description.getText().toString().trim();
                 AgriNews news = new AgriNews(tit,descri);
-                if(link != null){
-                    String lin = link.getText().toString().trim();
-                    news.setSource(lin);
-                }
+
+                String lin = link.getText().toString().trim();
+                news.setSource(lin);
+
                 AgroAppRepo.getInstanceOfAgroApp().uploadNews(news,UploadNewsActivity.this);
             }
         });
