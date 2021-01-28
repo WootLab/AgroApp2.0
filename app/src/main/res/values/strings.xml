@@ -20,6 +20,7 @@
     <string name="movietitle">movietitle</string>
     <string name="release_date">release date</string>
     <string name="todo">TODO</string>
+    <string name="hi_you_dey_wine">chat</string>
 
     <string-array name="roles">
         <item>Farmer</item>

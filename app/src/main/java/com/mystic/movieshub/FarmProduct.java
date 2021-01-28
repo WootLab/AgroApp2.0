@@ -10,6 +10,7 @@ public class FarmProduct implements Serializable {
     private User user;
     private String image;
     private String productId;
+    private int price;
 
     public FarmProduct() {
     }
@@ -36,6 +37,14 @@ public class FarmProduct implements Serializable {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public void setDescription(String description) {

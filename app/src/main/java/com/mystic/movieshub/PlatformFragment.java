@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import java.util.List;
@@ -22,11 +23,11 @@ import java.util.List;
 public class PlatformFragment extends Fragment {
 
 
-    RecyclerView mRecyclerView ;
-   // List<FarmProduct> farmProductList;
-    AgroAppRepo agroAppRepo;
-    PlatformAdapter adapter;
-    ProgressBar bar;
+    private RecyclerView mRecyclerView ;
+    private AgroAppRepo agroAppRepo;
+    private PlatformAdapter adapter;
+    private ProgressBar bar;
+    private Button but;
 
     public PlatformFragment() {
         // Required empty public constructor
@@ -54,7 +55,7 @@ public class PlatformFragment extends Fragment {
                     public void adapterListener(int position) {
                         FarmProduct specProd = product.get(position);
                         Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
-                        intent.putExtra(SpecificNewsActivity.MOVIE_OBJECT,specProd);
+                        intent.putExtra(SpecificProductActivity.PRODUCT,specProd);
                         startActivity(intent);
                     }
                 });
@@ -69,7 +70,27 @@ public class PlatformFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_genericview, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        but = view.findViewById(R.id.button5);
         bar = view.findViewById(R.id.progressBar3);
+
+
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //go to the layout to send message to admin;
+                //On the products you want
+                agroAppRepo.loadSpecUser(AgroAppRepo.ADMIN_ID, new AgroAppRepo.SpecificUser() {
+                    @Override
+                    public void loadSpecUser(User user) {
+                        Intent intent = new Intent(getActivity(), ChatScreenActivity.class);
+                        intent.putExtra(AgroAppRepo.ADMIN_USER,user);
+                        startActivity(intent);
+                    }
+                });
+
+
+            }
+        });
         return view;
     }
 }

@@ -27,15 +27,18 @@ import java.util.Objects;
 
 public class AgroAppRepo {
 
+    public static final String ADMIN_USER = "admin_user";
     private FirebaseDatabase firebaseDatabase;
     private static  AgroAppRepo agroAppRepo;
     private FirebaseAuth mAuth;
     private User user;
     private  FarmProduct farmProduct;
     private List<FarmProduct> farmProductList ;
+    private List<Chat> chatContainer;
     private List<AgriNews> agriNewsContainer;
     public static final String PRODUCT = "product";
     public static final String AGRIC_NEWS = "AgricNews";
+    public static final String ADMIN_ID = "admin_id";
     //private ProgressBar bar;
 
 
@@ -44,6 +47,7 @@ public class AgroAppRepo {
         firebaseDatabase = FirebaseDatabase.getInstance();
         farmProductList = new ArrayList<>();
         agriNewsContainer = new ArrayList<>();
+        chatContainer = new ArrayList<>();
     }
 
 
@@ -263,6 +267,88 @@ public class AgroAppRepo {
 
     }
 
+
+    public void sendMessage(final String message, final String receiverId, final Context context){
+        if(!message.equals("")){
+            fetchUser(new FireBaseCallbackUser() {
+                @Override
+                public void fireBaseUser(User basuser) {
+                    String senderId = basuser.getUid();
+                    DatabaseReference reference = firebaseDatabase.getReference("CHAT");
+                    String chatId = reference.push().getKey();
+                    Chat chat = new Chat(message,chatId,senderId,receiverId);
+                    assert chatId != null;
+                    reference.child(chatId).setValue(chat)
+                            .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context,"Message cant be sent",Toast.LENGTH_LONG).show();
+                        }
+                    })
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(context,"Message was sent",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                }
+            });
+        }else{
+            Toast.makeText(context,"Message cant be sent",Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+
+    public void loadMessages(final FireBaseMessages fireBaseMessages){
+        final String senderId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference databaseChats = FirebaseDatabase.getInstance().getReference("CHAT");
+        databaseChats.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                chatContainer.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Chat chat = dataSnapshot.getValue(Chat.class);
+                    assert chat != null;
+                    if(chat.getSenderId().equals(senderId) && chat.getReceiverId().equals(ADMIN_ID)
+                            || chat.getSenderId().equals(ADMIN_ID) && chat.getReceiverId().equals(senderId)){
+                        chatContainer.add(chat);
+                    }
+
+                    fireBaseMessages.firebaseMessages(chatContainer);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    public void loadSpecUser(String userdId, final SpecificUser userCallback){
+        DatabaseReference databaseSpecUser = FirebaseDatabase.getInstance().getReference("USER");
+        databaseSpecUser.child(userdId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                userCallback.loadSpecUser(user);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
     public void logOut(Context context){
         mAuth.signOut();
         Intent intent = new Intent(context, LoginActivity.class);
@@ -283,5 +369,19 @@ public class AgroAppRepo {
     public interface FireBaseCallbacProduct {
         void fireBaseProducts(List<FarmProduct> product);
     }
+
+
+    public interface FireBaseMessages{
+        void firebaseMessages(List<Chat> chatCont);
+    }
+
+
+
+    public interface SpecificUser{
+        void loadSpecUser(User user);
+    }
+
+
+
 
 }

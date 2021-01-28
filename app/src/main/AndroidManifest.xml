@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UploadNewsActivity"></activity>
+        <activity android:name=".SpecificProductActivity"></activity>
+        <activity android:name=".ChatScreenActivity" />
+        <activity android:name=".UploadNewsActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>

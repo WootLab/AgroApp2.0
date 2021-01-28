@@ -139,6 +139,7 @@ public class UploadActivity extends AppCompatActivity {
                                             Log.d("User",""+basuser);
                                             user = basuser;
                                             product.setTitle(tit);
+                                            product.setPrice(20);
                                             product.setUser(user);
                                             product.setImage(uri.toString());
                                             agroAppRepo.uploadProduct(product,UploadActivity.this);
