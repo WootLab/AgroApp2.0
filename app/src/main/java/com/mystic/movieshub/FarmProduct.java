@@ -1,6 +1,7 @@
 package com.mystic.movieshub;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class FarmProduct implements Serializable {
 
@@ -11,6 +12,8 @@ public class FarmProduct implements Serializable {
     private String image;
     private String productId;
     private int price;
+
+    private String date;
 
     public FarmProduct() {
     }
@@ -41,6 +44,14 @@ public class FarmProduct implements Serializable {
 
     public int getPrice() {
         return price;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setPrice(int price) {

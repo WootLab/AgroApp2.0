@@ -54,7 +54,7 @@ public class PlatformFragment extends Fragment {
                     @Override
                     public void adapterListener(int position) {
                         FarmProduct specProd = product.get(position);
-                        Intent intent = new Intent(getActivity(), SpecificNewsActivity.class);
+                        Intent intent = new Intent(getActivity(), SpecificProductActivity.class);
                         intent.putExtra(SpecificProductActivity.PRODUCT,specProd);
                         startActivity(intent);
                     }

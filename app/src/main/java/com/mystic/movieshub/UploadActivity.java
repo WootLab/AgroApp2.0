@@ -28,6 +28,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class UploadActivity extends AppCompatActivity {
 
     private EditText edtTitle,edtDesc;
@@ -137,11 +142,16 @@ public class UploadActivity extends AppCompatActivity {
                                         @Override
                                         public void fireBaseUser(User basuser) {
                                             Log.d("User",""+basuser);
+                                            long millis=System.currentTimeMillis();
+                                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy dd,MM hh:mm:ss", Locale.getDefault());
+                                            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                            String utcTime = dateFormat.format(millis);
                                             user = basuser;
                                             product.setTitle(tit);
                                             product.setPrice(20);
                                             product.setUser(user);
                                             product.setImage(uri.toString());
+                                            product.setDate(utcTime);
                                             agroAppRepo.uploadProduct(product,UploadActivity.this);
                                         }
                                     });
