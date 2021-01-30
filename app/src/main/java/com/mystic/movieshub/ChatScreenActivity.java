@@ -68,16 +68,16 @@ public class ChatScreenActivity extends AppCompatActivity {
             @Override
             public void firebaseMessages(List<Chat> chatCont) {
                 chats = chatCont;
-                chatScreenAdapter = new ChatScreenAdapter(chats,ChatScreenActivity.this);
                 bar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
-                if(!(chatCont.size() > 0)){
-
-                }
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatScreenActivity.this);
+                setUpAdapter(chats);
+                 /* if(chatScreenAdapter == null){
+                    chatScreenAdapter = new ChatScreenAdapter(chats,ChatScreenActivity.this);
+                }*/
+                /*LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatScreenActivity.this);
                 recyclerView.setAdapter(chatScreenAdapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
-                linearLayoutManager.setStackFromEnd(true);
+                linearLayoutManager.setStackFromEnd(true);*/
             }
         });
         final String mess = message.getText().toString().trim();
@@ -108,5 +108,15 @@ public class ChatScreenActivity extends AppCompatActivity {
         name = findViewById(R.id.usernamee);
         recyclerView.setHasFixedSize(true);
 
+    }
+
+    private void setUpAdapter(List<Chat> chatholder){
+        if(chatScreenAdapter == null ){
+            chatScreenAdapter = new ChatScreenAdapter(chatholder,ChatScreenActivity.this);
+        }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatScreenActivity.this);
+        recyclerView.setAdapter(chatScreenAdapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        linearLayoutManager.setStackFromEnd(true);
     }
 }
