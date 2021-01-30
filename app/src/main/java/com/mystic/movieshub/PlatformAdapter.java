@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -16,24 +17,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieHolder> {
-    List<FarmProduct> farmProductList;
-    Context context;
-    CustomeAdapterListener listener;
+    private List<FarmProduct> farmProductList;
+    private Context context;
+    private CustomeAdapterListener listener;
+    private String userId;
 
     public PlatformAdapter(List<FarmProduct> farmProductList, Context context){
         this.farmProductList = farmProductList;
         this.context = context;
+        userId = FirebaseAuth.getInstance().getUid();
     }
 
     public void setOnAdapterListener(CustomeAdapterListener listener){
         this.listener = listener;
     }
+
 
 
     @NonNull
@@ -48,6 +53,12 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
         FarmProduct farmProduct = farmProductList.get(position);
         holder.textView1.setText(farmProduct.getTitle());
         holder.textView2.setText(farmProduct.getDescription());
+
+        if(farmProduct.getUser().getUid().equals(userId) || userId.equals("ADMIN ID")){
+            holder.deleteBtn.setVisibility(View.VISIBLE);
+        }else{
+            holder.deleteBtn.setVisibility(View.GONE);
+        }
 
         if(farmProduct.getUser().getImage() != null){
             Glide.with(context)
@@ -67,6 +78,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
         MaterialCardView material;
         CircleImageView circleImageView;
         TextView textView1,textView2;
+        Button deleteBtn;
         public MovieHolder(@NonNull View itemView, final CustomeAdapterListener listener) {
             super(itemView);
 
@@ -74,6 +86,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
             textView1 = itemView.findViewById(R.id.textView);
             textView2 = itemView.findViewById(R.id.textView2);
             material = itemView.findViewById(R.id.material);
+            deleteBtn = itemView.findViewById(R.id.button6);
 
             material.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,5 +104,6 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
 
     public interface CustomeAdapterListener{
         void adapterListener(int position);
+        void deleteAdvert(int position);
     }
 }

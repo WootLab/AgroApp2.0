@@ -28,7 +28,7 @@ public class PlatformFragment extends Fragment {
     private PlatformAdapter adapter;
     private ProgressBar bar;
     private Button but;
-
+    List<FarmProduct> farmProducts;
     public PlatformFragment() {
         // Required empty public constructor
     }
@@ -43,9 +43,11 @@ public class PlatformFragment extends Fragment {
         super.onCreate(savedInstanceState);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
+
         agroAppRepo.fetchPro(new AgroAppRepo.FireBaseCallbacProduct() {
             @Override
             public void fireBaseProducts(final List<FarmProduct> product) {
+                farmProducts = product;
                 bar.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 adapter = new PlatformAdapter(product,getActivity());
@@ -57,6 +59,14 @@ public class PlatformFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), SpecificProductActivity.class);
                         intent.putExtra(SpecificProductActivity.PRODUCT,specProd);
                         startActivity(intent);
+                    }
+
+                    @Override
+                    public void deleteAdvert(int position) {
+                        FarmProduct specProd = product.get(position);
+                        String id = specProd.getProductId();
+                        agroAppRepo.removeProduct(id,getContext());
+                        adapter.notifyItemChanged(position);
                     }
                 });
             }

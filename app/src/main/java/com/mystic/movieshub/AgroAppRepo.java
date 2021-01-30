@@ -357,6 +357,24 @@ public class AgroAppRepo {
 
 
 
+    public void removeProduct(String productId, final Context context){
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference(PRODUCT);
+        mDatabaseReference
+                .child(productId)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(context,"Advert was removed",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
+
+
     public interface FireBaseCallbackAgriNews{
         void firebaseAgriNews(List<AgriNews> agriNews);
     }
