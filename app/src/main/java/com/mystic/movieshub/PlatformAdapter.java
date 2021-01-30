@@ -88,6 +88,17 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
             material = itemView.findViewById(R.id.material);
             deleteBtn = itemView.findViewById(R.id.button6);
 
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(listener != null){
+                        int positon = getAdapterPosition();
+                        if(positon != RecyclerView.NO_POSITION){
+                            listener.deleteAdvert(positon);
+                        }
+                    }
+                }
+            });
             material.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -95,6 +106,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
                         int positon = getAdapterPosition();
                         if (positon != RecyclerView.NO_POSITION){
                             listener.adapterListener(positon);
+
                         }
                     }
                 }
