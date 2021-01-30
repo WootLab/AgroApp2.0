@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -64,13 +66,34 @@ public class ChatScreenActivity extends AppCompatActivity {
             }
         });
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
-        agroAppRepo.loadMessages(new AgroAppRepo.FireBaseMessages() {
-            @Override
-            public void firebaseMessages(List<Chat> chatCont) {
-                chats = chatCont;
-                bar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                setUpAdapter(chats);
+        if(farmer != null ){
+            agroAppRepo.loadMessages(new AgroAppRepo.FireBaseMessages() {
+                @Override
+                public void firebaseMessages(List<Chat> chatCont) {
+                    chats = chatCont;
+                    Log.d("Chats Size",""+chats.size());
+                    bar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    //setUpAdapter(chats);
+
+                    chatScreenAdapter = new ChatScreenAdapter(chats,ChatScreenActivity.this);
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatScreenActivity.this);
+                recyclerView.setAdapter(chatScreenAdapter);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                linearLayoutManager.setStackFromEnd(true);
+                }
+            },farmer.getUid());
+
+        }else{
+            agroAppRepo.loadMessages(new AgroAppRepo.FireBaseMessages() {
+                @Override
+                public void firebaseMessages(List<Chat> chatCont) {
+                    chats = chatCont;
+                    Log.d("Chats Size",""+chats.size());
+                    bar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    setUpAdapter(chats);
                  /* if(chatScreenAdapter == null){
                     chatScreenAdapter = new ChatScreenAdapter(chats,ChatScreenActivity.this);
                 }*/
@@ -78,20 +101,21 @@ public class ChatScreenActivity extends AppCompatActivity {
                 recyclerView.setAdapter(chatScreenAdapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 linearLayoutManager.setStackFromEnd(true);*/
-            }
-        });
-        final String mess = message.getText().toString().trim();
+                }
+            },user.getUid());
+        }
+
+
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!mess.trim().equals("")){
+                final String mess = message.getText().toString().trim();
                     if( user != null){
                         agroAppRepo.sendMessage(mess,user.getUid(), ChatScreenActivity.this);
                     }else{
                         agroAppRepo.sendMessage(mess,farmer.getUid(), ChatScreenActivity.this);
                     }
-                }
-
+                    message.setText("");
             }
         });
 

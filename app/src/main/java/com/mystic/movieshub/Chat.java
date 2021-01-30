@@ -14,6 +14,9 @@ public class Chat {
         this.receiverId = receiverId;
     }
 
+    public Chat() {
+    }
+
     public String getMessage() {
         return message;
     }

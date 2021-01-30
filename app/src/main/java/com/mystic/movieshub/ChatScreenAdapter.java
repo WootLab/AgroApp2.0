@@ -64,29 +64,16 @@ public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
             final ReceiverView receiverView = (ReceiverView) holder;
             receiverView.txt.setText(chat.getMessage());
             String receiverpic = chat.getSenderId();
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("USERS");
-            reference.child(receiverpic).addValueEventListener(new ValueEventListener() {
+            AgroAppRepo.getInstanceOfAgroApp().loadSpecUser(receiverpic, new AgroAppRepo.SpecificUser() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    User user = snapshot.getValue(User.class);
-                    assert user != null;
-                    String pic = user.getImage();
+                public void loadSpecUse(User user) {
                     Glide.with(context)
                             .asBitmap()
                             .placeholder(R.drawable.doctor)
-                            .load(Uri.parse(pic))
+                            .load(Uri.parse(user.getImage()))
                             .into(receiverView.imageView);
-
-                    Log.d("Imaage",pic);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
                 }
             });
-
-
         }
     }
 
@@ -104,7 +91,7 @@ public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return 0;
+        return listOfChats.size();
     }
 
     public static class SenderView extends RecyclerView.ViewHolder{

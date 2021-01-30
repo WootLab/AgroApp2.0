@@ -222,8 +222,6 @@ public class AgroAppRepo {
                                         }
                                     });
 
-
-
                         }
 
                         if(task.isCanceled()){
@@ -303,8 +301,9 @@ public class AgroAppRepo {
 
 
 
-    public void loadMessages(final FireBaseMessages fireBaseMessages){
+    public void loadMessages(final FireBaseMessages fireBaseMessages, final String receiverId){
         final String senderId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d("SenderId",senderId);
         DatabaseReference databaseChats = FirebaseDatabase.getInstance().getReference("CHAT");
         databaseChats.addValueEventListener(new ValueEventListener() {
             @Override
@@ -313,10 +312,17 @@ public class AgroAppRepo {
                 Log.d("FirebaseMessages","I am in ondatachanged");
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Chat chat = dataSnapshot.getValue(Chat.class);
-                    Log.d("FirebaseMessages","Exeecuting");
-                    assert chat != null;
-                    if(chat.getSenderId().equals(senderId) && chat.getReceiverId().equals(ADMIN_ID)
-                            || chat.getSenderId().equals(ADMIN_ID) && chat.getReceiverId().equals(senderId)){
+
+                    Log.d("SenderId",chat.getSenderId()+"="+senderId);
+
+                    Log.d("ReceiverId",chat.getReceiverId()+"="+receiverId);
+                    /*if(chat.getSenderId().equals(userId) && chat.getReceiverId().equals(receiverId) ||
+                            chat.getSenderId().equals(receiverId)&& chat.getReceiverId().equals(userId)){
+                        chatContainer.add(chat);
+                    }*/
+                    if(chat.getSenderId().equals(senderId) && chat.getReceiverId().equals(receiverId)
+                            || chat.getSenderId().equals(receiverId) && chat.getReceiverId().equals(senderId)){
+                        Log.d("FirebaseMessages","I am in the loop and passed the conditions");
                         chatContainer.add(chat);
                     }
                 }
