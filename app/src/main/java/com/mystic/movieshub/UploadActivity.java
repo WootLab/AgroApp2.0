@@ -143,7 +143,7 @@ public class UploadActivity extends AppCompatActivity {
                                         public void fireBaseUser(User basuser) {
                                             Log.d("User",""+basuser);
                                             long millis=System.currentTimeMillis();
-                                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy dd,MM hh:mm:ss", Locale.getDefault());
+                                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/dd/MM hh:mm:ss", Locale.getDefault());
                                             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                                             String utcTime = dateFormat.format(millis);
                                             user = basuser;

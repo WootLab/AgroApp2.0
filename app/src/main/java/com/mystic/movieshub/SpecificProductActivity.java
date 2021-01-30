@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +16,10 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
     public static final String PRODUCT = "Product";
     private ImageView imageView,authorimage;
     private TextView time, desc;
+    private TextView name;
+    private ImageButton call;
+    private ImageButton chat;
+    private ImageButton cart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,25 +29,30 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
 
         FarmProduct product = (FarmProduct) getIntent().getSerializableExtra(PRODUCT);
         if(product != null){
-
             time.setText(product.getDate());
             desc.setText(product.getDescription());
+            name.setText(product.getUser().getName());
             Glide.with(this)
                     .asBitmap()
-                    .circleCrop()
                     .load(Uri.parse(product.getImage()))
-                    .into(authorimage);
+                    .into(imageView);
 
             Glide.with(this)
                     .asBitmap()
                     .circleCrop()
                     .load(Uri.parse(product.getUser().getImage()))
-                    .into(imageView);
+                    .into(authorimage);
         }
+
+        respondToClick();
 
     }
 
-
+    private void respondToClick() {
+        call.setOnClickListener(this);
+        chat.setOnClickListener(this);
+        cart.setOnClickListener(this);
+    }
 
 
     public void defineView(){
@@ -50,6 +60,10 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
         authorimage = findViewById(R.id.imagi);
         time = findViewById(R.id.time);
         desc = findViewById(R.id.textView8);
+        name = findViewById(R.id.sellersname);
+        call = findViewById(R.id.imageButton2);
+        chat = findViewById(R.id.imageButton3);
+        cart = findViewById(R.id.imageButton4);
 
     }
 
@@ -57,13 +71,14 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.imageButton2:
-                //gguuuhu
+                Toast.makeText(SpecificProductActivity.this,"You clicked call",Toast.LENGTH_LONG).show();
                 break;
             case R.id.imageButton3:
-                //iufeheiojiojdiodj
+                Toast.makeText(SpecificProductActivity.this,"You clicked chat",Toast.LENGTH_LONG).show();
+
                 break;
             case R.id.imageButton4:
-                //hfifdbdfufghbdfiufhui
+                Toast.makeText(SpecificProductActivity.this,"You clicked cart",Toast.LENGTH_LONG).show();
                 break;
         }
 

@@ -35,7 +35,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        recyclerView.setHasFixedSize(true);
+
 
         final User user = (User) getIntent().getSerializableExtra(AgroAppRepo.ADMIN_ID);
         if(user != null){
@@ -89,5 +89,6 @@ public class ChatScreenActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.cycler);
         bar = findViewById(R.id.progressBar4);
         imageView = findViewById(R.id.profileImage);
+        recyclerView.setHasFixedSize(true);
     }
 }

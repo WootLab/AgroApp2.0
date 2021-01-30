@@ -38,7 +38,7 @@ public class AgroAppRepo {
     private List<AgriNews> agriNewsContainer;
     public static final String PRODUCT = "product";
     public static final String AGRIC_NEWS = "AgricNews";
-    public static final String ADMIN_ID = "admin_id";
+    public static final String ADMIN_ID = "P3O1w3u7K4NLY7zA6OS7pg3N8633";
     //private ProgressBar bar;
 
 
