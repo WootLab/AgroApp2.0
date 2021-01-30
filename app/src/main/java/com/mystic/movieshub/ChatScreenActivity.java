@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -27,6 +28,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private ChatScreenAdapter chatScreenAdapter;
     private ProgressBar bar;
     private ImageView imageView;
+    private TextView name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +37,24 @@ public class ChatScreenActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        final User user = (User) getIntent().getSerializableExtra(AgroAppRepo.ADMIN_ID);
+        defineViews();
+        final User user = (User) getIntent().getSerializableExtra(AgroAppRepo.ADMIN_USER);
+        final User farmer = (User) getIntent().getSerializableExtra(SpecificProductActivity.FARMER);
         if(user != null){
-            Glide.with(this).asBitmap().load(user.getImage()).into(imageView);
+            Glide.with(this)
+                    .asBitmap()
+                    .circleCrop()
+                    .load(user.getImage())
+                    .into(imageView);
+            name.setText(user.getName());
         } else{
-            //Glide.with(this).asBitmap().load(user.getImage()).into(imageView);
+            assert farmer != null;
+            Glide.with(this)
+                    .asBitmap()
+                    .circleCrop()
+                    .load(farmer.getImage())
+                    .into(imageView);
+            name.setText(farmer.getName());
         }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -51,7 +64,6 @@ public class ChatScreenActivity extends AppCompatActivity {
             }
         });
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
-        defineViews();
         agroAppRepo.loadMessages(new AgroAppRepo.FireBaseMessages() {
             @Override
             public void firebaseMessages(List<Chat> chatCont) {
@@ -59,6 +71,9 @@ public class ChatScreenActivity extends AppCompatActivity {
                 chatScreenAdapter = new ChatScreenAdapter(chats,ChatScreenActivity.this);
                 bar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+                if(!(chatCont.size() > 0)){
+
+                }
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatScreenActivity.this);
                 recyclerView.setAdapter(chatScreenAdapter);
                 recyclerView.setLayoutManager(linearLayoutManager);
@@ -73,12 +88,13 @@ public class ChatScreenActivity extends AppCompatActivity {
                     if( user != null){
                         agroAppRepo.sendMessage(mess,user.getUid(), ChatScreenActivity.this);
                     }else{
-                        agroAppRepo.sendMessage(mess,"", ChatScreenActivity.this);
+                        agroAppRepo.sendMessage(mess,farmer.getUid(), ChatScreenActivity.this);
                     }
                 }
 
             }
         });
+
 
 
     }
@@ -89,6 +105,8 @@ public class ChatScreenActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.cycler);
         bar = findViewById(R.id.progressBar4);
         imageView = findViewById(R.id.profileImage);
+        name = findViewById(R.id.usernamee);
         recyclerView.setHasFixedSize(true);
+
     }
 }

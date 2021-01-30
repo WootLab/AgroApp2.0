@@ -3,10 +3,12 @@ package com.mystic.movieshub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -94,8 +96,17 @@ public class LoginActivity extends AppCompatActivity {
 
             AccSharedPref.setStoredEmail(this,email);
             ProgressBar bar = findViewById(R.id.progressBar2);
+            closeKeyboard();
             AgroAppRepo.getInstanceOfAgroApp().login(email, password,this,bar);
         }
 
+    }
+
+    private void closeKeyboard(){
+        View view = this.getCurrentFocus();
+        if(view != null){
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
     }
 }

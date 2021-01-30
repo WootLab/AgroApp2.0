@@ -310,17 +310,18 @@ public class AgroAppRepo {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chatContainer.clear();
+                Log.d("FirebaseMessages","I am in ondatachanged");
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Chat chat = dataSnapshot.getValue(Chat.class);
+                    Log.d("FirebaseMessages","Exeecuting");
                     assert chat != null;
                     if(chat.getSenderId().equals(senderId) && chat.getReceiverId().equals(ADMIN_ID)
                             || chat.getSenderId().equals(ADMIN_ID) && chat.getReceiverId().equals(senderId)){
                         chatContainer.add(chat);
                     }
-
-                    fireBaseMessages.firebaseMessages(chatContainer);
                 }
-
+                Log.d("FirebaseMessages",""+chatContainer.size());
+                fireBaseMessages.firebaseMessages(chatContainer);
             }
 
             @Override
@@ -332,12 +333,13 @@ public class AgroAppRepo {
 
 
     public void loadSpecUser(String userdId, final SpecificUser userCallback){
-        DatabaseReference databaseSpecUser = FirebaseDatabase.getInstance().getReference("USER");
+        DatabaseReference databaseSpecUser = FirebaseDatabase.getInstance().getReference("USERS");
         databaseSpecUser.child(userdId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                userCallback.loadSpecUser(user);
+                userCallback.loadSpecUse(user);
+                Log.d("Userc",""+user);
             }
 
             @Override
@@ -396,7 +398,7 @@ public class AgroAppRepo {
 
 
     public interface SpecificUser{
-        void loadSpecUser(User user);
+        void loadSpecUse(User user);
     }
 
 

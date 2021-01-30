@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class PlatformFragment extends Fragment {
     private ProgressBar bar;
     private Button but;
     List<FarmProduct> farmProducts;
+    private FarmProduct specProd;
     public PlatformFragment() {
         // Required empty public constructor
     }
@@ -55,7 +57,7 @@ public class PlatformFragment extends Fragment {
                 adapter.setOnAdapterListener(new PlatformAdapter.CustomeAdapterListener() {
                     @Override
                     public void adapterListener(int position) {
-                        FarmProduct specProd = product.get(position);
+                        specProd = product.get(position);
                         Intent intent = new Intent(getActivity(), SpecificProductActivity.class);
                         intent.putExtra(SpecificProductActivity.PRODUCT,specProd);
                         startActivity(intent);
@@ -63,7 +65,7 @@ public class PlatformFragment extends Fragment {
 
                     @Override
                     public void deleteAdvert(int position) {
-                        FarmProduct specProd = product.get(position);
+                        specProd = product.get(position);
                         String id = specProd.getProductId();
                         agroAppRepo.removeProduct(id,getContext());
                         adapter.notifyItemChanged(position);
@@ -87,17 +89,15 @@ public class PlatformFragment extends Fragment {
         but.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //go to the layout to send message to admin;
-                //On the products you want
                 agroAppRepo.loadSpecUser(AgroAppRepo.ADMIN_ID, new AgroAppRepo.SpecificUser() {
                     @Override
-                    public void loadSpecUser(User user) {
+                    public void loadSpecUse(User user) {
+                        Log.d("user",""+user);
                         Intent intent = new Intent(getActivity(), ChatScreenActivity.class);
-                        intent.putExtra(AgroAppRepo.ADMIN_USER,user);
+                        intent.putExtra(AgroAppRepo.ADMIN_USER, user);
                         startActivity(intent);
                     }
                 });
-
 
             }
         });

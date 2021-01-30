@@ -1,5 +1,6 @@
 package com.mystic.movieshub;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -14,12 +15,14 @@ import com.bumptech.glide.Glide;
 
 public class SpecificProductActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PRODUCT = "Product";
+    public static final String FARMER = "farmer";
     private ImageView imageView,authorimage;
     private TextView time, desc;
     private TextView name;
     private ImageButton call;
     private ImageButton chat;
     private ImageButton cart;
+    private FarmProduct product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,8 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_specific_product);
         defineView();
 
-        FarmProduct product = (FarmProduct) getIntent().getSerializableExtra(PRODUCT);
+
+        product = (FarmProduct) getIntent().getSerializableExtra(PRODUCT);
         if(product != null){
             time.setText(product.getDate());
             desc.setText(product.getDescription());
@@ -75,7 +79,9 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.imageButton3:
                 Toast.makeText(SpecificProductActivity.this,"You clicked chat",Toast.LENGTH_LONG).show();
-
+                Intent intent = new Intent(this,ChatScreenActivity.class);
+                intent.putExtra(FARMER,product.getUser());
+                startActivity(intent);
                 break;
             case R.id.imageButton4:
                 Toast.makeText(SpecificProductActivity.this,"You clicked cart",Toast.LENGTH_LONG).show();

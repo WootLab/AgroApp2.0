@@ -63,7 +63,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
         if(farmProduct.getUser().getImage() != null){
             Glide.with(context)
                     .asBitmap()
-                    .load(Uri.parse(farmProduct.getUser().getImage()))
+                    .load(Uri.parse(farmProduct.getImage()))
                     .into(holder.circleImageView);
         }
 
