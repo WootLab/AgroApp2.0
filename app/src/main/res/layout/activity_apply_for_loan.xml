@@ -19,6 +19,7 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descript"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="description" />
@@ -51,6 +52,11 @@
                 android:entries="@array/states" />
 
             <Spinner
+                android:id="@+id/spinnerAgri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Spinner
                 android:id="@+id/spinnerlocal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="enter your address"
                 android:inputType="textPostalAddress" />
 
             <EditText
@@ -86,7 +93,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="enter postal  address"
                 android:inputType="textPostalAddress" />
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apply " />
+
+            <Button
+                android:id="@+id/button12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Go Back" />
 
 
         </LinearLayout>

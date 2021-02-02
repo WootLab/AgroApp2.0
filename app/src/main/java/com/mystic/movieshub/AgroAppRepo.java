@@ -382,6 +382,28 @@ public class AgroAppRepo {
     }
 
 
+    public void applyForLoans(String userId, String location, String description, String[] images, String agricType, final Context context){
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference("USERS");
+        Requirements requirements = new Requirements();
+        requirements.setLocation(location);
+        requirements.setDescription(description);
+        requirements.setImages(images);
+        requirements.setAgricTypes(agricType);
+        mDatabaseReference.child(userId).setValue(requirements).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(context,"You applied",Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(context,"Application was not succesful",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+    }
+
+
 
     public interface FireBaseCallbackAgriNews{
         void firebaseAgriNews(List<AgriNews> agriNews);

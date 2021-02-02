@@ -31,7 +31,6 @@ public class PlatformFragment extends Fragment {
     private PlatformAdapter adapter;
     private ProgressBar bar;
     private Button but;
-    private List<FarmProduct> farmProducts;
     private FarmProduct specProd;
     private FloatingActionButton floatingActionButton;
     public PlatformFragment() {
@@ -52,7 +51,6 @@ public class PlatformFragment extends Fragment {
         agroAppRepo.fetchPro(new AgroAppRepo.FireBaseCallbacProduct() {
             @Override
             public void fireBaseProducts(final List<FarmProduct> product) {
-                farmProducts = product;
                 bar.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 adapter = new PlatformAdapter(product,getActivity());
