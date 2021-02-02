@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -52,7 +53,7 @@ public class FarmersNewsFragment extends Fragment {
                              Bundle savedInstanceState) {
        View view = inflater.inflate(R.layout.fragment_genericview, container, false);
         mRecyclerView = view.findViewById(R.id.recyclerview);
-        LinearLayout layout = view.findViewById(R.id.hori);
+        Button layout = view.findViewById(R.id.button5);
         layout.setVisibility(View.GONE);
         bar = view.findViewById(R.id.progressBar3);
         return view;
