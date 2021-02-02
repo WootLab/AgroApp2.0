@@ -43,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private AgroAppRepo agroAppRepo;
     private ProgressBar bar ;
     private LinearLayout linearLayout;
+    private Button buttonApply;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -62,7 +63,7 @@ public class ProfileFragment extends Fragment {
 
         agroAppRepo.fetchUser(new AgroAppRepo.FireBaseCallbackUser() {
             @Override
-            public void fireBaseUser(User basuser) {
+            public void fireBaseUser(final User basuser) {
                 bar.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
                 String userEmail = basuser.getEmail();
@@ -77,6 +78,33 @@ public class ProfileFragment extends Fragment {
                 }else{
                     uploadNewsBtn.setVisibility(View.GONE);
                 }
+
+                if(basuser.getRole().equals("farmer")){
+                    buttonApply.setVisibility(View.VISIBLE);
+
+                    if(basuser.getRequirements().isApplicationState()){
+                        buttonApply.setText("ALREADY APPLIED CHECK STATUS");
+                    }else{
+                        buttonApply.setText("APPLY FOR LOANS");
+                    }
+                }else{
+                    buttonApply.setVisibility(View.GONE);
+                }
+
+
+                buttonApply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(basuser.getRequirements().isApplicationState()){
+                            Intent status= new Intent(getActivity(),StatusActivity.class);
+                            startActivity(status);
+                        }else{
+                            Intent intent = new Intent(getActivity(),ApplyForLoanActivity.class);
+                            startActivity(intent);
+                        }
+
+                    }
+                });
             }
         });
 
@@ -91,6 +119,7 @@ public class ProfileFragment extends Fragment {
         upload = view.findViewById(R.id.btnUpload);
         uploadNewsBtn = view.findViewById(R.id.button4);
         bar = view.findViewById(R.id.prog);
+        buttonApply = view.findViewById(R.id.button7);
         linearLayout = view.findViewById(R.id.lay);
         uploadNewsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +137,8 @@ public class ProfileFragment extends Fragment {
                startActivity(intent);
            }
        });
+
+
         return view;
     }
 

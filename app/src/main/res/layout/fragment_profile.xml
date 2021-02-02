@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -92,6 +92,12 @@
                 android:layout_height="wrap_content"
                 android:text="UPLOAD NEWS"
                 android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apply for loans" />
 
             <!--<de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageView"

@@ -12,6 +12,8 @@ public class User implements Serializable {
     private String email;
     private String password;
 
+    private Requirements requirements;
+
 
     public User(){
 
@@ -71,6 +73,14 @@ public class User implements Serializable {
 
     public String getImage() {
         return image;
+    }
+
+    public Requirements getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(Requirements requirements) {
+        this.requirements = requirements;
     }
 
     public void setImage(String image) {

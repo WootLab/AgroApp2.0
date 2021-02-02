@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
 /**
@@ -29,8 +31,9 @@ public class PlatformFragment extends Fragment {
     private PlatformAdapter adapter;
     private ProgressBar bar;
     private Button but;
-    List<FarmProduct> farmProducts;
+    private List<FarmProduct> farmProducts;
     private FarmProduct specProd;
+    private FloatingActionButton floatingActionButton;
     public PlatformFragment() {
         // Required empty public constructor
     }
@@ -75,6 +78,32 @@ public class PlatformFragment extends Fragment {
         });
 
 
+        agroAppRepo.fetchUser(new AgroAppRepo.FireBaseCallbackUser() {
+            @Override
+            public void fireBaseUser(User basuser) {
+                if(basuser.getRole().equals("farmer")
+                        || basuser.getEmail().equals("bam@gmail.com")
+                        || basuser.getEmail().equals("yvonne@gmail.com")
+                        || basuser.getEmail().equals("chinedu@gmail.com")){
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                }else{
+                    floatingActionButton.setVisibility(View.GONE);
+                }
+
+
+                floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(),UploadActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+
+
+        });
+
+
     }
 
     @Override
@@ -84,6 +113,8 @@ public class PlatformFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         but = view.findViewById(R.id.button5);
         bar = view.findViewById(R.id.progressBar3);
+        floatingActionButton = view.findViewById(R.id.floatingActionButton2);
+
 
 
         but.setOnClickListener(new View.OnClickListener() {

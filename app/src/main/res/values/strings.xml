@@ -27,4 +27,14 @@
         <item>Consumer</item>
     </string-array>
 
+
+    <string-array name="local">
+        <item>Ijebu Ode</item>
+        <item>Abeokuta</item>
+    </string-array>
+    <string-array name="states">
+        <item>ibadan</item>
+        <item>Ogun</item>
+    </string-array>
+
 </resources>
