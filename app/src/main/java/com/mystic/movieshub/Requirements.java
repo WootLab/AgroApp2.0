@@ -13,18 +13,17 @@ public class Requirements {
     private boolean eligible;
 
 
+
+    public Requirements() {
+    }
+
     public void setApplicationState(boolean applicationState) {
         this.applicationState = applicationState;
     }
 
-
-
     public boolean isApplicationState() {
         return applicationState;
     }
-    public Requirements() {
-    }
-
     public List<Uri> getImages() {
         return images;
     }

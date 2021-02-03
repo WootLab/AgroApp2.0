@@ -3,7 +3,6 @@ package com.mystic.movieshub;
 import java.io.Serializable;
 
 public class User implements Serializable {
-
     private String uid;
     private String role;
     private String name;
@@ -11,7 +10,6 @@ public class User implements Serializable {
     private String phoneNumber;
     private String email;
     private String password;
-
     private Requirements requirements;
 
 
