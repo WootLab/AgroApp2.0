@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         inputEditPassword = findViewById(R.id.loginInPassword);
         Button logbtn = findViewById(R.id.Login);
         TextView ntmb = findViewById(R.id.textView6);
+        TextView invest = findViewById(R.id.clickhere);
         firebase = FirebaseAuth.getInstance();
         //firebase = FirebaseAuth.getInstance();
 
@@ -53,7 +54,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        invest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this,InvestorScreenActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
 
     private void moveToSignUp() {
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);

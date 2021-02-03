@@ -36,9 +36,9 @@ import java.util.Objects;
 public class AgroAppRepo {
 
     public static final String ADMIN_USER = "admin_user";
-    private FirebaseDatabase firebaseDatabase;
+    private final FirebaseDatabase firebaseDatabase;
     private static  AgroAppRepo agroAppRepo;
-    private FirebaseAuth mAuth;
+    private final FirebaseAuth mAuth;
     private User user;
     private  FarmProduct farmProduct;
     private List<FarmProduct> farmProductList ;
@@ -47,6 +47,7 @@ public class AgroAppRepo {
     public static final String PRODUCT = "product";
     public static final String AGRIC_NEWS = "AgricNews";
     public static final String ADMIN_ID = "P3O1w3u7K4NLY7zA6OS7pg3N8633";
+    private List<User> qualifiedFarmers;
     private ProgressDialog progressDialog;
     //private ProgressBar bar;
 
@@ -57,6 +58,7 @@ public class AgroAppRepo {
         farmProductList = new ArrayList<>();
         agriNewsContainer = new ArrayList<>();
         chatContainer = new ArrayList<>();
+        qualifiedFarmers = new ArrayList<>();
     }
 
 
@@ -445,6 +447,34 @@ public class AgroAppRepo {
     }
 
 
+    public void fetchSelectedfarmers(final String local, final String state, final String typeoffarming, final FetchQualifiedfarmers fetchQualifiedfarmers){
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("APPROVEDFARMERS");
+        mDatebaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    User user = dataSnapshot.getValue(User.class);
+                    Requirements requirements = user.getRequirements();
+                    if(requirements.getLocalgov().equals(local)
+                            && requirements.getState().equals(state)
+                            && requirements.getAgricTypes().equals(typeoffarming))
+                    {
+                        qualifiedFarmers.add(user);
+                    }
+                }
+
+                fetchQualifiedfarmers.firebaseQualifiedFarmers(qualifiedFarmers);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
 
     public interface FireBaseCallbackAgriNews{
         void firebaseAgriNews(List<AgriNews> agriNews);
@@ -468,6 +498,12 @@ public class AgroAppRepo {
 
     public interface SpecificUser{
         void loadSpecUse(User user);
+    }
+
+
+
+    public interface FetchQualifiedfarmers{
+        void firebaseQualifiedFarmers(List<User> qualifiedfarmers);
     }
 
 
