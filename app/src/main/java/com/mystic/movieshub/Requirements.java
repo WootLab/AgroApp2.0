@@ -1,7 +1,11 @@
 package com.mystic.movieshub;
 
+import android.net.Uri;
+
+import java.util.List;
+
 public class Requirements {
-    private String[] images;
+    private List<Uri> images;
     private String location;
     private String description;
     private String agricTypes;
@@ -21,11 +25,11 @@ public class Requirements {
     public Requirements() {
     }
 
-    public String[] getImages() {
+    public List<Uri> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<Uri> images) {
         this.images = images;
     }
 

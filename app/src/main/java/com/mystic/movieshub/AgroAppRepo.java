@@ -382,7 +382,7 @@ public class AgroAppRepo {
     }
 
 
-    public void applyForLoans(String userId, String location, String description, String[] images, String agricType, final Context context){
+    public void applyForLoans(String userId, String location, String description, List<Uri> images, String agricType, final Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference("USERS");
         Requirements requirements = new Requirements();
         requirements.setLocation(location);
