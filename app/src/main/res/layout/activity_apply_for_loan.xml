@@ -35,15 +35,10 @@
                     android:hint="hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <Spinner
+                android:id="@+id/spinnerAgri"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="hint" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content" />
 
             <Spinner
                 android:id="@+id/spinnerState"
@@ -52,33 +47,10 @@
                 android:entries="@array/states" />
 
             <Spinner
-                android:id="@+id/spinnerAgri"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Spinner
                 android:id="@+id/spinnerlocal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/local" />
-
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Button" />
-
-            <Button
-                android:id="@+id/button10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Button" />
-
-            <Button
-                android:id="@+id/button8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Button" />
 
             <EditText
                 android:id="@+id/editTextTextAddress"
@@ -95,6 +67,12 @@
                 android:ems="10"
                 android:hint="enter postal  address"
                 android:inputType="textPostalAddress" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select farm Images" />
 
             <Button
                 android:id="@+id/button11"

@@ -1,9 +1,13 @@
 package com.mystic.movieshub;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -12,6 +16,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +25,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +47,7 @@ public class AgroAppRepo {
     public static final String PRODUCT = "product";
     public static final String AGRIC_NEWS = "AgricNews";
     public static final String ADMIN_ID = "P3O1w3u7K4NLY7zA6OS7pg3N8633";
+    private ProgressDialog progressDialog;
     //private ProgressBar bar;
 
 
@@ -316,10 +325,6 @@ public class AgroAppRepo {
                     Log.d("SenderId",chat.getSenderId()+"="+senderId);
 
                     Log.d("ReceiverId",chat.getReceiverId()+"="+receiverId);
-                    /*if(chat.getSenderId().equals(userId) && chat.getReceiverId().equals(receiverId) ||
-                            chat.getSenderId().equals(receiverId)&& chat.getReceiverId().equals(userId)){
-                        chatContainer.add(chat);
-                    }*/
                     if(chat.getSenderId().equals(senderId) && chat.getReceiverId().equals(receiverId)
                             || chat.getSenderId().equals(receiverId) && chat.getReceiverId().equals(senderId)){
                         Log.d("FirebaseMessages","I am in the loop and passed the conditions");
@@ -382,20 +387,56 @@ public class AgroAppRepo {
     }
 
 
-    public void applyForLoans(String userId, String location, String description, List<Uri> images, String agricType, final Context context){
+    private String getFileExtension(Context context, Uri uri){
+        // This was just a test
+        ContextWrapper rapper = new ContextWrapper(context);
+        ContentResolver resolver = rapper.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(resolver.getType(uri));
+    }
+
+
+    public void applyForLoans(String userId, String location, String description, List<Uri> imageList, String agricType, final Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference("USERS");
+        StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Please wait while we upload your details.................");
+        progressDialog.show();
+        for(Uri inuri : imageList){
+            final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,inuri));
+            imageName.putFile(inuri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                }
+                            });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                        }
+                    });
+        }
+
         Requirements requirements = new Requirements();
         requirements.setLocation(location);
         requirements.setDescription(description);
-        requirements.setImages(images);
+        requirements.setImages(imageList);
         requirements.setAgricTypes(agricType);
         mDatabaseReference.child(userId).setValue(requirements).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(context,"You applied",Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }else{
                     Toast.makeText(context,"Application was not succesful",Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
             }
         });

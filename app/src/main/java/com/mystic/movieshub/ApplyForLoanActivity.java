@@ -1,131 +1,96 @@
 package com.mystic.movieshub;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
-import android.webkit.MimeTypeMap;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ApplyForLoanActivity extends AppCompatActivity {
 
-    EditText farmdescription,address,postalcode;
-    Spinner state,localgovernment, agrictype;
-    Button imageone,imagetwo,imagethree,butApply, cancel;
-    private List<Uri> imageUri;
+    private static final int PICK_IMAGE = 4;
+    private EditText farmdescription,address,postalcode;
+    private Spinner agrictype,state, localGovernment;
+    private Button chooseMultipleImages,butApply, cancel;
+    private List<Uri> imageList;
 
-   // private ProgressDialog progressDialog;
-    private Uri urione, uritwo, urithree;
-
-
-    public static final int IMAGEONE = 1;
-    public static final int IMAGETWO = 2;
-    public static final int IMAGETHREE = 3;
-    private StorageReference mStorageRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_for_loan);
         defineViews();
-        imageUri = new ArrayList<>();
-        mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES");
+        imageList = new ArrayList<>();
         butApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String userId = FirebaseAuth.getInstance().getUid();
                 String description = farmdescription.getText().toString().trim();
+                String stateStr = state.getSelectedItem().toString();
+                String locgov = localGovernment.getSelectedItem().toString();
                 String addres = address.getText().toString().trim();
                 String postal = postalcode.getText().toString().trim();
                 String agric = agrictype.getSelectedItem().toString();
-
-                AgroAppRepo.getInstanceOfAgroApp().applyForLoans(userId,"",description,imageUri,agric,ApplyForLoanActivity.this);
+                AgroAppRepo.getInstanceOfAgroApp().applyForLoans(userId,"",description,imageList,agric,ApplyForLoanActivity.this);
 
             }
         });
 
 
-        imageone.setOnClickListener(new View.OnClickListener() {
+        chooseMultipleImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImage(IMAGEONE);
-
+                chooseMultiple();
             }
         });
 
-        imagetwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage(IMAGETWO);
 
-            }
-        });
-
-        imagethree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseImage(IMAGETHREE);
-            }
-        });
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IMAGEONE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
-            urione = data.getData();
-        }else if(requestCode == IMAGETWO && resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
-            uritwo = data.getData();
-        }else if(requestCode == IMAGETHREE && resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
-            urithree = data.getData();
+        if(requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.getClipData() != null){
+            int count = data.getClipData().getItemCount();
+            int currentImageSelect = 0;
+            while (currentImageSelect < count){
+                Uri imageUri = data.getClipData().getItemAt(currentImageSelect).getUri();
+                imageList.add(imageUri);
+                currentImageSelect++;
+            }
+
         }else{
-            Toast.makeText(this,"Nothing was selected",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ApplyForLoanActivity.this,"please select multiple pictures",Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void chooseImage(int image){
+
+    private void chooseMultiple(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,image);
-    }
-
-
-    private String getFileExtension(Uri uri){
-        // This was just a test
-        ContextWrapper rapper = new ContextWrapper(this);
-        ContentResolver resolver = rapper.getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(resolver.getType(uri));
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        startActivityForResult(intent,PICK_IMAGE);
     }
 
 
 
 
-    public void uploadFarmsToLoan(){
+
+    /*public void uploadFarmsToLoan(){
         if(urione != null && uritwo != null && urithree != null){
             imageUri.add(urione);
             imageUri.add(uritwo);
@@ -177,18 +142,16 @@ public class ApplyForLoanActivity extends AppCompatActivity {
 
         }
 
-    }
+    }*/
 
     public void defineViews(){
         farmdescription = findViewById(R.id.descript);
         state = findViewById(R.id.spinnerState);
-        localgovernment = findViewById(R.id.spinnerlocal);
+        localGovernment = findViewById(R.id.spinnerlocal);
         address = findViewById(R.id.editTextTextAddress);
         postalcode = findViewById(R.id.editTextTextPostal);
-        imageone = findViewById(R.id.button9);
-        imagetwo = findViewById(R.id.button10);
+        chooseMultipleImages = findViewById(R.id.button9);
         agrictype = findViewById(R.id.spinnerAgri);
-        imagethree = findViewById(R.id.button8);
         butApply = findViewById(R.id.button11);
         cancel = findViewById(R.id.button12);
     }
