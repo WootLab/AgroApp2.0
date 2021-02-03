@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 public class InvestorScreenActivity extends AppCompatActivity {
@@ -44,10 +46,17 @@ public class InvestorScreenActivity extends AppCompatActivity {
                         investorScreenAdapter.showQualifiedFarmer(new InvestorScreenAdapter.QualifiedFarmersListener() {
                             @Override
                             public void farmerlistener(int position) {
-                                User user = qualifiedfarmers.get(position);
-                                Intent intent = new Intent();
-                                intent.putExtra("QualifiedFarmer",user);
-                                startActivity(intent);
+
+                                if(FirebaseAuth.getInstance().getCurrentUser() == null){
+                                    Intent intent = new Intent(InvestorScreenActivity.this,LoginActivity.class);
+                                    startActivity(intent);
+                                }else{
+                                    User user = qualifiedfarmers.get(position);
+                                    Intent intent = new Intent(InvestorScreenActivity.this,QualifiedFarmersActivity.class);
+                                    intent.putExtra("QualifiedFarmer",user);
+                                    startActivity(intent);
+                                }
+
                             }
                         });
                     }
