@@ -447,7 +447,8 @@ public class AgroAppRepo {
     }
 
 
-    public void fetchSelectedfarmers(final String local, final String state, final String typeoffarming, final FetchQualifiedfarmers fetchQualifiedfarmers){
+    public void fetchSelectedfarmers(final String local, final String state, final String typeoffarming, final ProgressBar bar, final FetchQualifiedfarmers fetchQualifiedfarmers){
+        bar.setVisibility(View.VISIBLE);
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference("APPROVEDFARMERS");
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -462,14 +463,14 @@ public class AgroAppRepo {
                         qualifiedFarmers.add(user);
                     }
                 }
-
+                bar.setVisibility(View.GONE);
                 fetchQualifiedfarmers.firebaseQualifiedFarmers(qualifiedFarmers);
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                bar.setVisibility(View.GONE);
             }
         });
     }
