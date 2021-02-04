@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -103,7 +103,7 @@ public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public static class ReceiverView extends RecyclerView.ViewHolder{
-        CircleImageView imageView;
+        ImageView imageView;
         TextView txt;
         public ReceiverView(@NonNull View itemView) {
             super(itemView);

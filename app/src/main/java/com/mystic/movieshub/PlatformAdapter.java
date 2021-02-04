@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieHolder> {
     private List<FarmProduct> farmProductList;
@@ -76,7 +76,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
     //This inner class serves as the viewHolder it holds the view that is repeated
     public static class MovieHolder extends RecyclerView.ViewHolder {
         MaterialCardView material;
-        CircleImageView circleImageView;
+        ImageView circleImageView;
         TextView textView1,textView2;
         Button deleteBtn;
         public MovieHolder(@NonNull View itemView, final CustomeAdapterListener listener) {
