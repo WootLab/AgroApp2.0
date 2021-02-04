@@ -36,6 +36,8 @@ import java.util.Objects;
 public class AgroAppRepo {
 
     public static final String ADMIN_USER = "admin_user";
+    public static final String APPROVEDFARMERS = "APPROVEDFARMERS";
+    public static final String USERS = "USERS";
     private final FirebaseDatabase firebaseDatabase;
     private static  AgroAppRepo agroAppRepo;
     private final FirebaseAuth mAuth;
@@ -166,7 +168,7 @@ public class AgroAppRepo {
     //fetches from base
     public void fetchUser(final FireBaseCallbackUser fireBaseCallback){
         String userId = mAuth.getCurrentUser().getUid();
-        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("USERS").child(userId);
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference(USERS).child(userId);
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -202,7 +204,7 @@ public class AgroAppRepo {
                             Toast.makeText(context, "You have signed up", Toast.LENGTH_LONG).show();
                             //This is where we set the values we want our users to have
                             String userId = mAuth.getCurrentUser().getUid();
-                            DatabaseReference mDatebaseReference = firebaseDatabase.getReference("USERS");
+                            DatabaseReference mDatebaseReference = firebaseDatabase.getReference(USERS);
                             User user = new User(userId);
                             user.setName(name);
                             user.setImage(uri.toString());
@@ -346,7 +348,7 @@ public class AgroAppRepo {
 
 
     public void loadSpecUser(String userdId, final SpecificUser userCallback){
-        DatabaseReference databaseSpecUser = FirebaseDatabase.getInstance().getReference("USERS");
+        DatabaseReference databaseSpecUser = FirebaseDatabase.getInstance().getReference(USERS);
         databaseSpecUser.child(userdId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -398,8 +400,9 @@ public class AgroAppRepo {
     }
 
 
-    public void applyForLoans(String userId, String location, String description, List<Uri> imageList, String agricType, final Context context){
-        DatabaseReference mDatabaseReference = firebaseDatabase.getReference("USERS");
+    public void applyForLoans(final String userId, String location, String description, List<Uri> imageList, String agricType, final Context context){
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
+        final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait while we upload your details.................");
@@ -430,11 +433,46 @@ public class AgroAppRepo {
         requirements.setDescription(description);
         requirements.setImages(imageList);
         requirements.setAgricTypes(agricType);
+        requirements.setEligible(true);
         mDatabaseReference.child(userId).setValue(requirements).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(context,"You applied",Toast.LENGTH_LONG).show();
+                   /* loadSpecUser(userId, new SpecificUser() {
+                        @Override
+                        public void loadSpecUse(User user) {
+                            mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(context,"You applied",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    });*/
+                    // An error might stem from her seince am not sure if the user that we get from dis process below will come with the information that the user has
+                    User user = new User(userId);
+                    mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(context,"You applied",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+
                     progressDialog.dismiss();
                 }else{
                     Toast.makeText(context,"Application was not succesful",Toast.LENGTH_LONG).show();
@@ -449,7 +487,7 @@ public class AgroAppRepo {
 
     public void fetchSelectedfarmers(final String local, final String state, final String typeoffarming, final ProgressBar bar, final FetchQualifiedfarmers fetchQualifiedfarmers){
         bar.setVisibility(View.VISIBLE);
-        DatabaseReference mDatebaseReference = firebaseDatabase.getReference("APPROVEDFARMERS");
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference(APPROVEDFARMERS);
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
