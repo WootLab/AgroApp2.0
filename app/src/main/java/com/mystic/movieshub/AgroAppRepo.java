@@ -591,6 +591,7 @@ public class AgroAppRepo {
                 JSONObject stateObject = array.getJSONObject(i);
                 String stateName = stateObject.getString("state");
                 stateList.add(stateName);
+                Log.d("State",stateName);
             }
         } catch (JSONException e) {
             e.printStackTrace();

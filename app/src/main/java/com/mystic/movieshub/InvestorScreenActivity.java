@@ -6,16 +6,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.google.android.gms.common.util.Strings;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.SingleObserver;
@@ -27,33 +32,23 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
     private Spinner state, localgov, typeoffarming;
     private RecyclerView recyclerView;
     private Button but;
+    private  List<HashMap<String, List<String>>> fullLocalGov;
+    private List<String> stateList;
     private ProgressBar bar;
     private InvestorScreenAdapter investorScreenAdapter;
+    private ArrayAdapter<String> stateArrayAdapter;
+    private ArrayAdapter<String> localGovArrayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_investor_screen);
+        stateList = AgroAppRepo.getInstanceOfAgroApp().loadStates(getApplicationContext());
+        Log.d("Size State",""+stateList.size());
         defineViews();
-        AgroAppRepo.getInstanceOfAgroApp().loadLocal(InvestorScreenActivity.this)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<HashMap<String, List<String>>>>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<HashMap<String, List<String>>> hashMaps) {
-                        //This is where we are getting the local government from the background thread;
-
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-
-                    }
-                });
+        backgroundOperation();
+        fullLocalGov = new ArrayList<>();
+        stateArrayAdapter =  new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,stateList);
+        state.setAdapter(stateArrayAdapter);
         but.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +86,31 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
 
             }
         });
+
+        state.setOnItemSelectedListener(this);
+    }
+
+    private void backgroundOperation() {
+        AgroAppRepo.getInstanceOfAgroApp().loadLocal(InvestorScreenActivity.this)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<HashMap<String, List<String>>>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<HashMap<String, List<String>>> hashMaps) {
+                        //This is where we are getting the local government from the background thread;
+                        fullLocalGov = hashMaps;
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                    }
+                });
     }
 
     private void defineViews(){
@@ -105,8 +125,8 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
+        localGovArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Objects.requireNonNull(fullLocalGov.get(position).get(state.getSelectedItem().toString())));
+        localgov.setAdapter(localGovArrayAdapter);
 
     }
 

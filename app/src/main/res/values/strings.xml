@@ -37,4 +37,11 @@
         <item>Ogun</item>
     </string-array>
 
+
+    <string-array name="farming">
+        <item>Poultry</item>
+        <item>Goat Rearing</item>
+        <item>Cassava Planting</item>
+    </string-array>
+
 </resources>

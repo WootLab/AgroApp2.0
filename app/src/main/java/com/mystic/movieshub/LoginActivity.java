@@ -41,26 +41,13 @@ public class LoginActivity extends AppCompatActivity {
         String emailPref = AccSharedPref.getStoredEmail(this);
         inputEditEmail.setText(emailPref);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        logbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginActivity.this.login();
-            }
-        });
-        ntmb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginActivity.this.moveToSignUp();
-            }
-        });
+        logbtn.setOnClickListener(v -> LoginActivity.this.login());
+        ntmb.setOnClickListener(v -> LoginActivity.this.moveToSignUp());
 
 
-        invest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this,InvestorScreenActivity.class);
-                startActivity(intent);
-            }
+        invest.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this,InvestorScreenActivity.class);
+            startActivity(intent);
         });
 
     }
