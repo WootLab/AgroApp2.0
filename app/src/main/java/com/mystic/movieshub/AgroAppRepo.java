@@ -231,6 +231,8 @@ public class AgroAppRepo {
                             user.setPassword(password);
                             user.setPhoneNumber(phone);
                             user.setRole(role);
+                            Requirements requirements = new Requirements(false,false);
+                            user.setRequirements(requirements);
                             mDatebaseReference.child(userId)
                                     .setValue(user)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {

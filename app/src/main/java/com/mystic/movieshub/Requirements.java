@@ -19,6 +19,11 @@ public class Requirements {
     public Requirements() {
     }
 
+    public Requirements(boolean applicationState, boolean eligible) {
+        this.applicationState = applicationState;
+        this.eligible = eligible;
+    }
+
     public void setApplicationState(boolean applicationState) {
         this.applicationState = applicationState;
     }
