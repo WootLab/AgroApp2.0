@@ -33,21 +33,19 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
     private RecyclerView recyclerView;
     private Button but;
     private  List<HashMap<String, List<String>>> fullLocalGov;
-    private List<String> stateList;
     private ProgressBar bar;
     private InvestorScreenAdapter investorScreenAdapter;
-    private ArrayAdapter<String> stateArrayAdapter;
-    private ArrayAdapter<String> localGovArrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_investor_screen);
-        stateList = AgroAppRepo.getInstanceOfAgroApp().loadStates(getApplicationContext());
-        Log.d("Size State",""+stateList.size());
+        List<String> stateList = AgroAppRepo.getInstanceOfAgroApp().loadStates(getApplicationContext());
+        Log.d("Size State",""+ stateList.size());
         defineViews();
         backgroundOperation();
         fullLocalGov = new ArrayList<>();
-        stateArrayAdapter =  new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,stateList);
+        ArrayAdapter<String> stateArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stateList);
         state.setAdapter(stateArrayAdapter);
         but.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +123,7 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        localGovArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Objects.requireNonNull(fullLocalGov.get(position).get(state.getSelectedItem().toString())));
+        ArrayAdapter<String> localGovArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Objects.requireNonNull(fullLocalGov.get(position).get(state.getSelectedItem().toString())));
         localgov.setAdapter(localGovArrayAdapter);
 
     }
