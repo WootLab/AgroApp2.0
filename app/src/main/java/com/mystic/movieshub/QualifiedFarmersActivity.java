@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,8 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
     private FarmPhotoAdapter farmPhotoAdapter;
     private List<Uri> uriConatiner;
     private TextView name,email,adress, description;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

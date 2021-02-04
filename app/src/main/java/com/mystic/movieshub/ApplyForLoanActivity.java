@@ -1,4 +1,5 @@
 package com.mystic.movieshub;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,8 +8,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -17,21 +21,58 @@ import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class ApplyForLoanActivity extends AppCompatActivity {
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
+public class ApplyForLoanActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private static final int PICK_IMAGE = 4;
     private EditText farmdescription,address,postalcode;
     private Spinner agrictype,state, localGovernment;
+    private List<HashMap<String, List<String>>> fullLocalGov;
     private Button chooseMultipleImages,butApply, cancel;
     private List<Uri> imageList;
+
+    private ArrayAdapter<String> adapterState;
+    private ArrayAdapter<String> localGov;
+
+    private int pos = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_for_loan);
+        final AgroAppRepo agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
         defineViews();
+
+        agroAppRepo.loadLocal(ApplyForLoanActivity.this)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<HashMap<String, List<String>>>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<HashMap<String, List<String>>> hashMaps) {
+                        //This is where we are getting the local government from the background thread;
+                        fullLocalGov = hashMaps;
+
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                    }
+                });
         imageList = new ArrayList<>();
         butApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +84,7 @@ public class ApplyForLoanActivity extends AppCompatActivity {
                 String addres = address.getText().toString().trim();
                 String postal = postalcode.getText().toString().trim();
                 String agric = agrictype.getSelectedItem().toString();
-                AgroAppRepo.getInstanceOfAgroApp().applyForLoans(userId,"",description,imageList,agric,ApplyForLoanActivity.this);
+                agroAppRepo.applyForLoans(userId,"",description,imageList,agric,ApplyForLoanActivity.this);
 
             }
         });
@@ -57,7 +98,15 @@ public class ApplyForLoanActivity extends AppCompatActivity {
         });
 
 
+
+
+
+
+
     }
+
+
+
 
 
     @Override
@@ -154,5 +203,18 @@ public class ApplyForLoanActivity extends AppCompatActivity {
         agrictype = findViewById(R.id.spinnerAgri);
         butApply = findViewById(R.id.button11);
         cancel = findViewById(R.id.button12);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(position == 0){
+
+            fullLocalGov.get(0).get("Abia");
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

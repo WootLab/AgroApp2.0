@@ -41,6 +41,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AgroAppRepo {
 
@@ -59,6 +66,7 @@ public class AgroAppRepo {
     public static final String AGRIC_NEWS = "AgricNews";
     public static final String ADMIN_ID = "P3O1w3u7K4NLY7zA6OS7pg3N8633";
     private List<User> qualifiedFarmers;
+    private List<HashMap<String, List<String>>> fullLocalGovernment;
     private ProgressDialog progressDialog;
     //private ProgressBar bar;
 
@@ -572,6 +580,43 @@ public class AgroAppRepo {
 
         return  hashMaps;
     }
+
+
+
+    public Single<List<HashMap<String, List<String>>>> loadLocal(final Context context){
+        return Single.fromCallable(new Callable<List<HashMap<String, List<String>>>>() {
+            @Override
+            public List<HashMap<String, List<String>>> call() throws Exception {
+                return listOfHashMaps(context);
+            }
+        });
+
+    }
+
+    public void loadLocalToActivity(Context context){
+        fullLocalGovernment = new ArrayList<>();
+        loadLocal(context)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<HashMap<String, List<String>>>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<HashMap<String, List<String>>> hashMaps) {
+                        fullLocalGovernment = hashMaps;
+
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                    }
+                });
+    }
+
 
 
     public interface FireBaseCallbackAgriNews{
