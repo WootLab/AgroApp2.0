@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.SingleObserver;
@@ -37,9 +38,9 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
     private List<HashMap<String, List<String>>> fullLocalGov;
     private Button chooseMultipleImages,butApply, cancel;
     private List<Uri> imageList;
+    private List<String> stateContainer;
+    private  AgroAppRepo agroAppRepo;
 
-    private ArrayAdapter<String> adapterState;
-    private ArrayAdapter<String> localGov;
 
     private int pos = 0;
 
@@ -49,30 +50,10 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_for_loan);
-        final AgroAppRepo agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
+        agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
         defineViews();
-
-        agroAppRepo.loadLocal(ApplyForLoanActivity.this)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<HashMap<String, List<String>>>>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<HashMap<String, List<String>>> hashMaps) {
-                        //This is where we are getting the local government from the background thread;
-                        fullLocalGov = hashMaps;
-
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-
-                    }
-                });
+        setUpSpinner();
+        backgroundProcess();
         imageList = new ArrayList<>();
         butApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,15 +79,35 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
         });
 
 
-
-
+        state.setOnItemSelectedListener(this);
 
 
 
     }
 
+    private void backgroundProcess() {
+        agroAppRepo.loadLocal(ApplyForLoanActivity.this)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<HashMap<String, List<String>>>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
 
+                    }
 
+                    @Override
+                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<HashMap<String, List<String>>> hashMaps) {
+                        //This is where we are getting the local government from the background thread;
+                        fullLocalGov = hashMaps;
+
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                    }
+                });
+    }
 
 
     @Override
@@ -137,61 +138,13 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
 
 
 
+    private void setUpSpinner(){
+        stateContainer = agroAppRepo.loadStates(this);
+        ArrayAdapter<String> stateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,stateContainer);
+        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        state.setAdapter(stateAdapter);
+    }
 
-
-    /*public void uploadFarmsToLoan(){
-        if(urione != null && uritwo != null && urithree != null){
-            imageUri.add(urione);
-            imageUri.add(uritwo);
-            imageUri.add(urithree);
-
-            int imageListSize = imageUri.size();
-            List<Task<Uri>> uploadedImageUrlTasks = new ArrayList<>(imageListSize);
-            StorageReference filerefone = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(urione));
-            StorageReference filereftwo = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(uritwo));
-            StorageReference filerefthree = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(urithree));
-
-            for(Uri imageri : imageUri){
-
-                final String imageFilename = imageri.getLastPathSegment();
-                final StorageReference imageRef = mStorageRef.child(imageFilename); // Warning: potential for collisions/overwrite
-
-                UploadTask currentUploadTask = imageRef.putFile(imageri);
-
-                Task<Uri> currentUrlTask = currentUploadTask
-                        .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    Log.d("upload.onClick()", "Upload for \"" + imageFilename + "\" failed!");
-                                    throw task.getException(); // rethrow any errors
-                                }
-
-                                Log.d("upload.onClick()", "Upload for \"" + imageFilename + "\" finished. Fetching download URL...");
-                                return imageRef.getDownloadUrl();
-
-                            }
-                        })
-                        .continueWithTask(new Continuation<Uri, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<Uri> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    Log.d("upload.onClick()", "Could not get download URL for \"" + imageFilename + "\"!");
-                                    throw task.getException(); // rethrow any errors
-                                }
-
-                                Log.d("upload.onClick()", "Download URL for \"" + imageFilename + "\" is \"" + task.getResult() + "\".");
-                                return null;
-                               // return task.getResult();
-                            }
-                        });
-                uploadedImageUrlTasks.add(currentUrlTask);
-            }
-
-
-        }
-
-    }*/
 
     public void defineViews(){
         farmdescription = findViewById(R.id.descript);
@@ -205,12 +158,16 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
         cancel = findViewById(R.id.button12);
     }
 
+
+
+    //This might cause an error
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(position == 0){
+        //private ArrayAdapter<String> arrayListLocal;
+        //private ArrayAdapter<String> adapterState;
+        ArrayAdapter<String> localGovAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Objects.requireNonNull(fullLocalGov.get(position).get(state.getSelectedItem().toString())));
+        localGovernment.setAdapter(localGovAdapter);
 
-            fullLocalGov.get(0).get("Abia");
-        }
     }
 
     @Override

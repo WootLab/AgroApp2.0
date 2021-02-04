@@ -58,6 +58,7 @@ public class AgroAppRepo {
     private static  AgroAppRepo agroAppRepo;
     private final FirebaseAuth mAuth;
     private User user;
+    private List<String> stateList;
     private  FarmProduct farmProduct;
     private List<FarmProduct> farmProductList ;
     private List<Chat> chatContainer;
@@ -78,6 +79,7 @@ public class AgroAppRepo {
         agriNewsContainer = new ArrayList<>();
         chatContainer = new ArrayList<>();
         qualifiedFarmers = new ArrayList<>();
+        stateList = new ArrayList<>();
     }
 
 
@@ -582,6 +584,20 @@ public class AgroAppRepo {
     }
 
 
+    public List<String> loadStates(Context context){
+        try {
+            JSONArray array = new JSONArray(loadJSONFromAsset(context));
+            for( int i = 0 ; i < array.length() ; i++){
+                JSONObject stateObject = array.getJSONObject(i);
+                String stateName = stateObject.getString("state");
+                stateList.add(stateName);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return stateList;
+    }
+
 
     public Single<List<HashMap<String, List<String>>>> loadLocal(final Context context){
         return Single.fromCallable(new Callable<List<HashMap<String, List<String>>>>() {
@@ -593,29 +609,6 @@ public class AgroAppRepo {
 
     }
 
-    public void loadLocalToActivity(Context context){
-        fullLocalGovernment = new ArrayList<>();
-        loadLocal(context)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<HashMap<String, List<String>>>>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull List<HashMap<String, List<String>>> hashMaps) {
-                        fullLocalGovernment = hashMaps;
-
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-
-                    }
-                });
-    }
 
 
 
