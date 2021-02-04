@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +30,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -513,6 +522,56 @@ public class AgroAppRepo {
         });
     }
 
+//This could hunt me for i have not tried it before
+
+
+    public String loadJSONFromAsset(Context context) {
+        String json;
+        try {
+            InputStream is = context.getAssets().open("localgovernment.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+
+
+
+    //This process should be running in the background we are going to be using RXJAVA
+    private List<HashMap<String, List<String>>> listOfHashMaps(Context context){
+
+        List<HashMap<String, List<String>>> hashMaps = new ArrayList<>();
+        try {
+            JSONArray array = new JSONArray(loadJSONFromAsset(context));
+            for(int i = 0 ; i < array.length() ; i++){
+                List<String> localContainer = new ArrayList<>();
+                JSONObject stateObject = array.getJSONObject(i);
+                String stateName = stateObject.getString("state");
+                //JSONArray localgov = stateObject.getJSONArray("lgas");
+                JSONArray localgov = (JSONArray) stateObject.get("lgas");
+                for(int j = 0 ; j < localgov.length() ; j++ ){
+                    localContainer.add(localgov.get(j).toString());
+                }
+
+                HashMap<String, List<String>>  localListMap = new HashMap<>();
+                localListMap.put(stateName,localContainer);
+                hashMaps.add(localListMap);
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return  hashMaps;
+    }
 
 
     public interface FireBaseCallbackAgriNews{
