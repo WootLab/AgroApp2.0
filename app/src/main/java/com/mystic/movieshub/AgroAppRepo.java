@@ -611,6 +611,10 @@ public class AgroAppRepo {
     }
 
 
+    public String FormatedPrice(FarmProduct farmProduct){
+        String price = "N"+String.valueOf(farmProduct.getPrice());
+        return price;
+    }
 
 
     public interface FireBaseCallbackAgriNews{

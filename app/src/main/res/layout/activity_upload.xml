@@ -33,7 +33,30 @@
                 android:hint="Title" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="211dp">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/EdtDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="description" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <EditText
+            android:id="@+id/editTextNumberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Price of product"
+            android:inputType="numberDecimal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,25 +75,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Nane of file"
+                android:text="Name of file"
                 android:gravity="center"/>
         </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="5dp"
-            tools:layout_editor_absoluteY="211dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/EdtDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="description" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="CANcel" />
+                android:text="CANCEL" />
         </LinearLayout>
 
 

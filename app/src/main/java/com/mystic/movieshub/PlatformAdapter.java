@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -60,6 +61,12 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
             holder.deleteBtn.setVisibility(View.GONE);
         }
 
+        try {
+            holder.textViewPrice.setText(String.valueOf(farmProduct.getPrice()));
+        }catch (NullPointerException e){
+            Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+
         if(farmProduct.getUser().getImage() != null){
             Glide.with(context)
                     .asBitmap()
@@ -77,7 +84,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
     public static class MovieHolder extends RecyclerView.ViewHolder {
         MaterialCardView material;
         ImageView circleImageView;
-        TextView textView1,textView2;
+        TextView textView1,textView2,textViewPrice;
         Button deleteBtn;
         public MovieHolder(@NonNull View itemView, final CustomeAdapterListener listener) {
             super(itemView);
@@ -87,6 +94,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
             textView2 = itemView.findViewById(R.id.textView2);
             material = itemView.findViewById(R.id.material);
             deleteBtn = itemView.findViewById(R.id.button6);
+            textViewPrice = itemView.findViewById(R.id.textView26);
 
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

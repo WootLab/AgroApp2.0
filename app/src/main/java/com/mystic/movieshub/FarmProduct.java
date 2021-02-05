@@ -11,7 +11,7 @@ public class FarmProduct implements Serializable {
     private User user;
     private String image;
     private String productId;
-    private int price;
+    private double price;
 
     private String date;
 
@@ -42,7 +42,7 @@ public class FarmProduct implements Serializable {
         this.productId = productId;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
@@ -54,7 +54,7 @@ public class FarmProduct implements Serializable {
         this.date = date;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

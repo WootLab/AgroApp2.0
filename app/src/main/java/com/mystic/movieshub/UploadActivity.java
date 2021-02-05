@@ -43,6 +43,7 @@ public class UploadActivity extends AppCompatActivity {
     private Uri mImageUri;
     private ProgressBar bar;
     private StorageReference mStorageRef;
+    private EditText productPrice;
     private StorageTask mUploads;
     private User user;
     @Override
@@ -55,6 +56,7 @@ public class UploadActivity extends AppCompatActivity {
         fileName = findViewById(R.id.fileName);
         edtDesc =  findViewById(R.id.EdtDesc);
         bar = findViewById(R.id.progress_bar);
+        productPrice = findViewById(R.id.editTextNumberDecimal);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
         uploadBtn = findViewById(R.id.button2);
@@ -136,6 +138,7 @@ public class UploadActivity extends AppCompatActivity {
                                     Toast.makeText(UploadActivity.this,"successfully uploaded",Toast.LENGTH_SHORT).show();
                                     final String tit = edtTitle.getText().toString().trim();
                                     String desc = edtDesc.getText().toString().trim();
+                                    double price = Double.parseDouble(productPrice.getText().toString().trim());
                                     final FarmProduct product = new FarmProduct(desc);
 
                                     AgroAppRepo.getInstanceOfAgroApp().fetchUser(new AgroAppRepo.FireBaseCallbackUser() {
@@ -148,7 +151,7 @@ public class UploadActivity extends AppCompatActivity {
                                             String utcTime = dateFormat.format(millis);
                                             user = basuser;
                                             product.setTitle(tit);
-                                            product.setPrice(20);
+                                            product.setPrice(price);
                                             product.setUser(user);
                                             product.setImage(uri.toString());
                                             product.setDate(utcTime);
