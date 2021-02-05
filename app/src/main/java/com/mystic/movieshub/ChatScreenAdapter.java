@@ -2,7 +2,6 @@ package com.mystic.movieshub;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.List;
 
 
 public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     private static  final int RIGHT = 1;
     private static  final int LEFT = 0;
     private final List<Chat> listOfChats;

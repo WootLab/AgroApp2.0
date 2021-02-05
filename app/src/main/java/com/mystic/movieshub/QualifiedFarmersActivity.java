@@ -23,14 +23,12 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
     private ImageView imageView;
     private RecyclerView recyclerView;
     private FarmPhotoAdapter farmPhotoAdapter;
-    private List<Uri> uriConatiner;
     private ImageButton call, chat;
     private TextView name,email,adress, description, phoneNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qualified_farmers);
-        uriConatiner = new ArrayList<>();
         final User user = (User) getIntent().getSerializableExtra("QualifiedFarmers");
         defineViews();
 
@@ -43,10 +41,10 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
         adress.setText(user.getRequirements().getLocation());
         phoneNumber.setText(user.getPhoneNumber());
         description.setText(user.getRequirements().getDescription());
-        uriConatiner = user.getRequirements().getImages();
+        List<Uri> uriContainer = user.getRequirements().getImages();
 
         if(farmPhotoAdapter == null){
-            farmPhotoAdapter = new FarmPhotoAdapter(uriConatiner,this);
+            farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
         }
         recyclerView.setAdapter(farmPhotoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -56,7 +54,7 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String number = user.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" +number));
+                intent.setData(Uri.parse(number));
                 startActivity(intent);
             }
         });
