@@ -41,11 +41,21 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
         adress.setText(user.getRequirements().getLocation());
         phoneNumber.setText(user.getPhoneNumber());
         description.setText(user.getRequirements().getDescription());
-        List<Uri> uriContainer = user.getRequirements().getImages();
+        final List<Uri> uriContainer = user.getRequirements().getImages();
 
         if(farmPhotoAdapter == null){
             farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
         }
+
+        farmPhotoAdapter.showPhoto(new FarmPhotoAdapter.PhotoAdapterListener() {
+            @Override
+            public void photolistener(int position) {
+                Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
+                Uri uri = uriContainer.get(position);
+                intent.putExtra("PHOTO",uri);
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(farmPhotoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -58,6 +68,9 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+
 
 
         chat.setOnClickListener(new View.OnClickListener() {

@@ -18,6 +18,7 @@ import java.util.List;
 public class FarmPhotoAdapter extends RecyclerView.Adapter<FarmPhotoAdapter.FarmPhotoHolder> {
     private List<Uri> uriList;
     private Context context;
+    private PhotoAdapterListener photoAdapterListener;
 
     public FarmPhotoAdapter(List<Uri> uriList , Context context){
         this.uriList = uriList;
@@ -30,6 +31,10 @@ public class FarmPhotoAdapter extends RecyclerView.Adapter<FarmPhotoAdapter.Farm
         return new FarmPhotoHolder(view);
     }
 
+
+    public void showPhoto(PhotoAdapterListener photoAdapterListener){
+        this.photoAdapterListener = photoAdapterListener;
+    }
     @Override
     public void onBindViewHolder(@NonNull FarmPhotoHolder holder, int position) {
         Uri uri = uriList.get(position);
@@ -56,9 +61,19 @@ public class FarmPhotoAdapter extends RecyclerView.Adapter<FarmPhotoAdapter.Farm
             materialCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if(photoAdapterListener != null){
+                        int pos = getAdapterPosition();
+                        if(pos != RecyclerView.NO_POSITION){
+                            photoAdapterListener.photolistener(pos);
+                        }
+                    }
                 }
             });
         }
+    }
+
+
+    public interface PhotoAdapterListener{
+        void photolistener(int position);
     }
 }

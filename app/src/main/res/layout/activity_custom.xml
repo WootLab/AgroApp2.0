@@ -75,22 +75,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:background="@drawable/chatboxcorners"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <EditText
                 android:id="@+id/edtMess"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="20sp"
+                android:background="@android:color/transparent"
                 android:hint="Enter your message here" />
 
             <ImageButton
                 android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
+                android:layout_gravity="center"
+
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:background="@android:color/transparent"
+
                 android:src="@drawable/ic_baseline_send_24" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

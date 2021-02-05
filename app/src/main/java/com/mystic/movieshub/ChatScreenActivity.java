@@ -129,6 +129,8 @@ public class ChatScreenActivity extends AppCompatActivity {
                 }
             },qualifiedfarmer.getUid());
 
+
+
         }
 
 
