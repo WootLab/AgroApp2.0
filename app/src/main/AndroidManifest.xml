@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".QualifiedFarmersActivity"></activity>
+        <activity android:name=".QualifiedFarmersActivity"/>
         <activity android:name=".InvestorScreenActivity" />
         <activity android:name=".StatusActivity" />
         <activity android:name=".ApplyForLoanActivity" />

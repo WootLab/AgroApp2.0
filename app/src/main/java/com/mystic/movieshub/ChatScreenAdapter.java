@@ -28,10 +28,9 @@ public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static  final int RIGHT = 1;
     private static  final int LEFT = 0;
-    private List<Chat> listOfChats;
+    private final List<Chat> listOfChats;
     private FirebaseUser user;
     Context context;
-
 
     public ChatScreenAdapter(List<Chat> chatHolder, Context context) {
         listOfChats = chatHolder;
