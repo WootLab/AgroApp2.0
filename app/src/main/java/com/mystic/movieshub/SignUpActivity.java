@@ -3,6 +3,7 @@ package com.mystic.movieshub;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -54,6 +55,11 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        Toolbar toolbar = findViewById(R.id.toolbarr);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Sign Up");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mStorageRef = FirebaseStorage.getInstance().getReference("USERSPIC");
         defineViews();
 

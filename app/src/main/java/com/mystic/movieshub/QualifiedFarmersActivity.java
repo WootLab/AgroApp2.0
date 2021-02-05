@@ -1,6 +1,7 @@
 package com.mystic.movieshub;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class QualifiedFarmersActivity extends AppCompatActivity {
 
@@ -29,7 +31,12 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qualified_farmers);
+
+        Toolbar toolbar = findViewById(R.id.toolbarr);
+        setSupportActionBar(toolbar);
         final User user = (User) getIntent().getSerializableExtra("QualifiedFarmers");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(user.getName());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         defineViews();
 
         Glide.with(this)
