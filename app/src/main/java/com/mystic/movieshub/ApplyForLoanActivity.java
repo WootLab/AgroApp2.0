@@ -2,6 +2,7 @@ package com.mystic.movieshub;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
     private  AgroAppRepo agroAppRepo;
 
 
-    private int pos = 0;
+    //private int pos = 0;
 
 
 
@@ -51,6 +52,11 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_for_loan);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
+
+        Toolbar toolbar = findViewById(R.id.toolbarr);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Application");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         defineViews();
         setUpSpinner();
         backgroundProcess();
