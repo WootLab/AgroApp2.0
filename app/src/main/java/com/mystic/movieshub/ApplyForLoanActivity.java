@@ -65,7 +65,7 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
                 String addres = address.getText().toString().trim();
                 String postal = postalcode.getText().toString().trim();
                 String agric = agrictype.getSelectedItem().toString();
-                agroAppRepo.applyForLoans(userId,"",description,imageList,agric,ApplyForLoanActivity.this);
+                agroAppRepo.applyForLoans(userId,locgov,stateStr,description,imageList,agric,ApplyForLoanActivity.this);
 
             }
         });

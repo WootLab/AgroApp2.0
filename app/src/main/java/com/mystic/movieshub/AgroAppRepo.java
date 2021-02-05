@@ -421,7 +421,7 @@ public class AgroAppRepo {
     }
 
 
-    public void applyForLoans(final String userId, String location, String description, List<Uri> imageList, String agricType, final Context context){
+    public void applyForLoans(final String userId, String localgov,String state,String description, List<Uri> imageList, String agricType, final Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
         final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
@@ -445,12 +445,14 @@ public class AgroAppRepo {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
+                            return;
                         }
                     });
         }
 
         Requirements requirements = new Requirements();
-        requirements.setLocation(location);
+        requirements.setLocalgov(localgov);
+        requirements.setState(state);
         requirements.setDescription(description);
         requirements.setImages(imageList);
         requirements.setAgricTypes(agricType);
@@ -477,7 +479,7 @@ public class AgroAppRepo {
                             });
                         }
                     });*/
-                    // An error might stem from her seince am not sure if the user that we get from dis process below will come with the information that the user has
+                    // An error might stem from her since am not sure if the user that we get from dis process below will come with the information that the user has
                     User user = new User(userId);
                     mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -496,7 +498,7 @@ public class AgroAppRepo {
 
                     progressDialog.dismiss();
                 }else{
-                    Toast.makeText(context,"Application was not succesful",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,"Application was not successful",Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
                 }
             }
@@ -534,9 +536,7 @@ public class AgroAppRepo {
         });
     }
 
-//This could hunt me for i have not tried it before
-
-
+   //This could hunt me for i have not tried it before
     public String loadJSONFromAsset(Context context) {
         String json;
         try {
@@ -558,7 +558,6 @@ public class AgroAppRepo {
 
     //This process should be running in the background we are going to be using RXJAVA
     private List<HashMap<String, List<String>>> listOfHashMaps(Context context){
-
         List<HashMap<String, List<String>>> hashMaps = new ArrayList<>();
         try {
             JSONArray array = new JSONArray(loadJSONFromAsset(context));
@@ -566,7 +565,6 @@ public class AgroAppRepo {
                 List<String> localContainer = new ArrayList<>();
                 JSONObject stateObject = array.getJSONObject(i);
                 String stateName = stateObject.getString("state");
-                //JSONArray localgov = stateObject.getJSONArray("lgas");
                 JSONArray localgov = (JSONArray) stateObject.get("lgas");
                 for(int j = 0 ; j < localgov.length() ; j++ ){
                     localContainer.add(localgov.get(j).toString());
