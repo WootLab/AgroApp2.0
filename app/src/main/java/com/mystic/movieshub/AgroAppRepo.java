@@ -437,6 +437,7 @@ public class AgroAppRepo {
                             imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
+                                    Toast.makeText(context,"something went wrong",Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -445,6 +446,7 @@ public class AgroAppRepo {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
+                            Toast.makeText(context,"something went wrong",Toast.LENGTH_SHORT).show();
                             return;
                         }
                     });
@@ -462,7 +464,7 @@ public class AgroAppRepo {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                   /* loadSpecUser(userId, new SpecificUser() {
+                    loadSpecUser(userId, new SpecificUser() {
                         @Override
                         public void loadSpecUse(User user) {
                             mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -479,9 +481,9 @@ public class AgroAppRepo {
                                 }
                             });
                         }
-                    });*/
+                    });
                     // An error might stem from her since am not sure if the user that we get from dis process below will come with the information that the user has
-                    User user = new User(userId);
+                    /*User user = new User(userId);
                     mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -494,14 +496,13 @@ public class AgroAppRepo {
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
                         }
-                    });
+                    });*/
 
 
-                    progressDialog.dismiss();
                 }else{
                     Toast.makeText(context,"Application was not successful",Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
                 }
+                progressDialog.dismiss();
             }
         });
 
@@ -518,6 +519,7 @@ public class AgroAppRepo {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     User user = dataSnapshot.getValue(User.class);
                     Requirements requirements = user.getRequirements();
+                    Log.d("Requirements",user.toString());
                     if(requirements.getLocalgov().equals(local)
                             && requirements.getState().equals(state)
                             && requirements.getAgricTypes().equals(typeoffarming))
