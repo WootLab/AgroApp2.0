@@ -457,7 +457,8 @@ public class AgroAppRepo {
         requirements.setImages(imageList);
         requirements.setAgricTypes(agricType);
         requirements.setEligible(true);
-        mDatabaseReference.child(userId).setValue(requirements).addOnCompleteListener(new OnCompleteListener<Void>() {
+        requirements.setApplicationState(true);
+        mDatabaseReference.child(userId).child("requirements").setValue(requirements).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){

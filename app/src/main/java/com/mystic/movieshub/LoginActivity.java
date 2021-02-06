@@ -2,6 +2,7 @@ package com.mystic.movieshub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginpage);
+
+
+
+        Toolbar toolbar = findViewById(R.id.toolbarr);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Login");
         inputEditEmail = findViewById(R.id.logInEmail);
         inputEditPassword = findViewById(R.id.loginInPassword);
         Button logbtn = findViewById(R.id.Login);
