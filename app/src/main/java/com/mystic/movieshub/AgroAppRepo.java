@@ -205,7 +205,7 @@ public class AgroAppRepo {
 
 
 
-    public void signUp(final String email, final String password, final Context context, final ProgressBar bar, final String phone, final String name, final Uri uri, final String role){
+    public void signUp(final String email, final String password, final Context context, final ProgressBar bar, final String phone, final String name, final Uri uri, final String role,User fromInv){
         bar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email,password)
                 .addOnFailureListener(new OnFailureListener() {
@@ -239,7 +239,7 @@ public class AgroAppRepo {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-                                                login(email, password, context,bar);
+                                                login(email, password, context,bar,fromInv);
                                             }
 
                                             if(!task.isSuccessful()){
@@ -268,7 +268,7 @@ public class AgroAppRepo {
 
     }
 
-    public void login(String email, String password, final Context context, final ProgressBar bar) {
+    public void login(String email, String password, final Context context, final ProgressBar bar, User fromInv) {
         if (email != null && password != null) {
             bar.setVisibility(View.VISIBLE);
             mAuth.signInWithEmailAndPassword(email, password)
@@ -287,8 +287,15 @@ public class AgroAppRepo {
                             if(task.isSuccessful()){
                                 //Go to the next Activity
                                 bar.setVisibility(View.GONE);
-                                Intent intent = new Intent(context,MainActivity.class);
-                                context.startActivity(intent);
+                                if(fromInv != null){
+                                    Intent intent = new Intent(context,InvestorScreenActivity.class);
+                                    intent.putExtra("QualUser",fromInv);
+                                    context.startActivity(intent);
+                                }else{
+                                    Intent intent = new Intent(context,MainActivity.class);
+                                    context.startActivity(intent);
+                                }
+
                             }
                         }
                     });
@@ -437,6 +444,7 @@ public class AgroAppRepo {
                             imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
+                                    imageList.add(inuri);
                                     Toast.makeText(context,"something went wrong",Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -447,7 +455,6 @@ public class AgroAppRepo {
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
                             Toast.makeText(context,"something went wrong",Toast.LENGTH_SHORT).show();
-                            return;
                         }
                     });
         }

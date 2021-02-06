@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText inputEditEmail;
     private TextInputEditText inputEditPassword;
     private FirebaseAuth firebase;
+    private User fromInvScr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbarr);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Login");
+
+        fromInvScr = (User) getIntent().getSerializableExtra("FromInvestorScr");
         inputEditEmail = findViewById(R.id.logInEmail);
         inputEditPassword = findViewById(R.id.loginInPassword);
         Button logbtn = findViewById(R.id.Login);
@@ -53,8 +56,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
         invest.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this,InvestorScreenActivity.class);
-            startActivity(intent);
+                Intent intent = new Intent(LoginActivity.this,InvestorScreenActivity.class);
+                startActivity(intent);
+
         });
 
     }
@@ -102,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
             AccSharedPref.setStoredEmail(this,email);
             ProgressBar bar = findViewById(R.id.progressBar2);
             closeKeyboard();
-            AgroAppRepo.getInstanceOfAgroApp().login(email, password,this,bar);
+            AgroAppRepo.getInstanceOfAgroApp().login(email, password,this,bar,fromInvScr);
         }
 
     }

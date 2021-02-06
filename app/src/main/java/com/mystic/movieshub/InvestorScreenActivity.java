@@ -68,7 +68,9 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
                             public void farmerlistener(int position) {
 
                                 if(FirebaseAuth.getInstance().getCurrentUser() == null){
+                                    User user = qualifiedfarmers.get(position);
                                     Intent intent = new Intent(InvestorScreenActivity.this,LoginActivity.class);
+                                    intent.putExtra("FromInvestorScr",user);
                                     startActivity(intent);
                                 }else{
                                     User user = qualifiedfarmers.get(position);

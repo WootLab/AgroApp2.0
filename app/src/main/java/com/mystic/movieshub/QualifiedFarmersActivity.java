@@ -34,46 +34,79 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbarr);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
         final User user = (User) getIntent().getSerializableExtra("QualifiedFarmers");
-        Objects.requireNonNull(getSupportActionBar()).setTitle(user.getName());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        defineViews();
+        final User qual = (User) getIntent().getSerializableExtra("QualUser");
 
-        Glide.with(this)
-                .asBitmap()
-                .load(Uri.parse(user.getImage()))
-                .into(imageView);
-        name.setText(user.getName());
-        email.setText(user.getEmail());
-        adress.setText(user.getRequirements().getLocation());
-        phoneNumber.setText(user.getPhoneNumber());
-        description.setText(user.getRequirements().getDescription());
-        final List<Uri> uriContainer = user.getRequirements().getImages();
+        if(user != null ){
+            Objects.requireNonNull(getSupportActionBar()).setTitle(user.getName());
 
-        if(farmPhotoAdapter == null){
-            farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
-        }
+            Glide.with(this)
+                    .asBitmap()
+                    .load(Uri.parse(user.getImage()))
+                    .into(imageView);
+            name.setText(user.getName());
+            email.setText(user.getEmail());
+            adress.setText(user.getRequirements().getLocation());
+            phoneNumber.setText(user.getPhoneNumber());
+            description.setText(user.getRequirements().getDescription());
+            final List<Uri> uriContainer = user.getRequirements().getImages();
+            if(farmPhotoAdapter == null){
+                farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
+            }
 
-        farmPhotoAdapter.showPhoto(new FarmPhotoAdapter.PhotoAdapterListener() {
-            @Override
-            public void photolistener(int position) {
+            farmPhotoAdapter.showPhoto(position -> {
                 Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
                 Uri uri = uriContainer.get(position);
                 intent.putExtra("PHOTO",uri);
                 startActivity(intent);
+            });
+        }else{
+            Objects.requireNonNull(getSupportActionBar()).setTitle(qual.getName());
+            Glide.with(this)
+                    .asBitmap()
+                    .load(Uri.parse(qual.getImage()))
+                    .into(imageView);
+            name.setText(qual.getName());
+            email.setText(qual.getEmail());
+            adress.setText(qual.getRequirements().getLocation());
+            phoneNumber.setText(qual.getPhoneNumber());
+            description.setText(qual.getRequirements().getDescription());
+            final List<Uri> uriContainer = qual.getRequirements().getImages();
+            if(farmPhotoAdapter == null){
+                farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
             }
-        });
+
+            farmPhotoAdapter.showPhoto(position -> {
+                Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
+                Uri uri = uriContainer.get(position);
+                intent.putExtra("PHOTO",uri);
+                startActivity(intent);
+            });
+        }
         recyclerView.setAdapter(farmPhotoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        defineViews();
+
+
+
+
+        call.setOnClickListener(v -> {
+            if(user != null){
                 String number = user.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse(number));
                 startActivity(intent);
+            } else {
+                String number = qual.getPhoneNumber();
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse(number));
+                startActivity(intent);
             }
+
+
         });
 
 
