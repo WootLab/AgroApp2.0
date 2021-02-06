@@ -50,6 +50,7 @@ public class SignUpActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     private Spinner spinner;
     private StorageTask mUploads;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Sign Up");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        user = (User) getIntent().getSerializableExtra("QualUser");
         mStorageRef = FirebaseStorage.getInstance().getReference("USERSPIC");
         defineViews();
 
@@ -162,7 +164,7 @@ public class SignUpActivity extends AppCompatActivity {
         AccSharedPref.setStoredEmail(this,email);
         //This will trigger what adds the user to the database
         ProgressBar prog = findViewById(R.id.progressBar);
-        AgroAppRepo.getInstanceOfAgroApp().signUp(email,password,this,prog,phone,fullname,uri,role);
+        AgroAppRepo.getInstanceOfAgroApp().signUp(email,password,this,prog,phone,fullname,uri,role,user);
     }
 
     private void chooseImage() {
