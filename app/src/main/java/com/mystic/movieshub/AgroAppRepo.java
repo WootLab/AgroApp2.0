@@ -446,6 +446,8 @@ public class AgroAppRepo {
             Log.d("Loans","We are showing dialog");
             Log.d("Loans",""+imageList.size());
 
+
+
             for( int i = 0 ; i < imageList.size() ; i++){
                 Uri uriexact = imageList.get(i);
                 final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
@@ -473,53 +475,12 @@ public class AgroAppRepo {
                                                     .child(userId)
                                                     .child("requirements")
                                                     .setValue(requirements)
-                                                    .addOnCanceledListener(new OnCanceledListener() {
-                                                        @Override
-                                                        public void onCanceled() {
-                                                            Toast.makeText(context,"This was cancelled",Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    })
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Log.d("Loans","We are about to add the requirements to the base because it is cmplete");
-
-                                                    if(task.isSuccessful()){
-                                                        loadSpecUser(userId, new SpecificUser() {
-                                                            @Override
-                                                            public void loadSpecUse(User user) {
-                                                                loadSpecUser(userId, new SpecificUser() {
-                                                                    @Override
-                                                                    public void loadSpecUse(User user) {
-
-                                                                        mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                if(task.isSuccessful()){
-                                                                                    progressDialog.dismiss();
-                                                                                    Log.d("Loans","We added requirement to databases");
-                                                                                }
-                                                                            }
-                                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                                            @Override
-                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-                                                    }else{
-                                                        Toast.makeText(context,"We had issues ",Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.d("Loans", " could not be uploaded");
-                                                }
-                                            });
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Log.d("Loans","This might not work");
+                                                        }
+                                                    });
                                         }
                                     }
                                 });
