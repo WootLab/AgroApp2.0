@@ -429,13 +429,18 @@ public class AgroAppRepo {
 
 
     public void applyForLoans(final String userId, String localgov,String state,String description, List<Uri> imageList, String agricType, final Context context){
+        Log.d("Loans","We are in the method");
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
         final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
         StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
         progressDialog = new ProgressDialog(context);
+        Log.d("Loans","We are setting up dialog");
         progressDialog.setMessage("Please wait while we upload your details.................");
         progressDialog.show();
+        Log.d("Loans","We are showing dialog");
+        Log.d("Loans",""+imageList.size());
         for(Uri inuri : imageList){
+            Log.d("Loans","We are in a loop");
             final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,inuri));
             imageName.putFile(inuri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -445,7 +450,7 @@ public class AgroAppRepo {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     imageList.add(inuri);
-                                    Toast.makeText(context,"something went wrong",Toast.LENGTH_SHORT).show();
+                                    Log.d("Loans","Adde image");
                                 }
                             });
                         }
@@ -453,12 +458,20 @@ public class AgroAppRepo {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            Log.d("Loans",e.getMessage());
                             progressDialog.dismiss();
                             Toast.makeText(context,"something went wrong",Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if(!task.isSuccessful()){
+                        Log.d("Loans","Image was not added");
+                    }
+                }
+            });
         }
-
+        Log.d("Loans","We are setting requirements");
         Requirements requirements = new Requirements();
         requirements.setLocalgov(localgov);
         requirements.setState(state);
@@ -478,7 +491,7 @@ public class AgroAppRepo {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(context,"You applied",Toast.LENGTH_LONG).show();
+                                        Log.d("Loans","We added requirement to databases");
                                     }
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
