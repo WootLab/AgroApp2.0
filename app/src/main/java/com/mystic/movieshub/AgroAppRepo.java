@@ -439,18 +439,66 @@ public class AgroAppRepo {
         progressDialog.show();
         Log.d("Loans","We are showing dialog");
         Log.d("Loans",""+imageList.size());
-        for(Uri inuri : imageList){
-            Log.d("Loans","We are in a loop");
-            final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,inuri));
-            imageName.putFile(inuri)
+
+        for( int i = 0 ; i < imageList.size() ; i++){
+            Uri uriexact = imageList.get(i);
+            final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
+            int finalI = i;
+            imageName.putFile(uriexact)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    imageList.add(inuri);
-                                    Log.d("Loans","Adde image");
+                                    if( finalI == (imageList.size()-1)){
+                                        imageList.add(uri);
+                                        Log.d("Loans","Adde image");
+                                        Log.d("Loans","We are setting requirements");
+                                        Requirements requirements = new Requirements();
+                                        requirements.setLocalgov(localgov);
+                                        requirements.setState(state);
+                                        requirements.setDescription(description);
+                                        requirements.setImages(imageList);
+                                        requirements.setAgricTypes(agricType);
+                                        requirements.setEligible(true);
+                                        requirements.setApplicationState(true);
+                                        mDatabaseReference.child(userId).child("requirements").setValue(requirements).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    loadSpecUser(userId, new SpecificUser() {
+                                                        @Override
+                                                        public void loadSpecUse(User user) {
+                                                            loadSpecUser(userId, new SpecificUser() {
+                                                                @Override
+                                                                public void loadSpecUse(User user) {
+                                                                    mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if(task.isSuccessful()){
+                                                                                Log.d("Loans","We added requirement to databases");
+                                                                            }
+                                                                        }
+                                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d("Loans", " could not be uploaded");
+                                            }
+                                        });
+                                    }
                                 }
                             });
                         }
@@ -467,64 +515,14 @@ public class AgroAppRepo {
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if(!task.isSuccessful()){
                         Log.d("Loans","Image was not added");
+
+
+                        //if(imageList.size());
                     }
                 }
             });
         }
-        Log.d("Loans","We are setting requirements");
-        Requirements requirements = new Requirements();
-        requirements.setLocalgov(localgov);
-        requirements.setState(state);
-        requirements.setDescription(description);
-        requirements.setImages(imageList);
-        requirements.setAgricTypes(agricType);
-        requirements.setEligible(true);
-        requirements.setApplicationState(true);
-        mDatabaseReference.child(userId).child("requirements").setValue(requirements).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    loadSpecUser(userId, new SpecificUser() {
-                        @Override
-                        public void loadSpecUse(User user) {
-                            mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Log.d("Loans","We added requirement to databases");
-                                    }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                    });
-                    // An error might stem from her since am not sure if the user that we get from dis process below will come with the information that the user has
-                    /*User user = new User(userId);
-                    mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(context,"You applied",Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
-                        }
-                    });*/
 
-
-                }else{
-                    Toast.makeText(context,"Application was not successful",Toast.LENGTH_LONG).show();
-                }
-                progressDialog.dismiss();
-            }
-        });
 
 
     }
