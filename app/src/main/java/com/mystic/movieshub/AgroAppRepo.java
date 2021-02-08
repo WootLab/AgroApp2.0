@@ -70,6 +70,7 @@ public class AgroAppRepo {
     private List<User> qualifiedFarmers;
     private List<HashMap<String, List<String>>> fullLocalGovernment;
     private ProgressDialog progressDialog;
+    public boolean success;
     //private ProgressBar bar;
 
 
@@ -81,6 +82,7 @@ public class AgroAppRepo {
         chatContainer = new ArrayList<>();
         qualifiedFarmers = new ArrayList<>();
         stateList = new ArrayList<>();
+        success = false;
     }
 
 
@@ -429,11 +431,10 @@ public class AgroAppRepo {
     }
 
 
-    public void applyForLoans(final String userId, String localgov,String state,String description, List<Uri> imageList, String agricType, final Context context){
+    public void applyForLoans(final String userId, String localgov,String state,String description, List<Uri> imageList, String agricType, final Context context, SuxcessListener suxcessListener){
         if(imageList.size() < 3){
          Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
         }else {
-
 
             Log.d("Loans","We are in the method");
             DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
@@ -459,19 +460,10 @@ public class AgroAppRepo {
                                 imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        if( finalI == (imageList.size()-1)){
-                                            imageList.add(uri);
-                                            Log.d("Loans","Adde image");
-                                            Log.d("Loans","We are setting requirements");
-                                            Requirements requirements = new Requirements();
-                                            requirements.setLocalgov(localgov);
-                                            requirements.setState(state);
-                                            requirements.setDescription(description);
-                                            requirements.setImages(imageList);
-                                            requirements.setAgricTypes(agricType);
-                                            requirements.setEligible(true);
-                                            requirements.setApplicationState(true);
-                                            mDatabaseReference
+                                        imageList.add(uri);
+                                        if (finalI == (imageList.size() - 1)) {
+                                            suxcessListener.suxesListener(true);
+                                            /*mDatabaseReference
                                                     .child(userId)
                                                     .child("requirements")
                                                     .setValue(requirements)
@@ -480,7 +472,7 @@ public class AgroAppRepo {
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             Log.d("Loans","This might not work");
                                                         }
-                                                    });
+                                                    });*/
                                         }
                                     }
                                 });
@@ -498,12 +490,38 @@ public class AgroAppRepo {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(!task.isSuccessful()){
                             Log.d("Loans","Image was not added");
-
-
+                            progressDialog.dismiss();
                             //if(imageList.size());
                         }
                     }
                 });
+            }
+
+
+            if(success){
+
+                Log.d("Loans","Adde image");
+                Log.d("Loans","We are setting requirements");
+                Requirements requirements = new Requirements();
+                Log.d("Loans","We are setting requirements fields");
+                requirements.setLocalgov(localgov);
+                requirements.setState(state);
+                requirements.setDescription(description);
+                requirements.setImages(imageList);
+                requirements.setAgricTypes(agricType);
+                requirements.setEligible(true);
+                requirements.setApplicationState(true);
+                Log.d("Loans","I made it here");
+                mDatabaseReference
+                        .child(userId)
+                        .child("requirements")
+                        .setValue(requirements)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d("Loans","This might not work");
+                            }
+                        });
             }
         }
 
@@ -648,6 +666,9 @@ public class AgroAppRepo {
     }
 
 
+    public interface SuxcessListener{
+        void suxesListener(boolean succes);
+    }
 
 
 }

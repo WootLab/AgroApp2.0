@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -71,7 +72,15 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
                 String addres = address.getText().toString().trim();
                 String postal = postalcode.getText().toString().trim();
                 String agric = agrictype.getSelectedItem().toString();
-                agroAppRepo.applyForLoans(userId,locgov,stateStr,description,imageList,agric,ApplyForLoanActivity.this);
+                agroAppRepo.applyForLoans(userId, locgov, stateStr, description, imageList, agric, ApplyForLoanActivity.this, new AgroAppRepo.SuxcessListener() {
+                    @Override
+                    public void suxesListener(boolean succes) {
+                        if(succes){
+                            Log.d("Loans","Workin in activity");
+                            Toast.makeText(ApplyForLoanActivity.this,"working",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
             }
         });
