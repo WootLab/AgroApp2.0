@@ -429,6 +429,9 @@ public class AgroAppRepo {
     }
 
 
+
+
+
     public Single<Void> addInBackground(String userId,Requirements requirements){
         return Single.fromCallable(new Callable<Void>() {
             @Override
@@ -436,6 +439,10 @@ public class AgroAppRepo {
                 DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
                 final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
                 mDatabaseReference.child(userId).child("requirements").setValue(requirements).getResult();
+                //Task<User> userTask = mDatabaseReference.child(userId).
+                //for(){
+
+                //}
                 loadSpecUser(userId, new SpecificUser() {
                     @Override
                     public void loadSpecUse(User user) {
@@ -454,11 +461,7 @@ public class AgroAppRepo {
         if(imageList.size() < 3){
          Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
         }else {
-
-            DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
-            final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
             Log.d("Loans","We are in the method");
-
             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
             progressDialog = new ProgressDialog(context);
             Log.d("Loans","We are setting up dialog");
