@@ -436,8 +436,7 @@ public class AgroAppRepo {
 
 
             Log.d("Loans","We are in the method");
-            DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
-            final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
+
             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
             progressDialog = new ProgressDialog(context);
             Log.d("Loans","We are setting up dialog");
@@ -457,8 +456,8 @@ public class AgroAppRepo {
                                 imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        imageList.add(uri);
                                         if( finalI == (imageList.size()-1)){
-                                            imageList.add(uri);
                                             Log.d("Loans","Adde image");
                                             Log.d("Loans","We are setting requirements");
                                             Requirements requirements = new Requirements();
@@ -469,57 +468,9 @@ public class AgroAppRepo {
                                             requirements.setAgricTypes(agricType);
                                             requirements.setEligible(true);
                                             requirements.setApplicationState(true);
-                                            mDatabaseReference
-                                                    .child(userId)
-                                                    .child("requirements")
-                                                    .setValue(requirements)
-                                                    .addOnCanceledListener(new OnCanceledListener() {
-                                                        @Override
-                                                        public void onCanceled() {
-                                                            Toast.makeText(context,"This was cancelled",Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    })
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Log.d("Loans","We are about to add the requirements to the base because it is cmplete");
 
-                                                    if(task.isSuccessful()){
-                                                        loadSpecUser(userId, new SpecificUser() {
-                                                            @Override
-                                                            public void loadSpecUse(User user) {
-                                                                loadSpecUser(userId, new SpecificUser() {
-                                                                    @Override
-                                                                    public void loadSpecUse(User user) {
+                                            performAdiitionToBase(userId,requirements,context);
 
-                                                                        mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                if(task.isSuccessful()){
-                                                                                    progressDialog.dismiss();
-                                                                                    Log.d("Loans","We added requirement to databases");
-                                                                                }
-                                                                            }
-                                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                                            @Override
-                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-                                                    }else{
-                                                        Toast.makeText(context,"We had issues ",Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.d("Loans", " could not be uploaded");
-                                                }
-                                            });
                                         }
                                     }
                                 });
@@ -546,9 +497,64 @@ public class AgroAppRepo {
             }
         }
 
+    }
 
 
+    private void performAdiitionToBase(String userId,Requirements requirements,Context context){
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
+        final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
 
+        mDatabaseReference
+                .child(userId)
+                .child("requirements")
+                .setValue(requirements)
+                .addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        Toast.makeText(context,"This was cancelled",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("Loans","We are about to add the requirements to the base because it is cmplete");
+
+                        if(task.isSuccessful()){
+                            loadSpecUser(userId, new SpecificUser() {
+                                @Override
+                                public void loadSpecUse(User user) {
+                                    loadSpecUser(userId, new SpecificUser() {
+                                        @Override
+                                        public void loadSpecUse(User user) {
+
+                                            mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        progressDialog.dismiss();
+                                                        Log.d("Loans","We added requirement to databases");
+                                                    }
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }else{
+                            Toast.makeText(context,"We had issues ",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Loans", " could not be uploaded");
+            }
+        });
     }
 
 
