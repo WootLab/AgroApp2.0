@@ -429,12 +429,34 @@ public class AgroAppRepo {
     }
 
 
+    public Single<Void> addInBackground(String userId,Requirements requirements){
+        return Single.fromCallable(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
+                final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
+                mDatabaseReference.child(userId).child("requirements").setValue(requirements).getResult();
+                loadSpecUser(userId, new SpecificUser() {
+                    @Override
+                    public void loadSpecUse(User user) {
+                        mDatabaseReferenceApproved.child(userId).setValue(user).getResult();
+                    }
+                });
+                return null;
+            }
+        });
+
+    }
+
+
+
     public void applyForLoans(final String userId, String localgov,String state,String description, List<Uri> imageList, String agricType, final Context context){
         if(imageList.size() < 3){
          Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
         }else {
 
-
+            DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
+            final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
             Log.d("Loans","We are in the method");
 
             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
@@ -447,6 +469,7 @@ public class AgroAppRepo {
 
             for( int i = 0 ; i < imageList.size() ; i++){
                 Uri uriexact = imageList.get(i);
+
                 final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
                 int finalI = i;
                 imageName.putFile(uriexact)
@@ -468,8 +491,26 @@ public class AgroAppRepo {
                                             requirements.setAgricTypes(agricType);
                                             requirements.setEligible(true);
                                             requirements.setApplicationState(true);
+                                            addInBackground(userId,requirements).subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe(new SingleObserver<Void>() {
+                                                        @Override
+                                                        public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
 
-                                            performAdiitionToBase(userId,requirements,context);
+                                                        }
+
+                                                        @Override
+                                                        public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Void aVoid) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                                                        }
+                                                    });
+                                            progressDialog.dismiss();
+                                            Log.d("Loans","We added requirement to databases");
 
                                         }
                                     }
@@ -488,8 +529,6 @@ public class AgroAppRepo {
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(!task.isSuccessful()){
                             Log.d("Loans","Image was not added");
-
-
                             //if(imageList.size());
                         }
                     }
@@ -499,63 +538,6 @@ public class AgroAppRepo {
 
     }
 
-
-    private void performAdiitionToBase(String userId,Requirements requirements,Context context){
-        DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
-        final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
-
-        mDatabaseReference
-                .child(userId)
-                .child("requirements")
-                .setValue(requirements)
-                .addOnCanceledListener(new OnCanceledListener() {
-                    @Override
-                    public void onCanceled() {
-                        Toast.makeText(context,"This was cancelled",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.d("Loans","We are about to add the requirements to the base because it is cmplete");
-
-                        if(task.isSuccessful()){
-                            loadSpecUser(userId, new SpecificUser() {
-                                @Override
-                                public void loadSpecUse(User user) {
-                                    loadSpecUser(userId, new SpecificUser() {
-                                        @Override
-                                        public void loadSpecUse(User user) {
-
-                                            mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful()){
-                                                        progressDialog.dismiss();
-                                                        Log.d("Loans","We added requirement to databases");
-                                                    }
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        }else{
-                            Toast.makeText(context,"We had issues ",Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Loans", " could not be uploaded");
-            }
-        });
-    }
 
 
     public void fetchSelectedfarmers(final String local, final String state, final String typeoffarming, final ProgressBar bar, final FetchQualifiedfarmers fetchQualifiedfarmers){
