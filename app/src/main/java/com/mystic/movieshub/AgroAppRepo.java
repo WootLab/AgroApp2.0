@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,15 +60,15 @@ public class AgroAppRepo {
     private static  AgroAppRepo agroAppRepo;
     private final FirebaseAuth mAuth;
     private User user;
-    private List<String> stateList;
+    private final List<String> stateList;
     private  FarmProduct farmProduct;
-    private List<FarmProduct> farmProductList ;
-    private List<Chat> chatContainer;
+    private final List<FarmProduct> farmProductList ;
+    private final List<Chat> chatContainer;
     private List<AgriNews> agriNewsContainer;
     public static final String PRODUCT = "product";
     public static final String AGRIC_NEWS = "AgricNews";
     public static final String ADMIN_ID = "P3O1w3u7K4NLY7zA6OS7pg3N8633";
-    private List<User> qualifiedFarmers;
+    private final List<User> qualifiedFarmers;
     private List<HashMap<String, List<String>>> fullLocalGovernment;
     private ProgressDialog progressDialog;
     //private ProgressBar bar;
@@ -275,28 +276,25 @@ public class AgroAppRepo {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-
                             Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
                             Log.d("Login error", Objects.requireNonNull(e.getMessage()));
                             bar.setVisibility(View.GONE);
                         }
                     })
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
-                                //Go to the next Activity
-                                bar.setVisibility(View.GONE);
-                                if(fromInv != null){
-                                    Intent intent = new Intent(context,InvestorScreenActivity.class);
-                                    intent.putExtra("QualUser",fromInv);
-                                    context.startActivity(intent);
-                                }else{
-                                    Intent intent = new Intent(context,MainActivity.class);
-                                    context.startActivity(intent);
-                                }
-
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            //Go to the next Activity
+                            bar.setVisibility(View.GONE);
+                            Intent intent;
+                            if(fromInv != null){
+                                intent = new Intent(context, InvestorScreenActivity.class);
+                                intent.putExtra("QualUser",fromInv);
+                                Toast.makeText(context,"Pls login or signUp to Chat with farmer",Toast.LENGTH_SHORT).show();
+                            }else{
+                                intent = new Intent(context, MainActivity.class);
                             }
+                            context.startActivity(intent);
+
                         }
                     });
 
@@ -309,30 +307,19 @@ public class AgroAppRepo {
 
     public void sendMessage(final String message, final String receiverId, final Context context){
         if(!message.equals("")){
-            fetchUser(new FireBaseCallbackUser() {
-                @Override
-                public void fireBaseUser(User basuser) {
-                    String senderId = basuser.getUid();
-                    DatabaseReference reference = firebaseDatabase.getReference("CHAT");
-                    String chatId = reference.push().getKey();
-                    Chat chat = new Chat(message,chatId,senderId,receiverId);
-                    assert chatId != null;
-                    reference.child(chatId).setValue(chat)
-                            .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context,"Message cant be sent",Toast.LENGTH_LONG).show();
-                        }
-                    })
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(context,"Message was sent",Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                }
+            fetchUser(basuser -> {
+                String senderId = basuser.getUid();
+                DatabaseReference reference = firebaseDatabase.getReference("CHAT");
+                String chatId = reference.push().getKey();
+                Chat chat = new Chat(message,chatId,senderId,receiverId);
+                assert chatId != null;
+                reference.child(chatId).setValue(chat)
+                        .addOnFailureListener(e -> Toast.makeText(context,"Message cant be sent",Toast.LENGTH_LONG).show())
+                        .addOnCompleteListener(task -> {
+                            if(task.isSuccessful()){
+                                Toast.makeText(context,"Message was sent",Toast.LENGTH_LONG).show();
+                            }
+                        });
             });
         }else{
             Toast.makeText(context,"Message cant be sent",Toast.LENGTH_LONG).show();
@@ -520,6 +507,7 @@ public class AgroAppRepo {
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                qualifiedFarmers.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     User user = dataSnapshot.getValue(User.class);
                     Requirements requirements = user.getRequirements();
@@ -552,7 +540,7 @@ public class AgroAppRepo {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;

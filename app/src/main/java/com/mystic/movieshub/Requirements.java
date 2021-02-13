@@ -2,9 +2,10 @@ package com.mystic.movieshub;
 
 import android.net.Uri;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Requirements {
+public class Requirements implements Serializable {
     private List<String> images;
     private String location;
     private String state;
@@ -13,8 +14,6 @@ public class Requirements {
     private String agricTypes;
     private boolean applicationState;
     private boolean eligible;
-
-
 
     public Requirements() {
     }

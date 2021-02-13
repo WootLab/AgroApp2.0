@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -40,6 +41,10 @@ public class LoginActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Login");
 
         fromInvScr = (User) getIntent().getSerializableExtra("FromInvestorScr");
+        if(fromInvScr != null ){
+            Log.d("FromLogin",fromInvScr.getEmail());
+        }
+
         inputEditEmail = findViewById(R.id.logInEmail);
         inputEditPassword = findViewById(R.id.loginInPassword);
         Button logbtn = findViewById(R.id.Login);

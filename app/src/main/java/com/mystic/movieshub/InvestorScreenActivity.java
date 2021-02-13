@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.util.Strings;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +33,7 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
 
     private Spinner state, localgov, typeoffarming;
     private RecyclerView recyclerView;
+    private TextView noFarmer;
     private Button but;
     private  List<HashMap<String, List<String>>> fullLocalGov;
     private ProgressBar bar;
@@ -59,27 +62,30 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
                         if(investorScreenAdapter == null){
                             investorScreenAdapter = new InvestorScreenAdapter(qualifiedfarmers,InvestorScreenActivity.this);
                         }
-                        recyclerView.setVisibility(View.VISIBLE);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(InvestorScreenActivity.this));
-                        recyclerView.setAdapter(investorScreenAdapter);
+                        if(qualifiedfarmers.size() > 0){
+                            recyclerView.setVisibility(View.VISIBLE);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(InvestorScreenActivity.this));
+                            recyclerView.setAdapter(investorScreenAdapter);
+                            noFarmer.setVisibility(View.GONE);
+                        }else{
+                            noFarmer.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
 
-                        investorScreenAdapter.showQualifiedFarmer(new InvestorScreenAdapter.QualifiedFarmersListener() {
-                            @Override
-                            public void farmerlistener(int position) {
-
-                                if(FirebaseAuth.getInstance().getCurrentUser() == null){
-                                    User user = qualifiedfarmers.get(position);
-                                    Intent intent = new Intent(InvestorScreenActivity.this,LoginActivity.class);
-                                    intent.putExtra("FromInvestorScr",user);
-                                    startActivity(intent);
-                                }else{
-                                    User user = qualifiedfarmers.get(position);
-                                    Intent intent = new Intent(InvestorScreenActivity.this,QualifiedFarmersActivity.class);
-                                    intent.putExtra("QualifiedFarmer",user);
-                                    startActivity(intent);
-                                }
-
+                        investorScreenAdapter.showQualifiedFarmer(position -> {
+                            if(FirebaseAuth.getInstance().getCurrentUser() == null){
+                                User user = qualifiedfarmers.get(position);
+                                Intent intent = new Intent(InvestorScreenActivity.this,LoginActivity.class);
+                                intent.putExtra("FromInvestorScr",user);
+                               Toast.makeText(InvestorScreenActivity.this,"You must be loged in",Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
+                            }else{
+                                User user = qualifiedfarmers.get(position);
+                                Intent intent = new Intent(InvestorScreenActivity.this,QualifiedFarmersActivity.class);
+                                intent.putExtra("QualifiedFarmer",user);
+                                startActivity(intent);
                             }
+
                         });
                     }
                 });
@@ -120,6 +126,7 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
         recyclerView = findViewById(R.id.recyclerView2);
         but = findViewById(R.id.button8);
         bar = findViewById(R.id.progressBar5);
+        noFarmer = findViewById(R.id.textView27);
 
     }
 
