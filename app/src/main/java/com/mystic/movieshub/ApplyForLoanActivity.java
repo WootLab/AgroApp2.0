@@ -38,7 +38,7 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
     private Spinner agrictype,state, localGovernment;
     private List<HashMap<String, List<String>>> fullLocalGov;
     private Button chooseMultipleImages,butApply, cancel;
-    private List<Uri> imageList;
+    private List<String> imageList;
     private List<String> stateContainer;
     private  AgroAppRepo agroAppRepo;
 
@@ -71,7 +71,7 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
                 String addres = address.getText().toString().trim();
                 String postal = postalcode.getText().toString().trim();
                 String agric = agrictype.getSelectedItem().toString();
-                agroAppRepo.applyForLoans(userId,locgov,stateStr,description,imageList,agric,ApplyForLoanActivity.this);
+                agroAppRepo.addToQualified(userId,locgov,stateStr,description,imageList,agric,ApplyForLoanActivity.this);
 
             }
         });
@@ -124,7 +124,7 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
             int currentImageSelect = 0;
             while (currentImageSelect < count){
                 Uri imageUri = data.getClipData().getItemAt(currentImageSelect).getUri();
-                imageList.add(imageUri);
+                imageList.add(imageUri.toString());
                 currentImageSelect++;
             }
 

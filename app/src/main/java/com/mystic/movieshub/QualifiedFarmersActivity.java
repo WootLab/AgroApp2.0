@@ -51,14 +51,14 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
             adress.setText(user.getRequirements().getLocation());
             phoneNumber.setText(user.getPhoneNumber());
             description.setText(user.getRequirements().getDescription());
-            final List<Uri> uriContainer = user.getRequirements().getImages();
+            final List<String> uriContainer = user.getRequirements().getImages();
             if(farmPhotoAdapter == null){
                 farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
             }
 
             farmPhotoAdapter.showPhoto(position -> {
                 Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
-                Uri uri = uriContainer.get(position);
+                String uri = uriContainer.get(position);
                 intent.putExtra("PHOTO",uri);
                 startActivity(intent);
             });
@@ -73,14 +73,14 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
             adress.setText(qual.getRequirements().getLocation());
             phoneNumber.setText(qual.getPhoneNumber());
             description.setText(qual.getRequirements().getDescription());
-            final List<Uri> uriContainer = qual.getRequirements().getImages();
+            final List<String> uriContainer = qual.getRequirements().getImages();
             if(farmPhotoAdapter == null){
                 farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
             }
 
             farmPhotoAdapter.showPhoto(position -> {
                 Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
-                Uri uri = uriContainer.get(position);
+                String uri = uriContainer.get(position);
                 intent.putExtra("PHOTO",uri);
                 startActivity(intent);
             });

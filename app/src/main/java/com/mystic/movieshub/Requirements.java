@@ -5,7 +5,7 @@ import android.net.Uri;
 import java.util.List;
 
 public class Requirements {
-    private List<Uri> images;
+    private List<String> images;
     private String location;
     private String state;
     private String localgov;
@@ -31,11 +31,11 @@ public class Requirements {
     public boolean isApplicationState() {
         return applicationState;
     }
-    public List<Uri> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(List<Uri> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 

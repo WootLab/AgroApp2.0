@@ -354,9 +354,7 @@ public class AgroAppRepo {
                 Log.d("FirebaseMessages","I am in ondatachanged");
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Chat chat = dataSnapshot.getValue(Chat.class);
-
                     Log.d("SenderId",chat.getSenderId()+"="+senderId);
-
                     Log.d("ReceiverId",chat.getReceiverId()+"="+receiverId);
                     if(chat.getSenderId().equals(senderId) && chat.getReceiverId().equals(receiverId)
                             || chat.getSenderId().equals(receiverId) && chat.getReceiverId().equals(senderId)){
@@ -428,115 +426,19 @@ public class AgroAppRepo {
         return mime.getExtensionFromMimeType(resolver.getType(uri));
     }
 
-
-    public void applyForLoans(final String userId, String localgov,String state,String description, List<Uri> imageList, String agricType, final Context context){
-        if(imageList.size() < 3){
-         Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
-        }else {
-
-
-            Log.d("Loans","We are in the method");
-
-            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
-            progressDialog = new ProgressDialog(context);
-            Log.d("Loans","We are setting up dialog");
-            progressDialog.setMessage("Please wait while we upload your details.................");
-            progressDialog.show();
-            Log.d("Loans","We are showing dialog");
-            Log.d("Loans",""+imageList.size());
-
-            for( int i = 0 ; i < imageList.size() ; i++){
-                Uri uriexact = imageList.get(i);
-                final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
-                int finalI = i;
-                imageName.putFile(uriexact)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        imageList.add(uri);
-                                        if( finalI == (imageList.size()-1)){
-                                            Log.d("Loans","Adde image");
-                                            Log.d("Loans","We are setting requirements");
-                                            Requirements requirements = new Requirements();
-                                            requirements.setLocalgov(localgov);
-                                            requirements.setState(state);
-                                            requirements.setDescription(description);
-                                            requirements.setImages(imageList);
-                                            requirements.setAgricTypes(agricType);
-                                            requirements.setEligible(true);
-                                            requirements.setApplicationState(true);
-
-                                            performAdiitionToBase(userId,requirements,context);
-
-                                        }
-                                    }
-                                });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("Loans",e.getMessage());
-                                progressDialog.dismiss();
-                                Toast.makeText(context,"something went wrong",Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if(!task.isSuccessful()){
-                            Log.d("Loans","Image was not added");
-
-
-                            //if(imageList.size());
-                        }
-                    }
-                });
-            }
-        }
-
-    }
-
-
     //Just added this method
-    public void addPictures(final String userId, List<Uri> imageList, final Context context, FetchImagesUri fetchImagesUri){
-
-
+    public void addPictures(final String userId, List<String> imageList, final Context context, FetchImagesUri fetchImagesUri){
         if(imageList.size() < 3){
             Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
         }else{
-
-            Log.d("Loans","We are in the method");
-
             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
             progressDialog = new ProgressDialog(context);
-            Log.d("Loans","We are setting up dialog");
-            progressDialog.setMessage("Please wait while we upload your details.................");
-            progressDialog.show();
-            Log.d("Loans","We are showing dialog");
-            Log.d("Loans",""+imageList.size());
-
-
             for( int i = 0 ; i < imageList.size() ; i++){
-
-                Uri uriexact = imageList.get(i);
+                Uri uriexact = Uri.parse(imageList.get(i));
                 final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
-                int finalI = i;
                 imageName.putFile(uriexact)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        imageList.add(uri);
-                                    }
-                                });
-                            }
-                        });
+                        .addOnSuccessListener(taskSnapshot -> imageName.getDownloadUrl().addOnSuccessListener(uri -> imageList.add(uri.toString())))
+                .addOnFailureListener(e -> Toast.makeText(context,"Something went wrong",Toast.LENGTH_LONG).show());
             }
 
             fetchImagesUri.imagesUploaded(imageList);
@@ -546,14 +448,20 @@ public class AgroAppRepo {
 
 
     //Just added this method
-    public void addToQualified(final String userId, List<Uri> imageList, final Context context){
+    public void addToQualified(final String userId, String localgov,String state,String description, List<String> imageList, String agricType, final Context context){
+        progressDialog.setMessage("Please wait while we upload your details.................");
+        progressDialog.show();
+        addPictures(userId, imageList, context, imagesUriList -> {
+            Requirements requirements = new Requirements();
+            requirements.setLocalgov(localgov);
+            requirements.setState(state);
+            requirements.setDescription(description);
+            requirements.setImages(imageList);
+            requirements.setAgricTypes(agricType);
+            requirements.setEligible(true);
+            requirements.setApplicationState(true);
+            performAdiitionToBase(userId,requirements,context);
 
-        addPictures(userId, imageList, context, new FetchImagesUri() {
-            @Override
-            public void imagesUploaded(List<Uri> imagesUriList) {
-                DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
-                final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
-            }
         });
     }
 
@@ -561,7 +469,6 @@ public class AgroAppRepo {
     private void performAdiitionToBase(String userId,Requirements requirements,Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
         final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
-
         mDatabaseReference
                 .child(userId)
                 .child("requirements")
@@ -572,40 +479,33 @@ public class AgroAppRepo {
                         Toast.makeText(context,"This was cancelled",Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.d("Loans","We are about to add the requirements to the base because it is cmplete");
+                .addOnCompleteListener(task -> {
+                    Log.d("Loans","We are about to add the requirements to the base because it is cmplete");
 
-                        if(task.isSuccessful()){
-                            loadSpecUser(userId, new SpecificUser() {
-                                @Override
-                                public void loadSpecUse(User user) {
-                                    loadSpecUser(userId, new SpecificUser() {
-                                        @Override
-                                        public void loadSpecUse(User user) {
-
-                                            mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful()){
-                                                        progressDialog.dismiss();
-                                                        Log.d("Loans","We added requirement to databases");
-                                                    }
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
-                                                }
-                                            });
+                    if(task.isSuccessful()){
+                        loadSpecUser(userId, user -> loadSpecUser(userId, new SpecificUser() {
+                            @Override
+                            public void loadSpecUse(User user) {
+                                mDatabaseReferenceApproved.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task1) {
+                                        if(task1.isSuccessful()){
+                                            progressDialog.dismiss();
+                                            Toast.makeText(context,"Succesfully applied",Toast.LENGTH_SHORT).show();
+                                            Log.d("Loans","We added requirement to databases");
                                         }
-                                    });
-                                }
-                            });
-                        }else{
-                            Toast.makeText(context,"We had issues ",Toast.LENGTH_SHORT).show();
-                        }
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        }));
+                    }else{
+                        Toast.makeText(context,"We had issues ",Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -753,7 +653,7 @@ public class AgroAppRepo {
 
 
     public interface FetchImagesUri{
-        void imagesUploaded(List<Uri> imagesUriList);
+        void imagesUploaded(List<String> imagesUriList);
     }
 
 
