@@ -205,7 +205,6 @@ public class AgroAppRepo {
     }
 
 
-
     public void signUp(final String email, final String password, final Context context, final ProgressBar bar, final String phone, final String name, final Uri uri, final String role,User fromInv){
         bar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email,password)
@@ -461,7 +460,6 @@ public class AgroAppRepo {
             requirements.setEligible(true);
             requirements.setApplicationState(true);
             performAdiitionToBase(userId,requirements,context);
-
         });
     }
 
