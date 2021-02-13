@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "900329455630",
+    "firebase_url": "https://agro-app-28cf1-default-rtdb.firebaseio.com",
+    "project_id": "agro-app-28cf1",
+    "storage_bucket": "agro-app-28cf1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900329455630:android:cff97eee33ea4883063c5f",
+        "android_client_info": {
+          "package_name": "com.mystic.movieshub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900329455630-t4fojfl84o0i76eid2p8hk7r3bkmu1ec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLV9zgB63worQCINOfqOdhw17_OUtquC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900329455630-t4fojfl84o0i76eid2p8hk7r3bkmu1ec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

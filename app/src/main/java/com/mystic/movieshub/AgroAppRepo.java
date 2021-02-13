@@ -500,6 +500,64 @@ public class AgroAppRepo {
     }
 
 
+    //Just added this method
+    public void addPictures(final String userId, List<Uri> imageList, final Context context, FetchImagesUri fetchImagesUri){
+
+
+        if(imageList.size() < 3){
+            Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
+        }else{
+
+            Log.d("Loans","We are in the method");
+
+            StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
+            progressDialog = new ProgressDialog(context);
+            Log.d("Loans","We are setting up dialog");
+            progressDialog.setMessage("Please wait while we upload your details.................");
+            progressDialog.show();
+            Log.d("Loans","We are showing dialog");
+            Log.d("Loans",""+imageList.size());
+
+
+            for( int i = 0 ; i < imageList.size() ; i++){
+
+                Uri uriexact = imageList.get(i);
+                final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
+                int finalI = i;
+                imageName.putFile(uriexact)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                imageName.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        imageList.add(uri);
+                                    }
+                                });
+                            }
+                        });
+            }
+
+            fetchImagesUri.imagesUploaded(imageList);
+
+        }
+    }
+
+
+    //Just added this method
+    public void addToQualified(final String userId, List<Uri> imageList, final Context context){
+
+        addPictures(userId, imageList, context, new FetchImagesUri() {
+            @Override
+            public void imagesUploaded(List<Uri> imagesUriList) {
+                DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
+                final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
+            }
+        });
+    }
+
+
     private void performAdiitionToBase(String userId,Requirements requirements,Context context){
         DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
         final DatabaseReference mDatabaseReferenceApproved = firebaseDatabase.getReference(APPROVEDFARMERS);
@@ -690,6 +748,12 @@ public class AgroAppRepo {
 
     public interface FetchQualifiedfarmers{
         void firebaseQualifiedFarmers(List<User> qualifiedfarmers);
+    }
+
+
+
+    public interface FetchImagesUri{
+        void imagesUploaded(List<Uri> imagesUriList);
     }
 
 
