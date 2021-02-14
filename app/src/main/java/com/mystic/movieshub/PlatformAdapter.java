@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -20,19 +22,22 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieHolder> {
-    private List<FarmProduct> farmProductList;
-    private Context context;
+public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieHolder> implements Filterable {
+    private final List<FarmProduct> farmProductList;
+    private final List<FarmProduct> farmProductsFullList;
+    private final Context context;
     private CustomeAdapterListener listener;
-    private String userId;
+    private final String userId;
 
     public PlatformAdapter(List<FarmProduct> farmProductList, Context context){
         this.farmProductList = farmProductList;
         this.context = context;
+        this.farmProductsFullList = new ArrayList<>(farmProductList);
         userId = FirebaseAuth.getInstance().getUid();
     }
 
@@ -76,10 +81,47 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
 
     }
 
+
+    private final Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<FarmProduct> filteredProduct = new ArrayList<>();
+
+            if(constraint == null || constraint.length() < 0  ){
+                filteredProduct.addAll(farmProductsFullList);
+            } else {
+                String filteredPattern = constraint.toString().toLowerCase().trim();
+                for( FarmProduct product : farmProductsFullList){
+                    if(product.getTitle().toLowerCase().contains(filteredPattern)){
+                        filteredProduct.add(product);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredProduct;
+            return  filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            farmProductList.clear();
+            farmProductList.addAll((List)results.values);
+            notifyDataSetChanged();
+
+        }
+    };
     @Override
     public int getItemCount() {
         return farmProductList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
     //This inner class serves as the viewHolder it holds the view that is repeated
     public static class MovieHolder extends RecyclerView.ViewHolder {
         MaterialCardView material;
