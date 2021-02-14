@@ -84,7 +84,7 @@ public class PlatformFragment extends Fragment {
         agroAppRepo.fetchUser(new AgroAppRepo.FireBaseCallbackUser() {
             @Override
             public void fireBaseUser(User basuser) {
-                if(basuser.getRole().equals("farmer")
+                if(basuser.getRole().equals("Farmer")
                         || basuser.getEmail().equals("bam@gmail.com")
                         || basuser.getEmail().equals("yvonne@gmail.com")
                         || basuser.getEmail().equals("chinedu@gmail.com")){

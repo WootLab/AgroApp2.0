@@ -3,6 +3,7 @@ package com.mystic.movieshub;
 import android.content.Context;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +109,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
         protected void publishResults(CharSequence constraint, FilterResults results) {
             farmProductList.clear();
             farmProductList.addAll((List)results.values);
+            Log.d("plat","I am in search");
             notifyDataSetChanged();
 
         }
