@@ -24,7 +24,7 @@ public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static  final int LEFT = 0;
     private final List<Chat> listOfChats;
     private FirebaseUser user;
-    Context context;
+    private final Context context;
 
     public ChatScreenAdapter(List<Chat> chatHolder, Context context) {
         listOfChats = chatHolder;
@@ -63,6 +63,7 @@ public class ChatScreenAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Glide.with(context)
                             .asBitmap()
                             .placeholder(R.drawable.doctor)
+                            .circleCrop()
                             .load(Uri.parse(user.getImage()))
                             .into(receiverView.imageView);
                 }

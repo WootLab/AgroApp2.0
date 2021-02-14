@@ -31,33 +31,15 @@ public class ChatListFragment extends Fragment {
     private TextView noChat;
     private TextView textView;
     private LinearLayoutManager linearLayoutManager;
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public ChatListFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ChatListFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static ChatListFragment newInstance(String param1, String param2) {
         ChatListFragment fragment = new ChatListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +48,31 @@ public class ChatListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
-        agroAppRepo.loadRecentChat(new AgroAppRepo.FetchContact() {
+        agroAppRepo.loadRecentChatTwo(contacted -> {
+            if(contactAdapter == null){
+                contactAdapter = new ChatlistAdapter(contacted, getActivity());
+            }
+
+            if(contacted.size() > 0){
+                progressBar.setVisibility(View.GONE);
+                noChat.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setAdapter(contactAdapter);
+                linearLayoutManager = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(linearLayoutManager);
+            }else{
+                noChat.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+
+            contactAdapter.moveToChatScreen(pos -> {
+                User user = contacted.get(pos);
+                Intent intent = new Intent(getActivity(),ChatScreenActivity.class);
+                intent.putExtra("CONTACT",user);
+                startActivity(intent);
+            });
+        });
+        /*agroAppRepo.loadRecentChat(new AgroAppRepo.FetchContact() {
             @Override
             public void contactList(List<Chat> contact) {
                 if(contactAdapter == null){
@@ -95,19 +101,13 @@ public class ChatListFragment extends Fragment {
                     }
                 });
             }
-        });
+        });*/
 
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
         recyclerView = view.findViewById(R.id.chatholder);
         progressBar = view.findViewById(R.id.progressBar6);

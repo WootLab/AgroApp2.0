@@ -70,7 +70,9 @@ public class AgroAppRepo {
     public static final String ADMIN_ID = "P3O1w3u7K4NLY7zA6OS7pg3N8633";
     private final List<User> qualifiedFarmers;
     private List<Chat> chatList;
-    private List<HashMap<String, List<String>>> fullLocalGovernment;
+    private List<String> usersStringId;
+    private List<User> contactedUser;
+    //private List<HashMap<String, List<String>>> fullLocalGovernment;
     private ProgressDialog progressDialog;
     //private ProgressBar bar;
 
@@ -84,6 +86,7 @@ public class AgroAppRepo {
         qualifiedFarmers = new ArrayList<>();
         stateList = new ArrayList<>();
         chatList = new ArrayList<>();
+        usersStringId = new ArrayList<>();
     }
 
 
@@ -586,6 +589,74 @@ public class AgroAppRepo {
     }
 
 
+
+   public void loadRecentChatTwo(FetchContactedUser fetchContactedUser){
+
+        contactedUser = new ArrayList<>();
+       String userId = FirebaseAuth.getInstance().getUid();
+       DatabaseReference databaseReference = firebaseDatabase.getReference("CHAT");
+
+       databaseReference.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot snapshot) {
+               for(DataSnapshot data : snapshot.getChildren()){
+                   Chat chat = data.getValue(Chat.class);
+                   if(chat.getReceiverId().equals(userId)){
+                       usersStringId.add(chat.getSenderId());
+                   }
+
+                   if(chat.getSenderId().equals(userId)){
+                       usersStringId.add(chat.getSenderId());
+                   }
+
+               }
+
+
+               DatabaseReference usersBaseReference = firebaseDatabase.getReference("USERS");
+               usersBaseReference.addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(@NonNull DataSnapshot snapshot) {
+                       contactedUser.clear();
+                       for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                           User user = dataSnapshot.getValue(User.class);
+                           for(String id : usersStringId){
+                               if(user.getUid().equals(id)){
+                                   if(contactedUser.size() > 0){
+
+                                       Log.d("Iterating","I made it here");
+                                       /*for(User userone : contactedUser){
+                                           if(!user.getUid().equals(userone.getUid())){
+                                               contactedUser.add(userone);
+                                           }
+                                       }*/
+                                   }else{
+                                       contactedUser.add(user);
+                                   }
+                               }
+                           }
+                       }
+
+                       fetchContactedUser.contactedList(contactedUser);
+
+                   }
+
+                   @Override
+                   public void onCancelled(@NonNull DatabaseError error) {
+
+                   }
+               });
+
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError error) {
+
+           }
+       });
+
+   }
+
+
     //This process should be running in the background we are going to be using RXJAVA
     private List<HashMap<String, List<String>>> listOfHashMaps(Context context){
         List<HashMap<String, List<String>>> hashMaps = new ArrayList<>();
@@ -676,6 +747,10 @@ public class AgroAppRepo {
 
     public interface  FetchContact{
         void contactList(List<Chat> contact);
+    }
+
+    public interface FetchContactedUser{
+        void contactedList(List<User> contacted);
     }
 
 

@@ -13,18 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
+
 
 import java.util.List;
 
 
 public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.ViewContain> {
-    private final List<Chat> chats;
+    private final List<User> users;
     private final Context context;
     private MyListener listener;
 
-    public ChatlistAdapter(List<Chat> chats, Context context) {
-        this.chats = chats;
+    public ChatlistAdapter(List<User> users, Context context) {
+        this.users = users;
         this.context = context;
     }
 
@@ -42,48 +42,17 @@ public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.ViewCo
 
     @Override
     public void onBindViewHolder(@NonNull ViewContain holder, int position) {
-
-        Chat chat = chats.get(position);
-        String myId = FirebaseAuth.getInstance().getUid();
-
-        if(chat.getSenderId().equals(myId)){
-            String userId = chat.getReceiverId();
-            AgroAppRepo.getInstanceOfAgroApp().loadSpecUser(userId, new AgroAppRepo.SpecificUser() {
-                @Override
-                public void loadSpecUse(User user) {
-                    Glide.with(context)
-                            .asBitmap()
-                            .placeholder(R.drawable.doctor)
-                            .load(Uri.parse(user.getImage()))
-                            .into(holder.contactImage);
-
-                    holder.txtName.setText(user.getName());
-                    holder.email.setText(user.getEmail());
-                }
-            });
-        }else if(chat.getReceiverId().equals(myId)){
-            String userId = chat.getSenderId();
-            AgroAppRepo.getInstanceOfAgroApp().loadSpecUser(userId, new AgroAppRepo.SpecificUser() {
-                @Override
-                public void loadSpecUse(User user) {
-                    Glide.with(context)
-                            .asBitmap()
-                            .placeholder(R.drawable.doctor)
-                            .load(Uri.parse(user.getImage()))
-                            .into(holder.contactImage);
-
-                    holder.txtName.setText(user.getName());
-                    holder.email.setText(user.getEmail());
-                }
-            });
-        }
+        User user = users.get(position);
+        Glide.with(context).asBitmap().placeholder(R.drawable.doctor).circleCrop().load(Uri.parse(user.getImage())).into(holder.contactImage);
+        holder.txtName.setText(user.getName());
+        holder.email.setText(user.getEmail());
 
     }
 
 
     @Override
     public int getItemCount() {
-        return chats.size();
+        return users.size();
     }
 
     public class ViewContain extends RecyclerView.ViewHolder {
@@ -97,16 +66,13 @@ public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.ViewCo
             txtName = itemView.findViewById(R.id.txtName);
             email = itemView.findViewById(R.id.emailTxt);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(listener != null){
-                        int pos = getAdapterPosition();
-                        if(pos != RecyclerView.NO_POSITION){
-                            listener.respond(pos);
-                        }
-
+            itemView.setOnClickListener(view -> {
+                if(listener != null){
+                    int pos = getAdapterPosition();
+                    if(pos != RecyclerView.NO_POSITION){
+                        listener.respond(pos);
                     }
+
                 }
             });
         }
@@ -114,7 +80,6 @@ public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.ViewCo
 
 
     }
-
 
     public interface MyListener{
         void respond(int pos);
