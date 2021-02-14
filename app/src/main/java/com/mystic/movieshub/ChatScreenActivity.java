@@ -40,6 +40,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         defineViews();
+        final User contact = (User) getIntent().getSerializableExtra("CONTACT");
         final User user = (User) getIntent().getSerializableExtra(AgroAppRepo.ADMIN_USER);
         final User farmer = (User) getIntent().getSerializableExtra(SpecificProductActivity.FARMER);
         final User qualifiedfarmer = (User) getIntent().getSerializableExtra("ChatQualifiedFarmer");
@@ -64,6 +65,14 @@ public class ChatScreenActivity extends AppCompatActivity {
                     .circleCrop()
                     .load(qualifiedfarmer.getImage())
                     .into(imageView);
+            name.setText(qualifiedfarmer.getName());
+        }else if(contact != null){
+            Glide.with(this)
+                    .asBitmap()
+                    .circleCrop()
+                    .load(contact.getImage())
+                    .into(imageView);
+            name.setText(contact.getName());
         }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -117,6 +126,17 @@ public class ChatScreenActivity extends AppCompatActivity {
 
 
 
+        }else if(contact != null){
+            agroAppRepo.loadMessages(new AgroAppRepo.FireBaseMessages() {
+                @Override
+                public void firebaseMessages(List<Chat> chatCont) {
+                    chats = chatCont;
+                    Log.d("Chats Size",""+chats.size());
+                    bar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    setUpAdapter(chats);
+                }
+            },contact.getUid());
         }
 
 
@@ -130,6 +150,8 @@ public class ChatScreenActivity extends AppCompatActivity {
                         agroAppRepo.sendMessage(mess,farmer.getUid(), ChatScreenActivity.this);
                     } else if(qualifiedfarmer != null){
                         agroAppRepo.sendMessage(mess,qualifiedfarmer.getUid(), ChatScreenActivity.this);
+                    }else if(contact != null){
+                        agroAppRepo.sendMessage(mess,contact.getUid(), ChatScreenActivity.this);
                     }
                     message.setText("");
             }

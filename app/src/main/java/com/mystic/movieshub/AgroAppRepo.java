@@ -69,6 +69,7 @@ public class AgroAppRepo {
     public static final String AGRIC_NEWS = "AgricNews";
     public static final String ADMIN_ID = "P3O1w3u7K4NLY7zA6OS7pg3N8633";
     private final List<User> qualifiedFarmers;
+    private List<Chat> chatList;
     private List<HashMap<String, List<String>>> fullLocalGovernment;
     private ProgressDialog progressDialog;
     //private ProgressBar bar;
@@ -82,6 +83,7 @@ public class AgroAppRepo {
         chatContainer = new ArrayList<>();
         qualifiedFarmers = new ArrayList<>();
         stateList = new ArrayList<>();
+        chatList = new ArrayList<>();
     }
 
 
@@ -561,6 +563,29 @@ public class AgroAppRepo {
 
 
 
+    public void loadRecentChat(FetchContact contactListener){
+        String userId = FirebaseAuth.getInstance().getUid();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("CHAT");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot data : snapshot.getChildren()){
+                    Chat chat = data.getValue(Chat.class);
+                    if(chat.getSenderId().equals(userId) || chat.getReceiverId().equals(userId)){
+                        chatList.add(chat);
+                    }
+                }
+                contactListener.contactList(chatList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
     //This process should be running in the background we are going to be using RXJAVA
     private List<HashMap<String, List<String>>> listOfHashMaps(Context context){
         List<HashMap<String, List<String>>> hashMaps = new ArrayList<>();
@@ -645,6 +670,12 @@ public class AgroAppRepo {
 
     public interface FetchImagesUri{
         void imagesUploaded(List<String> imagesUriList);
+    }
+
+
+
+    public interface  FetchContact{
+        void contactList(List<Chat> contact);
     }
 
 

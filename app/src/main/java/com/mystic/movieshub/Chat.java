@@ -1,6 +1,8 @@
 package com.mystic.movieshub;
 
-public class Chat {
+import java.io.Serializable;
+
+public class Chat implements Serializable {
 
     private String message;
     private String chatId;

@@ -106,6 +106,10 @@ public abstract class Multiplefragment extends AppCompatActivity implements Navi
                 fragment = new InvestFragment();
                 break;
 
+            case R.id.nav_chat:
+                fragment = new ChatListFragment();
+                break;
+
         }
         if(fragment != null) {
             ft = getSupportFragmentManager().beginTransaction();

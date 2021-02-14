@@ -26,6 +26,11 @@
             android:title="@string/Orders"/>
 
         <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_baseline_chat_24"
+            android:title="@string/Chat"/>
+
+        <item
             android:id="@+id/nav_invest"
             android:icon="@drawable/ic_sad_tear"
             android:title="@string/Invest"/>
