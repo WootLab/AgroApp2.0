@@ -26,7 +26,7 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FarmPhotoAdapter farmPhotoAdapter;
     private ImageButton call, chat;
-    private TextView name,email,adress, description, phoneNumber;
+    private TextView name,email,adress, description, phoneNumber,stateAndLocal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,11 +34,17 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbarr);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         final User user = (User) getIntent().getSerializableExtra("QualifiedFarmers");
         final User qual = (User) getIntent().getSerializableExtra("QualUser");
-
+        defineViews();
         if(user != null ){
             Objects.requireNonNull(getSupportActionBar()).setTitle(user.getName());
 
@@ -73,6 +79,8 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
             adress.setText(qual.getRequirements().getLocation());
             phoneNumber.setText(qual.getPhoneNumber());
             description.setText(qual.getRequirements().getDescription());
+            String location = qual.getRequirements().getState()+","+qual.getRequirements().getLocalgov();
+            stateAndLocal.setText(location);
             final List<String> uriContainer = qual.getRequirements().getImages();
             if(farmPhotoAdapter == null){
                 farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
@@ -87,10 +95,6 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
         }
         recyclerView.setAdapter(farmPhotoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        defineViews();
-
-
 
 
         call.setOnClickListener(v -> {
@@ -136,5 +140,6 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
         call = findViewById(R.id.imageButton5);
         chat = findViewById(R.id.imageButton6);
         phoneNumber = findViewById(R.id.textView23);
+        stateAndLocal = findViewById(R.id.textView20);
     }
 }

@@ -270,6 +270,7 @@ public class AgroAppRepo {
     }
 
     public void login(String email, String password, final Context context, final ProgressBar bar, User fromInv) {
+        Log.d("kogin","I am in login");
         if (email != null && password != null) {
             bar.setVisibility(View.VISIBLE);
             mAuth.signInWithEmailAndPassword(email, password)
@@ -277,7 +278,6 @@ public class AgroAppRepo {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(context,e.getMessage(),Toast.LENGTH_LONG).show();
-                            Log.d("Login error", Objects.requireNonNull(e.getMessage()));
                             bar.setVisibility(View.GONE);
                         }
                     })
@@ -286,15 +286,24 @@ public class AgroAppRepo {
                             //Go to the next Activity
                             bar.setVisibility(View.GONE);
                             Intent intent;
+                            Log.d("Qualified",""+fromInv);
                             if(fromInv != null){
-                                intent = new Intent(context, InvestorScreenActivity.class);
+                                intent = new Intent(context, QualifiedFarmersActivity.class);
                                 intent.putExtra("QualUser",fromInv);
-                                Toast.makeText(context,"Pls login or signUp to Chat with farmer",Toast.LENGTH_SHORT).show();
+                                Log.d("Qua","I am in fromInv");
+                                Log.d("Qualified","I am in null");
+                                Log.d("Qualified User",fromInv.getName());
+
                             }else{
                                 intent = new Intent(context, MainActivity.class);
                             }
                             context.startActivity(intent);
+                            Log.d("Else","I am authentic");
 
+                        }
+
+                        else {
+                            Log.d("Qual Error", "Wasnt succesful");
                         }
                     });
 
@@ -504,7 +513,8 @@ public class AgroAppRepo {
     public void fetchSelectedfarmers(final String local, final String state, final String typeoffarming, final ProgressBar bar, final FetchQualifiedfarmers fetchQualifiedfarmers){
         bar.setVisibility(View.VISIBLE);
         DatabaseReference mDatebaseReference = firebaseDatabase.getReference(APPROVEDFARMERS);
-        mDatebaseReference.addValueEventListener(new ValueEventListener() {
+        mDatebaseReference
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 qualifiedFarmers.clear();
@@ -596,12 +606,7 @@ public class AgroAppRepo {
 
 
     public Single<List<HashMap<String, List<String>>>> loadLocal(final Context context){
-        return Single.fromCallable(new Callable<List<HashMap<String, List<String>>>>() {
-            @Override
-            public List<HashMap<String, List<String>>> call() throws Exception {
-                return listOfHashMaps(context);
-            }
-        });
+        return Single.fromCallable(() -> listOfHashMaps(context));
 
     }
 

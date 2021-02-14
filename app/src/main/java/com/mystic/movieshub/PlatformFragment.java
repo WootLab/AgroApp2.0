@@ -96,6 +96,14 @@ public class PlatformFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
+
+
+
+                if(basuser.getRole().equals("Consumer")){
+                    but.setVisibility(View.VISIBLE);
+                }else{
+                    but.setVisibility(View.GONE);
+                }
             }
 
 

@@ -101,13 +101,6 @@ public class ChatScreenActivity extends AppCompatActivity {
                     bar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     setUpAdapter(chats);
-                 /* if(chatScreenAdapter == null){
-                    chatScreenAdapter = new ChatScreenAdapter(chats,ChatScreenActivity.this);
-                }*/
-                /*LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatScreenActivity.this);
-                recyclerView.setAdapter(chatScreenAdapter);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                linearLayoutManager.setStackFromEnd(true);*/
                 }
             },user.getUid());
         }else if(qualifiedfarmer != null){
@@ -119,13 +112,6 @@ public class ChatScreenActivity extends AppCompatActivity {
                     bar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     setUpAdapter(chats);
-                 /* if(chatScreenAdapter == null){
-                    chatScreenAdapter = new ChatScreenAdapter(chats,ChatScreenActivity.this);
-                }*/
-                /*LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatScreenActivity.this);
-                recyclerView.setAdapter(chatScreenAdapter);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                linearLayoutManager.setStackFromEnd(true);*/
                 }
             },qualifiedfarmer.getUid());
 

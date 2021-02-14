@@ -31,20 +31,21 @@
             android:id="@+id/floatingActionButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:layout_marginRight="5dp"
             android:layout_gravity="right"
-            android:src="@android:drawable/ic_input_add" />
+            android:layout_marginRight="5dp"
+            android:clickable="true"
+            android:src="@android:drawable/ic_input_add"
+            android:visibility="gone" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="CREATE CUSTOM ORDER"
-                android:layout_marginBottom="5dp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:text="CREATE CUSTOM ORDER"
 
-                />
+            android:visibility="gone" />
     </LinearLayout>
 
 

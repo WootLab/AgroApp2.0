@@ -3,6 +3,7 @@ package com.mystic.movieshub;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -31,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class UploadActivity extends AppCompatActivity {
@@ -50,6 +52,17 @@ public class UploadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
+        Toolbar toolbar = findViewById(R.id.toolbarr);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Upload Your Product");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         mStorageRef = FirebaseStorage.getInstance().getReference("PRODUCTS");
         choBtn = findViewById(R.id.choose);
         edtTitle = findViewById(R.id.EdtTitle);

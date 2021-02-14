@@ -21,6 +21,8 @@
     <string name="release_date">release date</string>
     <string name="todo">TODO</string>
     <string name="hi_you_dey_wine">chat</string>
+    <string name="Orders">Orders</string>
+    <string name="Invest">Invest In Farms</string>
 
     <string-array name="roles">
         <item>Farmer</item>

@@ -3,21 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showin="navigation_view">
     <group android:checkableBehavior="single">
-    <item
+        <item
         android:id="@+id/nav_action"
         android:icon="@drawable/ic_guns"
         android:title="@string/Action"
         android:checked="true"/>
 
-    <item
+        <item
         android:id="@+id/nav_com"
         android:icon="@drawable/ic_grin"
         android:title="@string/Comedy"/>
 
 
-    <item
+        <item
         android:id="@+id/nav_drama"
         android:icon="@drawable/ic_sad_tear"
         android:title="@string/Drama"/>
+
+        <item
+            android:id="@+id/nav_order"
+            android:icon="@drawable/ic_sad_tear"
+            android:title="@string/Orders"/>
+
+        <item
+            android:id="@+id/nav_invest"
+            android:icon="@drawable/ic_sad_tear"
+            android:title="@string/Invest"/>
     </group>
 </menu>

@@ -20,7 +20,7 @@ public class ShowFullFarmActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.imageView5);
         Toolbar toolbar = findViewById(R.id.toolbarr);
         setSupportActionBar(toolbar);
-        Uri uri = (Uri) getIntent().getSerializableExtra("PHOTO");
+        String uri =  getIntent().getStringExtra("PHOTO");
         Objects.requireNonNull(getSupportActionBar()).setTitle(uri.toString());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Glide.with(this)

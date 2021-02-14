@@ -16,8 +16,8 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.List;
 
 public class FarmPhotoAdapter extends RecyclerView.Adapter<FarmPhotoAdapter.FarmPhotoHolder> {
-    private List<String> uriList;
-    private Context context;
+    private final List<String> uriList;
+    private final Context context;
     private PhotoAdapterListener photoAdapterListener;
 
     public FarmPhotoAdapter(List<String> uriList , Context context){

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context=".InvestFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invest in farmers around you by searching for farmers based on theeir
+                states and local government. This is how it works you select the state whwere you are interested
+                in helping farmers and you also select the local  governments you wnat the farmers to come from.
+                .Some different farmers will be selected based oon the conditions we have slaid down down.
+                ThAfter You can then select any of the farners you will like to invest in then you can discuss
+                with the farner. Please bear in mind that after tyyou might have been cinvinced with invsesting
+                in any farmer olease do not share any finacial information and do not transfer any money tio any farmer w.
+                You are advised to chat the admin so we can do our background search  before you can be given the go ahwead
+                to hcontinue in invetsing in he farmer. If you are still intereseted in investing inany of the frms s please click the button below. " />
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Invest In Farms" />
+
+            <Button
+                android:id="@+id/button13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GO BACK" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

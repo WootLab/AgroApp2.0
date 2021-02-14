@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/camera"
+        app:srcCompat="@drawable/southkorea"
         android:contentDescription="@string/imagedescription" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="130dp"
         android:fontFamily="@font/arizonia"
-        android:text="@string/genres_name"
+        android:text="Agro App"
         android:textColor="#FFFFFF"
         android:textSize="30sp" />
 

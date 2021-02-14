@@ -1,6 +1,7 @@
 package com.mystic.movieshub;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,8 +44,18 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_investor_screen);
+        Toolbar toolbar = findViewById(R.id.toolbarr);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Search Farmers");
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         List<String> stateList = AgroAppRepo.getInstanceOfAgroApp().loadStates(getApplicationContext());
-        Log.d("Size State",""+ stateList.size());
         defineViews();
         backgroundOperation();
         fullLocalGov = new ArrayList<>();
@@ -56,38 +67,39 @@ public class InvestorScreenActivity extends AppCompatActivity implements Adapter
                 String stateStr = state.getSelectedItem().toString();
                 String localgovStr = localgov.getSelectedItem().toString();
                 String farmType = typeoffarming.getSelectedItem().toString();
-                AgroAppRepo.getInstanceOfAgroApp().fetchSelectedfarmers(localgovStr, stateStr, farmType,bar, new AgroAppRepo.FetchQualifiedfarmers() {
-                    @Override
-                    public void firebaseQualifiedFarmers(final List<User> qualifiedfarmers) {
-                        if(investorScreenAdapter == null){
-                            investorScreenAdapter = new InvestorScreenAdapter(qualifiedfarmers,InvestorScreenActivity.this);
-                        }
-                        if(qualifiedfarmers.size() > 0){
-                            recyclerView.setVisibility(View.VISIBLE);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(InvestorScreenActivity.this));
-                            recyclerView.setAdapter(investorScreenAdapter);
-                            noFarmer.setVisibility(View.GONE);
-                        }else{
-                            noFarmer.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }
-
-                        investorScreenAdapter.showQualifiedFarmer(position -> {
-                            if(FirebaseAuth.getInstance().getCurrentUser() == null){
-                                User user = qualifiedfarmers.get(position);
-                                Intent intent = new Intent(InvestorScreenActivity.this,LoginActivity.class);
-                                intent.putExtra("FromInvestorScr",user);
-                               Toast.makeText(InvestorScreenActivity.this,"You must be loged in",Toast.LENGTH_SHORT).show();
-                                startActivity(intent);
-                            }else{
-                                User user = qualifiedfarmers.get(position);
-                                Intent intent = new Intent(InvestorScreenActivity.this,QualifiedFarmersActivity.class);
-                                intent.putExtra("QualifiedFarmer",user);
-                                startActivity(intent);
-                            }
-
-                        });
+                AgroAppRepo.getInstanceOfAgroApp().fetchSelectedfarmers(localgovStr, stateStr, farmType,bar, qualifiedfarmers -> {
+                    if(investorScreenAdapter == null){
+                        investorScreenAdapter = new InvestorScreenAdapter(qualifiedfarmers,InvestorScreenActivity.this);
                     }
+                    if(qualifiedfarmers.size() > 0){
+                        recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(InvestorScreenActivity.this));
+                        recyclerView.setAdapter(investorScreenAdapter);
+                        noFarmer.setVisibility(View.GONE);
+                    }else{
+                        noFarmer.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }
+
+                    investorScreenAdapter.showQualifiedFarmer(position -> {
+                        Log.d("screenAdapter",qualifiedfarmers.get(position).getName());
+                        if(FirebaseAuth.getInstance().getCurrentUser() == null){
+                            User user = qualifiedfarmers.get(position);
+                            Intent intent = new Intent(InvestorScreenActivity.this,LoginActivity.class);
+                            intent.putExtra("FromInvestorScr",user);
+                            Toast.makeText(InvestorScreenActivity.this,"You have to login",Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
+
+                        }
+                        else{
+                            Log.d("Mogin","I am not null");
+                            User user = qualifiedfarmers.get(position);
+                            Intent intent = new Intent(InvestorScreenActivity.this,QualifiedFarmersActivity.class);
+                            intent.putExtra("QualifiedFarmers",user);
+                            startActivity(intent);
+                        }
+
+                    });
                 });
 
             }

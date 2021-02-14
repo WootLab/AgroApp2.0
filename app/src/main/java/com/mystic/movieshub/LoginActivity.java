@@ -111,6 +111,10 @@ public class LoginActivity extends AppCompatActivity {
             AccSharedPref.setStoredEmail(this,email);
             ProgressBar bar = findViewById(R.id.progressBar2);
             closeKeyboard();
+            if(fromInvScr != null){
+                Log.d("Name",fromInvScr.getName());
+            }
+
             AgroAppRepo.getInstanceOfAgroApp().login(email, password,this,bar,fromInvScr);
         }
 

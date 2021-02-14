@@ -57,6 +57,12 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Application");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         defineViews();
         setUpSpinner();
         backgroundProcess();

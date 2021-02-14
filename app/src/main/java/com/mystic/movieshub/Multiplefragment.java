@@ -16,8 +16,11 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.google.android.material.internal.NavigationMenuItemView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -61,7 +64,7 @@ public abstract class Multiplefragment extends AppCompatActivity implements Navi
         int positionOfMenuItem = 0; // or whatever...
         MenuItem item = menu.getItem(positionOfMenuItem);
         SpannableString s = new SpannableString("Logout");
-        s.setSpan(new ForegroundColorSpan(Color.GREEN), 0, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
         item.setTitle(s);
         return super.onCreateOptionsMenu(menu);
     }
@@ -93,6 +96,14 @@ public abstract class Multiplefragment extends AppCompatActivity implements Navi
 
             case R.id.nav_drama:
                 fragment = new FarmersNewsFragment();
+                break;
+
+            case R.id.nav_order:
+                fragment = new OrderFragment();
+                break;
+
+            case R.id.nav_invest:
+                fragment = new InvestFragment();
                 break;
 
         }

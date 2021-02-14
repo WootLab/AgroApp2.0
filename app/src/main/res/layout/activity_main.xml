@@ -48,14 +48,15 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/menu_nav"
-        android:fitsSystemWindows="true" />
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            android:visibility="visible"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/menu_nav" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
 
