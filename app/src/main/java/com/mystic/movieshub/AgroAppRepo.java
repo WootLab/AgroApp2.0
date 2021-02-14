@@ -622,16 +622,16 @@ public class AgroAppRepo {
                            for(String id : usersStringId){
                                if(user.getUid().equals(id)){
                                    if(contactedUser.size() > 0){
-
-                                       Log.d("Iterating","I made it here");
-                                       /*for(User userone : contactedUser){
-                                           if(!user.getUid().equals(userone.getUid())){
-                                               contactedUser.add(userone);
+                                       for(int i = 0 ; i < contactedUser.size() ; i++){
+                                           if(!user.getUid().equals(contactedUser.get(i).getUid())){
+                                             //  contactedUser.add(contactedUser.get(i));
+                                               Log.d("Intense","I am in d for loop");
                                            }
-                                       }*/
-                                   }else{
+                                       }
+                                   } else{
                                        contactedUser.add(user);
                                    }
+
                                }
                            }
                        }

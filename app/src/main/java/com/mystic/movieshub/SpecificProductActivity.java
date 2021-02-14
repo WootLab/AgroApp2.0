@@ -4,14 +4,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+
+import java.util.Objects;
 
 public class SpecificProductActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PRODUCT = "Product";
@@ -30,6 +34,17 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_specific_product);
         defineView();
 
+
+        Toolbar toolbar = findViewById(R.id.tool);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         product = (FarmProduct) getIntent().getSerializableExtra(PRODUCT);
         if(product != null){
@@ -68,7 +83,6 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
         call = findViewById(R.id.imageButton2);
         chat = findViewById(R.id.imageButton3);
         cart = findViewById(R.id.imageButton4);
-
     }
 
     @Override
