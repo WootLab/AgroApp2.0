@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Requirements implements Serializable {
-    private List<String> images;
+    private List<Uri> images;
     private String location;
     private String state;
     private String localgov;
@@ -30,11 +30,11 @@ public class Requirements implements Serializable {
     public boolean isApplicationState() {
         return applicationState;
     }
-    public List<String> getImages() {
+    public List<Uri> getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List<Uri> images) {
         this.images = images;
     }
 

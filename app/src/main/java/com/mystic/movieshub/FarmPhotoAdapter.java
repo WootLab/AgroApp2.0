@@ -16,11 +16,11 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.List;
 
 public class FarmPhotoAdapter extends RecyclerView.Adapter<FarmPhotoAdapter.FarmPhotoHolder> {
-    private final List<String> uriList;
+    private final List<Uri> uriList;
     private final Context context;
     private PhotoAdapterListener photoAdapterListener;
 
-    public FarmPhotoAdapter(List<String> uriList , Context context){
+    public FarmPhotoAdapter(List<Uri> uriList , Context context){
         this.uriList = uriList;
         this.context = context;
     }
@@ -37,10 +37,10 @@ public class FarmPhotoAdapter extends RecyclerView.Adapter<FarmPhotoAdapter.Farm
     }
     @Override
     public void onBindViewHolder(@NonNull FarmPhotoHolder holder, int position) {
-        String uri = uriList.get(position);
+        Uri uri = uriList.get(position);
         Glide.with(context)
                 .asBitmap()
-                .load(Uri.parse(uri))
+                .load(uri)
                 .into(holder.imageView);
 
     }

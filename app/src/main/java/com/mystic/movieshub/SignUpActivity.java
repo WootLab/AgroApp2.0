@@ -81,7 +81,6 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (mUploads != null && mUploads.isInProgress()) {
                     Toast.makeText(SignUpActivity.this, "An upload is ongoing", Toast.LENGTH_LONG).show();
                 }else{

@@ -38,7 +38,7 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
     private Spinner agrictype,state, localGovernment;
     private List<HashMap<String, List<String>>> fullLocalGov;
     private Button chooseMultipleImages,butApply, cancel;
-    private List<String> imageList;
+    private List<Uri> imageList;
     private List<String> stateContainer;
     private  AgroAppRepo agroAppRepo;
 
@@ -130,7 +130,7 @@ public class ApplyForLoanActivity extends AppCompatActivity implements AdapterVi
             int currentImageSelect = 0;
             while (currentImageSelect < count){
                 Uri imageUri = data.getClipData().getItemAt(currentImageSelect).getUri();
-                imageList.add(imageUri.toString());
+                imageList.add(imageUri);
                 currentImageSelect++;
             }
 
