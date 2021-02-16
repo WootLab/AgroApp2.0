@@ -48,6 +48,12 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
         holder.localgov.setText(user.getRequirements().getLocalgov());
         holder.state.setText(user.getRequirements().getState());
         holder.typeoffarming.setText(user.getRequirements().getAgricTypes());
+
+        if(user.getRequirements().isEligible()){
+            holder.butonAprove.setText("Disaprove");
+        }else{
+            holder.butonAprove.setText("Aprove");
+        }
         if(user.getImage() != null){
             Glide.with(context)
                     .asBitmap()

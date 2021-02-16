@@ -75,25 +75,49 @@ public class SeeFullFarmersActivity extends AppCompatActivity {
                     @Override
                     public void appListenerRes(int position) {
                         User user = qualifiedfarmers.get(position);
-                        user.getRequirements().setEligible(true);
-                        DatabaseReference mDatebaseReference = FirebaseDatabase.getInstance().getReference("USERS");
-                        mDatebaseReference
-                                .child(user.getUid())
-                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(SeeFullFarmersActivity.this,"Successfully changed eligibilty",Toast.LENGTH_SHORT).show();
-                                }
 
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(SeeFullFarmersActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                        if(user.getRequirements().isEligible()){
+                            user.getRequirements().setEligible(false);
+                            DatabaseReference mDatebaseReference = FirebaseDatabase.getInstance().getReference("USERS");
+                            mDatebaseReference
+                                    .child(user.getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(SeeFullFarmersActivity.this,"Successfully changed to false",Toast.LENGTH_SHORT).show();
                                     }
-                                });
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(SeeFullFarmersActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }else{
+                            user.getRequirements().setEligible(true);
+                            DatabaseReference mDatebaseReference = FirebaseDatabase.getInstance().getReference("USERS");
+                            mDatebaseReference
+                                    .child(user.getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(SeeFullFarmersActivity.this,"Successfully changed eligibilty",Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(SeeFullFarmersActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+
 
 
 
