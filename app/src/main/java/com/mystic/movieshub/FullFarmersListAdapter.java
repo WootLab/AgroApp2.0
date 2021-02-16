@@ -119,6 +119,7 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
             description = itemView.findViewById(R.id.textView15);
             butonAprove = itemView.findViewById(R.id.button15);
 
+            typeoffarming = itemView.findViewById(R.id.textView16);
             materialCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

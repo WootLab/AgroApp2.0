@@ -8,7 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,7 +66,6 @@ public class SeeFullFarmersActivity extends AppCompatActivity {
                         User user = qualifiedfarmers.get(position);
                         Intent intent = new Intent(SeeFullFarmersActivity.this,QualifiedFarmersActivity.class);
                         intent.putExtra("SeeFull",user);
-
                         startActivity(intent);
                     }
                 });
@@ -98,5 +101,33 @@ public class SeeFullFarmersActivity extends AppCompatActivity {
                 });
             }
         });
+
+
+
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+
+        menuInflater.inflate(R.menu.fullfarmermenu,menu);
+        MenuItem item = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView)item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                fullFarmersListAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
     }
 }
