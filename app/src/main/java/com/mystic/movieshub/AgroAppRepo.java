@@ -739,6 +739,57 @@ public class AgroAppRepo {
     }
 
 
+    public void addMoney(User user, double amount,String message,Context context){
+        double total = user.getBalance() + amount;
+        DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
+        user.setBalance(total);
+        mDatabaseReference
+                .child(user.getUid())
+                .setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    sendMessage(message,user.getUid(),context);
+                }
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+    }
+
+    public void removeMoney(User user,double amount,String message,Context context){
+        if(user.getBalance() > amount){
+            double remainder = user.getBalance() - amount;
+            DatabaseReference mDatabaseReference = firebaseDatabase.getReference(USERS);
+            user.setBalance(remainder);
+            mDatabaseReference
+                    .child(user.getUid())
+                    .setValue(user)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                sendMessage(message,user.getUid(),context);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+        }
+
+    }
+
+
     public interface FireBaseCallbackAgriNews{
         void firebaseAgriNews(List<AgriNews> agriNews);
     }

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SeeFullFarmersActivity"></activity>
+        <activity android:name=".FundFarmerActivity"></activity>
+        <activity android:name=".SeeFullFarmersActivity" />
         <activity android:name=".MoneyProfile" />
         <activity android:name=".ShowFullFarmActivity" />
         <activity android:name=".QualifiedFarmersActivity" />

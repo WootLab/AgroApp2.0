@@ -10,6 +10,7 @@ public class User implements Serializable {
     private String phoneNumber;
     private String email;
     private String password;
+    private double balance;
     private Requirements requirements;
 
 
@@ -20,6 +21,7 @@ public class User implements Serializable {
     public User(String uid) {
         this.uid = uid;
         this.image = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png";
+        balance = 0.00;
     }
 
     public String getUid() {
@@ -84,5 +86,13 @@ public class User implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }

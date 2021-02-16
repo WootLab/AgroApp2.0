@@ -50,6 +50,11 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
         holder.typeoffarming.setText(user.getRequirements().getAgricTypes());
 
         if(user.getRequirements().isEligible()){
+            holder.fundAcc.setVisibility(View.VISIBLE);
+        }else{
+            holder.fundAcc.setVisibility(View.GONE);
+        }
+        if(user.getRequirements().isEligible()){
             holder.butonAprove.setText("Disaprove");
         }else{
             holder.butonAprove.setText("Aprove");
@@ -113,7 +118,7 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
         MaterialCardView materialCardView;
         TextView name,localgov,state,typeoffarming,description;
         ImageView imageView;
-        Button butonAprove;
+        Button butonAprove,fundAcc;
 
         public FullFarmersHolder(@NonNull View itemView) {
             super(itemView);
@@ -124,6 +129,7 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
             state = itemView.findViewById(R.id.textView14);
             description = itemView.findViewById(R.id.textView15);
             butonAprove = itemView.findViewById(R.id.button15);
+            fundAcc = itemView.findViewById(R.id.button16);
 
             typeoffarming = itemView.findViewById(R.id.textView16);
             materialCardView.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +145,17 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
             });
 
 
+            fundAcc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(fullFarmersListener != null){
+                        int pos = getAdapterPosition();
+                        if(pos != RecyclerView.NO_POSITION){
+                            fullFarmersListener.fundfarmerListener(pos);
+                        }
+                    }
+                }
+            });
             butonAprove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -156,6 +173,7 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
 
     public interface FullFarmersListener{
         void farmerlistener(int position);
+        void fundfarmerListener(int pos);
     }
 
 
