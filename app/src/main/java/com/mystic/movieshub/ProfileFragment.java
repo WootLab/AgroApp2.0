@@ -101,6 +101,10 @@ public class ProfileFragment extends Fragment {
                     uploadNewsBtn.setVisibility(View.GONE);
                 }
 
+
+
+
+
                 if(basuser.getRole().equals("farmer") || basuser.getEmail().equals("bam@gmail.com")){
                     buttonApply.setVisibility(View.VISIBLE);
                     upload.setVisibility(View.VISIBLE);
@@ -111,7 +115,9 @@ public class ProfileFragment extends Fragment {
                     }
                 }else{
                     buttonApply.setVisibility(View.GONE);
+                    upload.setVisibility(View.GONE);
                 }
+
 
 
                 buttonApply.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +125,7 @@ public class ProfileFragment extends Fragment {
                     public void onClick(View v) {
                         if(basuser.getRequirements().isApplicationState()){
                             Intent status= new Intent(getActivity(),StatusActivity.class);
+                            status.putExtra("Status",basuser);
                             startActivity(status);
                         }else{
                             Intent intent = new Intent(getActivity(),ApplyForLoanActivity.class);
@@ -156,6 +163,8 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
 
 
        upload.setOnClickListener(new View.OnClickListener() {
@@ -251,10 +260,18 @@ public class ProfileFragment extends Fragment {
                                                                     barPicture.setVisibility(View.GONE);
                                                                     Toast.makeText(getActivity(),"Picture Succesfully uploaded uploaded",Toast.LENGTH_SHORT).show();
                                                                 }else {
+                                                                    barPicture.setVisibility(View.GONE);
                                                                     Toast.makeText(getActivity(),"There was an error ",Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }
-                                                        });
+                                                        })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        barPicture.setVisibility(View.GONE);
+                                                        Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         });
                                     }
@@ -270,6 +287,8 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onFailure(@NonNull Exception e) {
 
+                            barPicture.setVisibility(View.GONE);
+                            Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

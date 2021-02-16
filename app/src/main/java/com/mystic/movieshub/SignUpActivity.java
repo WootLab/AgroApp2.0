@@ -43,13 +43,10 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextPhone;
     private EditText editTextFullName;
-    private TextView btnSignIn,picName;
+    private TextView btnSignIn;
     private Button btnSignUp;
-    private MaterialButton cho;
-    private Uri mImageUri;
-    private StorageReference mStorageRef;
     private Spinner spinner;
-    private StorageTask mUploads;
+
     private User user;
     private ProgressBar prog;
 
@@ -69,87 +66,32 @@ public class SignUpActivity extends AppCompatActivity {
         });
         prog = findViewById(R.id.progressBar);
         user = (User) getIntent().getSerializableExtra("QualUser");
-        mStorageRef = FirebaseStorage.getInstance().getReference("USERSPIC");
+
         defineViews();
 
-        cho.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chooseImage();
-            }
-        });
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mUploads != null && mUploads.isInProgress()) {
-                    Toast.makeText(SignUpActivity.this, "An upload is ongoing", Toast.LENGTH_LONG).show();
-                }else{
                     uploadUserToBase();
-                }
-
             }
         });
 
     }
 
     private void uploadUserToBase() {
-        if(mImageUri != null ){
-
-            prog.setVisibility(View.VISIBLE);
-            //String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-            final StorageReference fileref = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
-            mUploads = fileref.putFile(mImageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            Handler hand = new Handler();
-                            hand.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //bar.setProgress(0);
-                                }
-                            },500);
-
-                            fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    Toast.makeText(SignUpActivity.this,"successfully uploaded",Toast.LENGTH_SHORT).show();
-                                    String email = editTextEmail.getText().toString().trim();
-                                    String password = editTextPassword.getText().toString().trim();
-                                    String phone = editTextPhone.getText().toString().trim();
-                                    String fullname = editTextFullName.getText().toString().trim();
-                                    String role = spinner.getSelectedItem().toString();;
-                                    addToDatabase(email,password,phone,fullname,uri,role);
-
-                                }
-                            });
-
-                        }
-
-
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-
-                        }
-                    });
-
-        }
-
-
-
+        prog.setVisibility(View.VISIBLE);
+        Toast.makeText(SignUpActivity.this,"successfully uploaded",Toast.LENGTH_SHORT).show();
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        String phone = editTextPhone.getText().toString().trim();
+        String fullname = editTextFullName.getText().toString().trim();
+        String role = spinner.getSelectedItem().toString();;
+        addToDatabase(email,password,phone,fullname,role);
     }
 
 
-    private void addToDatabase(String email, String password,String phone,String fullname,Uri uri,String role) {
+    private void addToDatabase(String email, String password,String phone,String fullname,String role) {
         if(email.isEmpty()){
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
@@ -171,32 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         AccSharedPref.setStoredEmail(this,email);
         //This will trigger what adds the user to the database
-        AgroAppRepo.getInstanceOfAgroApp().signUp(email,password,this,prog,phone,fullname,uri,role,user);
-    }
-
-    private void chooseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,PROFILE_PIC);
-    }
-
-    private String getFileExtension(Uri uri){
-        // This was just a test
-        ContextWrapper rapper = new ContextWrapper(this);
-        ContentResolver resolver = rapper.getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(resolver.getType(uri));
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PROFILE_PIC && resultCode == Activity.RESULT_OK && data != null  && data.getData() != null){
-            mImageUri = data.getData();
-            picName.setText(mImageUri.toString());
-        }
-
+        AgroAppRepo.getInstanceOfAgroApp().signUp(email,password,this,prog,phone,fullname,role,user);
     }
 
     public void defineViews(){
@@ -209,8 +126,6 @@ public class SignUpActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.email);
         editTextPhone = findViewById(R.id.phoneEd);
         editTextFullName = findViewById(R.id.fullname);
-        cho = findViewById(R.id.choPic);
-        picName = findViewById(R.id.picname);
         spinner = findViewById(R.id.spinnini);
         //Define TextInputLayout
         /*textInputLayoutEmail = findViewById(R.id.textInputLayout2);

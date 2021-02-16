@@ -62,6 +62,7 @@ public class ChatListFragment extends Fragment {
                 recyclerView.setLayoutManager(linearLayoutManager);
             }else{
                 noChat.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
             }
 

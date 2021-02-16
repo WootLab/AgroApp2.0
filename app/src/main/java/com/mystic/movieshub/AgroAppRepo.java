@@ -211,7 +211,7 @@ public class AgroAppRepo {
     }
 
 
-    public void signUp(final String email, final String password, final Context context, final ProgressBar bar, final String phone, final String name, final Uri uri, final String role,User fromInv){
+    public void signUp(final String email, final String password, final Context context, final ProgressBar bar, final String phone, final String name,final String role,User fromInv){
         bar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email,password)
                 .addOnFailureListener(new OnFailureListener() {
@@ -232,7 +232,6 @@ public class AgroAppRepo {
                             DatabaseReference mDatebaseReference = firebaseDatabase.getReference(USERS);
                             User user = new User(userId);
                             user.setName(name);
-                            user.setImage(uri.toString());
                             user.setEmail(email);
                             user.setPassword(password);
                             user.setPhoneNumber(phone);
@@ -427,17 +426,17 @@ public class AgroAppRepo {
     }
 
     //Just added this method
-    public void addPictures(final String userId, List<Uri> imageList, final Context context, FetchImagesUri fetchImagesUri){
+    public void addPictures(final String userId, List<String> imageList, final Context context, FetchImagesUri fetchImagesUri){
         if(imageList.size() < 3){
             Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
         }else{
             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
             progressDialog = new ProgressDialog(context);
             for( int i = 0 ; i < imageList.size() ; i++){
-                Uri uriexact = imageList.get(i);
+                Uri uriexact = Uri.parse(imageList.get(i));
                 final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
                 imageName.putFile(uriexact)
-                        .addOnSuccessListener(taskSnapshot -> imageName.getDownloadUrl().addOnSuccessListener(uri -> imageList.add(uri)))
+                        .addOnSuccessListener(taskSnapshot -> imageName.getDownloadUrl().addOnSuccessListener(uri -> imageList.add(uri.toString())))
                 .addOnFailureListener(e -> Toast.makeText(context,"Something went wrong",Toast.LENGTH_LONG).show());
             }
 
@@ -448,7 +447,7 @@ public class AgroAppRepo {
 
 
     //Just added this method
-    public void addToQualified(final String userId, String localgov,String state,String description, List<Uri> imageList, String agricType, final Context context){
+    public void addToQualified(final String userId, String localgov,String state,String description, List<String> imageList, String agricType, final Context context){
         progressDialog.setMessage("Please wait while we upload your details.................");
         progressDialog.show();
         addPictures(userId, imageList, context, imagesUriList -> {
@@ -606,7 +605,7 @@ public class AgroAppRepo {
                    }
 
                    if(chat.getSenderId().equals(userId)){
-                       usersStringId.add(chat.getSenderId());
+                       usersStringId.add(chat.getReceiverId());
                    }
 
                }
@@ -620,18 +619,19 @@ public class AgroAppRepo {
                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                            User user = dataSnapshot.getValue(User.class);
                            for(String id : usersStringId){
-                               Log.d("Intense",user.getName());
+                               Log.d("Intense",user.getUid());
                                if(user.getUid().equals(id)){
                                    if(contactedUser.size() > 0){
                                        for(int i = 0 ; i < contactedUser.size() ; i++){
-
-                                           String valueId = contactedUser.get(i).getUid();
-                                           if(!valueId.equals(user.getUid())){
-                                               Log.d("Intense","I am in d for loop");
+                                           String useroneid = contactedUser.get(i).getUid();
+                                           Log.d("Intense",useroneid);
+                                           if(!user.getUid().equals(useroneid) ){
+                                               Log.d("Intense",user.getUid());
+                                               Log.d("Intense","I am a break");
                                                contactedUser.add(user);
                                            }
                                        }
-                                   } else if(contactedUser.size() == 0){
+                                   } else {
                                        Log.d("Intense","I am in else loop");
                                        contactedUser.add(user);
                                    }
@@ -744,7 +744,7 @@ public class AgroAppRepo {
 
 
     public interface FetchImagesUri{
-        void imagesUploaded(List<Uri> imagesUriList);
+        void imagesUploaded(List<String> imagesUriList);
     }
 
 
