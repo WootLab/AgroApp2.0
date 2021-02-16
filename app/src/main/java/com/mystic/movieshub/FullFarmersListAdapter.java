@@ -70,11 +70,10 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
         return userList.size();
     }
 
-    private Filter filteredFarmer = new Filter() {
+    private final Filter filteredFarmer = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<User> filteredByNameUser = new ArrayList<>();
-
             if(constraint == null || constraint.length() < 0  ){
                 filteredByNameUser.addAll(fullUserList);
             } else {
