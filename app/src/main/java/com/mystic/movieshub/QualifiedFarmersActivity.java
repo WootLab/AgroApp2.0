@@ -42,6 +42,7 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
                 finish();
             }
         });
+        final User seefull = (User) getIntent().getSerializableExtra("SeeFull");
         final User user = (User) getIntent().getSerializableExtra("QualifiedFarmers");
         final User qual = (User) getIntent().getSerializableExtra("QualUser");
         defineViews();
@@ -68,7 +69,7 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
                 intent.putExtra("PHOTO",uri);
                 startActivity(intent);
             });
-        }else{
+        }else if(qual != null){
             Objects.requireNonNull(getSupportActionBar()).setTitle(qual.getName());
             Glide.with(this)
                     .asBitmap()
@@ -85,7 +86,29 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
             if(farmPhotoAdapter == null){
                 farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
             }
-
+            farmPhotoAdapter.showPhoto(position -> {
+                Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
+                String uri = uriContainer.get(position);
+                intent.putExtra("PHOTO",uri);
+                startActivity(intent);
+            });
+        } else if(seefull != null){
+            Objects.requireNonNull(getSupportActionBar()).setTitle(seefull.getName());
+            Glide.with(this)
+                    .asBitmap()
+                    .load(Uri.parse(seefull.getImage()))
+                    .into(imageView);
+            name.setText(seefull.getName());
+            email.setText(seefull.getEmail());
+            adress.setText(seefull.getRequirements().getLocation());
+            phoneNumber.setText(seefull.getPhoneNumber());
+            description.setText(seefull.getRequirements().getDescription());
+            String location = seefull.getRequirements().getState()+","+seefull.getRequirements().getLocalgov();
+            stateAndLocal.setText(location);
+            final List<String> uriContainer = seefull.getRequirements().getImages();
+            if(farmPhotoAdapter == null){
+                farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
+            }
             farmPhotoAdapter.showPhoto(position -> {
                 Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
                 String uri = uriContainer.get(position);
@@ -93,6 +116,7 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
                 startActivity(intent);
             });
         }
+
         recyclerView.setAdapter(farmPhotoAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -103,8 +127,13 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse(number));
                 startActivity(intent);
-            } else {
+            } else if(qual != null) {
                 String number = qual.getPhoneNumber();
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse(number));
+                startActivity(intent);
+            } else if(seefull != null){
+                String number = seefull.getPhoneNumber();
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse(number));
                 startActivity(intent);

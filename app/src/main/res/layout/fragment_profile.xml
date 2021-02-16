@@ -189,7 +189,7 @@
                     android:layout_marginEnd="3dp"
                     android:layout_weight="1"
                     android:text="UPLOAD PRODUCT"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
 
                 <Button
@@ -199,7 +199,7 @@
                     android:layout_marginStart="3dp"
                     android:layout_weight="1"
                     android:text="Apply for loans"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -216,7 +216,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="UPLOAD NEWS"
-                android:visibility="visible" />
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="See full Farmers"
+                android:visibility="gone" />
 
             <!--<Button
                 android:id="@+id/button7"

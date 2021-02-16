@@ -72,6 +72,7 @@ public class AgroAppRepo {
     private List<Chat> chatList;
     private List<String> usersStringId;
     private List<User> contactedUser;
+    private List<User> allFarmers;
     //private List<HashMap<String, List<String>>> fullLocalGovernment;
     private ProgressDialog progressDialog;
     //private ProgressBar bar;
@@ -202,6 +203,33 @@ public class AgroAppRepo {
                 fireBaseCallback.fireBaseUser(user);
             }
 
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+
+    public void fetchAllUser(FetchQualifiedfarmers fetchQualifiedfarmers){
+        allFarmers = new ArrayList<>();
+        DatabaseReference mDatebaseReference = firebaseDatabase.getReference(USERS);
+        mDatebaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                     User user = dataSnapshot.getValue(User.class);
+                     if(user.getRole().equals("Farmer") && user.getRequirements().isApplicationState()){
+                         allFarmers.add(user);
+                     }
+
+                 }
+
+                fetchQualifiedfarmers.firebaseQualifiedFarmers(allFarmers);
+
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -756,6 +784,8 @@ public class AgroAppRepo {
     public interface FetchContactedUser{
         void contactedList(List<User> contacted);
     }
+
+
 
 
 

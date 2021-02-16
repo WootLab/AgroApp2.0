@@ -62,6 +62,7 @@ public class ProfileFragment extends Fragment {
     private LinearLayout linearLayout;
     private Uri mImageUri;
     private Button buttonApply;
+    private Button seeFarmers;
     private StorageTask mUploads;
 
     public ProfileFragment() {
@@ -97,12 +98,11 @@ public class ProfileFragment extends Fragment {
                         .into(circleImageView);
                 if(userEmail.equals(bamidele) || userEmail.equals(yvonne) || userEmail.equals(chinedu)){
                     uploadNewsBtn.setVisibility(View.VISIBLE);
+                    seeFarmers.setVisibility(View.VISIBLE);
                 }else{
                     uploadNewsBtn.setVisibility(View.GONE);
+                    seeFarmers.setVisibility(View.GONE);
                 }
-
-
-
 
 
                 if(basuser.getRole().equals("farmer") || basuser.getEmail().equals("bam@gmail.com")){
@@ -147,6 +147,7 @@ public class ProfileFragment extends Fragment {
         nametextView = view.findViewById(R.id.username);
         upload = view.findViewById(R.id.btnUpload);
         uploadNewsBtn = view.findViewById(R.id.button4);
+        seeFarmers = view.findViewById(R.id.button14);
         bar = view.findViewById(R.id.prog);
         buttonApply = view.findViewById(R.id.button7);
         linearLayout = view.findViewById(R.id.lay);
@@ -166,6 +167,13 @@ public class ProfileFragment extends Fragment {
 
 
 
+        seeFarmers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),SeeFullFarmersActivity.class);
+                startActivity(intent);
+            }
+        });
 
        upload.setOnClickListener(new View.OnClickListener() {
            @Override
