@@ -2,10 +2,13 @@ package com.mystic.movieshub;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,11 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersListAdapter.FullFarmersHolder> {
+public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersListAdapter.FullFarmersHolder> implements Filterable {
 
     List<User> userList;
+    List<User> fullUserList;
     Context context;
     FullFarmersListener fullFarmersListener;
     AppListener appListener;
@@ -27,6 +32,7 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
     public FullFarmersListAdapter(List<User> userList, Context context){
         this.userList = userList;
         this.context = context;
+        fullUserList = new ArrayList<>(userList);
     }
     @NonNull
     @Override
@@ -62,6 +68,39 @@ public class FullFarmersListAdapter extends RecyclerView.Adapter<FullFarmersList
     @Override
     public int getItemCount() {
         return userList.size();
+    }
+
+    private Filter filteredFarmer = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<User> filteredByNameUser = new ArrayList<>();
+
+            if(constraint == null || constraint.length() < 0  ){
+                filteredByNameUser.addAll(fullUserList);
+            } else {
+                String filteredPattern = constraint.toString().toLowerCase().trim();
+                for( User user : fullUserList){
+                    if(user.getName().toLowerCase().contains(filteredPattern)){
+                        filteredByNameUser.add(user);
+                    }
+                }
+            }
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredByNameUser;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            userList.clear();
+            userList.addAll((List)results.values);
+            Log.d("plat","I am in search");
+            notifyDataSetChanged();
+        }
+    };
+    @Override
+    public Filter getFilter() {
+        return filteredFarmer;
     }
 
     public class FullFarmersHolder extends RecyclerView.ViewHolder {
