@@ -4,29 +4,29 @@
     tools:showin="navigation_view">
     <group android:checkableBehavior="single">
         <item
-        android:id="@+id/nav_action"
-        android:icon="@drawable/ic_guns"
-        android:title="@string/Action"
-        android:checked="true"/>
+            android:id="@+id/nav_action"
+            android:checked="true"
+            android:icon="@drawable/chatboxcorners"
+            android:title="@string/Action" />
 
         <item
-        android:id="@+id/nav_com"
-        android:icon="@drawable/ic_grin"
-        android:title="@string/Comedy"/>
+            android:id="@+id/nav_com"
+            android:icon="@drawable/chatboxcorners"
+            android:title="@string/Comedy" />
 
         <item
-        android:id="@+id/nav_drama"
-        android:icon="@drawable/ic_sad_tear"
-        android:title="@string/Drama"/>
+            android:id="@+id/nav_drama"
+            android:icon="@drawable/chatboxcorners"
+            android:title="@string/Drama" />
 
         <item
             android:id="@+id/nav_chat"
-            android:icon="@drawable/ic_baseline_chat_24"
-            android:title="@string/Chat"/>
+            android:icon="@drawable/chatboxcorners"
+            android:title="@string/Chat" />
 
         <item
             android:id="@+id/nav_invest"
-            android:icon="@drawable/ic_sad_tear"
-            android:title="@string/Invest"/>
+            android:icon="@drawable/chatboxcorners"
+            android:title="@string/Invest" />
     </group>
 </menu>

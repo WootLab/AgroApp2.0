@@ -48,7 +48,6 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
         defineViews();
         if(user != null ){
             Objects.requireNonNull(getSupportActionBar()).setTitle(user.getName());
-
             Glide.with(this)
                     .asBitmap()
                     .load(Uri.parse(user.getImage()))
@@ -62,6 +61,7 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
             if(farmPhotoAdapter == null){
                 farmPhotoAdapter = new FarmPhotoAdapter(uriContainer,this);
             }
+
 
             farmPhotoAdapter.showPhoto(position -> {
                 Intent intent = new Intent(QualifiedFarmersActivity.this,ShowFullFarmActivity.class);
@@ -141,9 +141,6 @@ public class QualifiedFarmersActivity extends AppCompatActivity {
 
 
         });
-
-
-
 
 
         chat.setOnClickListener(new View.OnClickListener() {
