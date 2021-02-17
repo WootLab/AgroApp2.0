@@ -98,10 +98,6 @@ public abstract class Multiplefragment extends AppCompatActivity implements Navi
                 fragment = new FarmersNewsFragment();
                 break;
 
-            case R.id.nav_order:
-                fragment = new OrderFragment();
-                break;
-
             case R.id.nav_invest:
                 fragment = new InvestFragment();
                 break;

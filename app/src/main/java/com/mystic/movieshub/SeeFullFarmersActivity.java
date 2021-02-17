@@ -73,6 +73,8 @@ public class SeeFullFarmersActivity extends AppCompatActivity {
                     public void fundfarmerListener(int pos) {
                         User user = qualifiedfarmers.get(pos);
                         Intent intent = new Intent(SeeFullFarmersActivity.this,FundFarmerActivity.class);
+                        intent.putExtra("FundUser",user);
+                        startActivity(intent);
                     }
                 });
 

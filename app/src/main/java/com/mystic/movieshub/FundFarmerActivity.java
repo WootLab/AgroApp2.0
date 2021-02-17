@@ -19,7 +19,6 @@ public class FundFarmerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fund_farmer);
-
         AgroAppRepo agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
         defineViews();
         Toolbar toolbar = findViewById(R.id.toolbarr);
@@ -33,7 +32,7 @@ public class FundFarmerActivity extends AppCompatActivity {
             }
         });
 
-        User user = (User) getIntent().getSerializableExtra("");
+        User user = (User) getIntent().getSerializableExtra("FundUser");
 
         credit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,13 +44,13 @@ public class FundFarmerActivity extends AppCompatActivity {
             }
         });
 
-
         debit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String amou = amount.getText().toString().trim();
                 String mess = message.getText().toString().trim();
                 double value = Double.parseDouble(amou);
+
                 agroAppRepo.addMoney(user,value,mess,FundFarmerActivity.this);
             }
         });

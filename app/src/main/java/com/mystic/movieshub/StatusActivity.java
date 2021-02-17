@@ -9,17 +9,18 @@ import android.widget.TextView;
 
 public class StatusActivity extends AppCompatActivity {
 
-    private TextView txt;
+    private TextView txt, valance;
     private LinearLayout linearLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_status);
 
+        valance = findViewById(R.id.valance);
         txt = findViewById(R.id.noInvestor);
         linearLayout = findViewById(R.id.eligibleView);
         User statusUser = (User)getIntent().getSerializableExtra("Status");
-
 
         if(statusUser.getRequirements().isEligible()){
             txt.setVisibility(View.GONE);
@@ -28,6 +29,10 @@ public class StatusActivity extends AppCompatActivity {
             txt.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
         }
+
+        valance.setText(Double.toString(statusUser.getBalance()));
+
+
 
 
 

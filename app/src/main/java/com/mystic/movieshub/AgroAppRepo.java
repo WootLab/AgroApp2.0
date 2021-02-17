@@ -219,6 +219,7 @@ public class AgroAppRepo {
         mDatebaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                allFarmers.clear();
                  for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                      User user = dataSnapshot.getValue(User.class);
                      if(user.getRole().equals("Farmer") && user.getRequirements().isApplicationState()){
@@ -459,12 +460,15 @@ public class AgroAppRepo {
             Toast.makeText(context,"Please select more than 2 images",Toast.LENGTH_SHORT).show();
         }else{
             StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("FARMIMAGES").child(userId);
-            progressDialog = new ProgressDialog(context);
+
             for( int i = 0 ; i < imageList.size() ; i++){
                 Uri uriexact = Uri.parse(imageList.get(i));
                 final StorageReference imageName = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(context,uriexact));
                 imageName.putFile(uriexact)
-                        .addOnSuccessListener(taskSnapshot -> imageName.getDownloadUrl().addOnSuccessListener(uri -> imageList.add(uri.toString())))
+                        .addOnSuccessListener(taskSnapshot -> imageName.getDownloadUrl().addOnSuccessListener(uri -> {
+                            Log.d("Loans",uri.toString());
+                            imageList.add(uri.toString());
+                        }))
                 .addOnFailureListener(e -> Toast.makeText(context,"Something went wrong",Toast.LENGTH_LONG).show());
             }
 
@@ -476,8 +480,9 @@ public class AgroAppRepo {
 
     //Just added this method
     public void addToQualified(final String userId, String localgov,String state,String description, List<String> imageList, String agricType, final Context context){
+        /*progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait while we upload your details.................");
-        progressDialog.show();
+        progressDialog.show();*/
         addPictures(userId, imageList, context, imagesUriList -> {
             Requirements requirements = new Requirements();
             requirements.setLocalgov(localgov);
@@ -516,15 +521,16 @@ public class AgroAppRepo {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task1) {
                                         if(task1.isSuccessful()){
-                                            progressDialog.dismiss();
+                                           // progressDialog.dismiss();
                                             Toast.makeText(context,"Succesfully applied",Toast.LENGTH_SHORT).show();
                                             Log.d("Loans","We added requirement to databases");
+
                                         }
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
+                                       // progressDialog.dismiss();
                                         Toast.makeText(context,"There was an error",Toast.LENGTH_LONG).show();
                                     }
                                 });

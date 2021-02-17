@@ -61,6 +61,9 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
         holder.textView1.setText(farmProduct.getTitle());
         holder.textView2.setText(farmProduct.getDescription());
 
+        if(farmProduct.getLocation() != null){
+            holder.textViewLocation.setText(farmProduct.getLocation());
+        }
         if(farmProduct.getUser().getUid().equals(userId) || userId.equals("ADMIN ID")){
             holder.deleteBtn.setVisibility(View.VISIBLE);
         }else{
@@ -128,7 +131,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
     public static class MovieHolder extends RecyclerView.ViewHolder {
         MaterialCardView material;
         ImageView circleImageView;
-        TextView textView1,textView2,textViewPrice;
+        TextView textView1,textView2,textViewPrice,textViewLocation;
         Button deleteBtn;
         public MovieHolder(@NonNull View itemView, final CustomeAdapterListener listener) {
             super(itemView);
@@ -140,6 +143,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.MovieH
             deleteBtn = itemView.findViewById(R.id.button6);
             textViewPrice = itemView.findViewById(R.id.textView26);
 
+            textViewLocation = itemView.findViewById(R.id.textView24);
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

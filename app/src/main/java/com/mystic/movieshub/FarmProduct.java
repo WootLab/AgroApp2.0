@@ -11,6 +11,7 @@ public class FarmProduct implements Serializable {
     private User user;
     private String image;
     private String productId;
+    private String location;
     private double price;
 
     private String date;
@@ -85,5 +86,13 @@ public class FarmProduct implements Serializable {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

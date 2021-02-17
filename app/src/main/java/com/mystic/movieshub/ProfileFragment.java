@@ -105,7 +105,7 @@ public class ProfileFragment extends Fragment {
                 }
 
 
-                if(basuser.getRole().equals("farmer") || basuser.getEmail().equals("bam@gmail.com")){
+                if(basuser.getRole().equals("Farmer") || basuser.getEmail().equals("bam@gmail.com")){
                     buttonApply.setVisibility(View.VISIBLE);
                     upload.setVisibility(View.VISIBLE);
                     if(basuser.getRequirements().isApplicationState()){

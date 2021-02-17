@@ -37,7 +37,7 @@ import java.util.TimeZone;
 
 public class UploadActivity extends AppCompatActivity {
 
-    private EditText edtTitle,edtDesc;
+    private EditText edtTitle,edtDesc,location;
     private TextView fileName;
     private AgroAppRepo agroAppRepo ;
     private Button uploadBtn, cancelBtn,choBtn;
@@ -69,6 +69,7 @@ public class UploadActivity extends AppCompatActivity {
         fileName = findViewById(R.id.fileName);
         edtDesc =  findViewById(R.id.EdtDesc);
         bar = findViewById(R.id.progress_bar);
+        location = findViewById(R.id.location);
         productPrice = findViewById(R.id.editTextNumberDecimal);
         agroAppRepo = AgroAppRepo.getInstanceOfAgroApp();
 
@@ -151,6 +152,7 @@ public class UploadActivity extends AppCompatActivity {
                                     Toast.makeText(UploadActivity.this,"successfully uploaded",Toast.LENGTH_SHORT).show();
                                     final String tit = edtTitle.getText().toString().trim();
                                     String desc = edtDesc.getText().toString().trim();
+                                    String locate = location.getText().toString();
                                     double price = Double.parseDouble(productPrice.getText().toString().trim());
                                     final FarmProduct product = new FarmProduct(desc);
 
@@ -168,6 +170,10 @@ public class UploadActivity extends AppCompatActivity {
                                             product.setUser(user);
                                             product.setImage(uri.toString());
                                             product.setDate(utcTime);
+                                            if(product.getLocation() != null){
+                                                product.setLocation(locate);
+                                            }
+
                                             agroAppRepo.uploadProduct(product,UploadActivity.this);
                                         }
                                     });
