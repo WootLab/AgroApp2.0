@@ -20,12 +20,12 @@ import java.util.Objects;
 public class SpecificProductActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PRODUCT = "Product";
     public static final String FARMER = "farmer";
-    private ImageView imageView,authorimage;
-    private TextView time, desc;
+    private ImageView imageView;
+    private TextView time, desc,location;
     private TextView name;
-    private ImageButton call;
-    private ImageButton chat;
-    private ImageButton cart;
+    private Button call;
+    private Button chat;
+    private TextView price;
     private FarmProduct product;
 
     @Override
@@ -33,7 +33,6 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_product);
         defineView();
-
 
         Toolbar toolbar = findViewById(R.id.tool);
         setSupportActionBar(toolbar);
@@ -51,16 +50,13 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
             time.setText(product.getDate());
             desc.setText(product.getDescription());
             name.setText(product.getUser().getName());
+            location.setText(product.getLocation());
+            price.setText(Double.toString(product.getPrice()));
             Glide.with(this)
                     .asBitmap()
                     .load(Uri.parse(product.getImage()))
                     .into(imageView);
 
-            Glide.with(this)
-                    .asBitmap()
-                    .circleCrop()
-                    .load(Uri.parse(product.getUser().getImage()))
-                    .into(authorimage);
         }
 
         respondToClick();
@@ -70,19 +66,18 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
     private void respondToClick() {
         call.setOnClickListener(this);
         chat.setOnClickListener(this);
-        cart.setOnClickListener(this);
     }
 
 
     public void defineView(){
         imageView = findViewById(R.id.image);
-        authorimage = findViewById(R.id.imagi);
         time = findViewById(R.id.time);
         desc = findViewById(R.id.textView8);
         name = findViewById(R.id.sellersname);
         call = findViewById(R.id.imageButton2);
         chat = findViewById(R.id.imageButton3);
-        cart = findViewById(R.id.imageButton4);
+        location = findViewById(R.id.locatio);
+        price = findViewById(R.id.textViewPrice);
     }
 
     @Override
@@ -90,15 +85,15 @@ public class SpecificProductActivity extends AppCompatActivity implements View.O
         switch (view.getId()){
             case R.id.imageButton2:
                 Toast.makeText(SpecificProductActivity.this,"You clicked call",Toast.LENGTH_LONG).show();
+                String number = product.getUser().getPhoneNumber();
+                Intent intenti = new Intent(Intent.ACTION_CALL);
+                intenti.setData(Uri.parse(number));
+                startActivity(intenti);
                 break;
             case R.id.imageButton3:
-                Toast.makeText(SpecificProductActivity.this,"You clicked chat",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this,ChatScreenActivity.class);
                 intent.putExtra(FARMER,product.getUser());
                 startActivity(intent);
-                break;
-            case R.id.imageButton4:
-                Toast.makeText(SpecificProductActivity.this,"You clicked cart",Toast.LENGTH_LONG).show();
                 break;
         }
 

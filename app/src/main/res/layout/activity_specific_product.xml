@@ -24,8 +24,9 @@
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:padding="0dp"
+                app:cardBackgroundColor="#EDEDED"
                 app:cardElevation="4dp">
 
                 <LinearLayout
@@ -39,53 +40,69 @@
 
                     <ImageView
                         android:id="@+id/image"
-                        android:layout_marginTop="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#040303"
                         android:src="@drawable/doctor" />
 
                     <LinearLayout
                         android:id="@+id/containerdetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Name" />
 
                             <TextView
                                 android:id="@+id/sellersname"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Sellers Name" />
+                                android:background="@drawable/chatboxcorners"
+                                android:padding="5dp"
+                                android:text="Omonayin bamidele" />
 
-                            <ImageView
-                                android:id="@+id/imagi"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:src="@drawable/doctor" />
                         </LinearLayout>
 
+
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
+
 
                             <TextView
+                                android:id="@+id/textView10"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Posted at" />
+                                android:text="Price" />
+
 
                             <TextView
-                                android:id="@+id/time"
-                                android:layout_width="match_parent"
+                                android:id="@+id/textViewPrice"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Expected time" />
-
+                                android:background="@drawable/chatboxcorners"
+                                android:padding="5dp"
+                                android:paddingEnd="30dp"
+                                android:text="200" />
                         </LinearLayout>
 
 
@@ -97,20 +114,53 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-
-                        <TextView
-                            android:id="@+id/textView9"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Name" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/textView10"
+                            <TextView
+                                android:id="@+id/textViewPost"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Posted at" />
+
+                            <TextView
+                                android:id="@+id/time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/chatboxcorners"
+                                android:padding="5dp"
+                                android:text="11-04-2025" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Price" />
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/textViewloc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Location" />
+
+
+                            <TextView
+                                android:id="@+id/locatio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/chatboxcorners"
+                                android:padding="5dp"
+                                android:text="Lagos, Oshodi" />
+                        </LinearLayout>
+
+
                     </LinearLayout>
 
                     <TextView
@@ -127,26 +177,24 @@
                         android:layout_marginTop="5dp"
                         android:orientation="horizontal">
 
-                        <ImageButton
+                        <Button
                             android:id="@+id/imageButton2"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="3dp"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_call_24" />
+                            android:drawableLeft="@drawable/ic_baseline_call_24"
+                            android:text="CALL TO BUY" />
 
-                        <ImageButton
+                        <Button
                             android:id="@+id/imageButton3"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_chat_24" />
+                            android:drawableLeft="@drawable/ic_baseline_chat_24"
+                            android:text="CHAT TO BUY" />
 
-                        <ImageButton
-                            android:id="@+id/imageButton4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_add_shopping_cart_24" />
                     </LinearLayout>
 
                 </LinearLayout>
