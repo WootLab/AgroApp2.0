@@ -50,8 +50,7 @@ public class FundFarmerActivity extends AppCompatActivity {
                 String amou = amount.getText().toString().trim();
                 String mess = message.getText().toString().trim();
                 double value = Double.parseDouble(amou);
-
-                agroAppRepo.addMoney(user,value,mess,FundFarmerActivity.this);
+                agroAppRepo.removeMoney(user,value,mess,FundFarmerActivity.this);
             }
         });
 

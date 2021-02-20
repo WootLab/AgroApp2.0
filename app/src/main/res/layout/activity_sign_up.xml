@@ -9,17 +9,20 @@
     android:fillViewport="true"
     >
 
-    <LinearLayout
+    <LixnearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context=".SignUp">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarr"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"/>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"/>
+
+
 
 
     <LinearLayout
@@ -155,5 +158,8 @@
 
         </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
+
+
+
+    </LixnearLayout>
 </ScrollView>
